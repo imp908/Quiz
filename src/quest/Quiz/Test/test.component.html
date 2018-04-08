@@ -1,3 +1,9 @@
 <div>{{className}}</div>
 
-<list-component [quizes]="_quizes"></list-component>
+<button (click)="httpGet()">Get Http tst</button>
+
+<httpClick-component></httpClick-component>
+
+<div *ngIf="_quizes">
+  <list-component [quizes_]="_quizes"></list-component>
+</div>

@@ -9,6 +9,10 @@ import { FormsModule } from '@angular/forms';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+import { HttpClientModule } from '@angular/common/http';
+
+
+
 /*
 //	npm install --save @angular/material @angular/cdk
 import {MatButtonModule, MatCheckboxModule} from '@angular/material';
@@ -24,15 +28,25 @@ import {questionComponent} from '../quest/Quiz/Question/question.component';
 import {quizComponent} from '../quest/Quiz/Quizes/quiz.component';
 import {listComponent} from '../quest/Quiz/List/list.component';
 
+import {HS} from '../quest/Quiz/Http/quiz.service';
+
+import {httpClick} from '../quest/Quiz/Http/httpClick.component';
+
 @NgModule({
   declarations: [
     AppComponent5
     ,testComponent
     ,mainComponent2,answerComponent,questionComponent,quizComponent,listComponent
+    ,httpClick
   ],
   imports: [
-    BrowserModule,ReactiveFormsModule,FormsModule
-    ,NgbModule.forRoot()
+    BrowserModule,ReactiveFormsModule,FormsModule,
+    //bootstrap
+    NgbModule.forRoot(),
+
+     // import HttpClientModule after BrowserModule.
+     HttpClientModule,
+
     /*
     //matdesign animations
     ,BrowserAnimationsModule
@@ -42,7 +56,7 @@ import {listComponent} from '../quest/Quiz/List/list.component';
     ,MatTableModule
     */
   ],
-  providers: [],
+  providers: [HS],
   bootstrap: [AppComponent5]
 })
 export class AppModule5 { }
