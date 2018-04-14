@@ -5,9 +5,11 @@
   <button (click)="AddQuiz()">Add quizes_</button>
 </div>
 
-<div *ngIf="_quizes">
+
+<div *ngIf="(_quizes!=null)">
+
   <!--<list-component [quizes_]="_quizes"></list-component>-->
-  <div *ngFor="let qz of _quizes.array">
-    {{qz.dateFrom}}
-  </div>
+  <a>Quizes getted</a>
+    <list-component [quizes_]="_quizes"></list-component>
+  <!--<div *ngFor="let qz of _quizes.array">{{qz.name}} </div>-->
 </div>

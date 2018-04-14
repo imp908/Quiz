@@ -12,9 +12,9 @@ interface IPrimitiveCollection_ { <X>(arg:Array<X>):Array<X> }
 //Generic PrimitiveCollection
 //---------------------------------------------------------------
 function PrimitiveCollection_<T>(arg:Array<T>):Array<T>{return arg;}
-let myCol1: <U>(arg:Array<U>) => Array<U> = PrimitiveCollection_;
+let myCol1: <U>(arg:Array<U>) => Array<U>=PrimitiveCollection_;
 //call signature of and object literal type
-let myCol2: { <X>(arg:Array<X>):Array<X> } =PrimitiveCollection_;
+let myCol2: { <X>(arg:Array<X>):Array<X> }=PrimitiveCollection_;
 //call via interface
 let myCol3: IPrimitiveCollection_ = PrimitiveCollection_;
 
@@ -27,9 +27,11 @@ export interface IprimitiveItem{
 }
 export interface IPrimitiveCollection<T extends IprimitiveItem>{
   array:Array<T>;
+  add(item:T);
   delete(item:T);
   update(item:T);
-  addUpdate(item:T)
+  addUpdate(item:T);
+  addUpdateArr(items:Array<T>);
 }
 
 class PrimitiveItem{
@@ -37,8 +39,12 @@ class PrimitiveItem{
   name:string="";
   value?:string;
 }
-class PrimitiveCollection<T extends IprimitiveItem>{
+export class PrimitiveCollection<T extends IprimitiveItem>{
   array:Array<T>;
+
+  constructor(){
+      this.array=new Array<T>();
+  }
 
   add(item:T){
     var max=0;
@@ -113,6 +119,12 @@ class PrimitiveCollection<T extends IprimitiveItem>{
     }
   }
 
+  addUpdateArr(items:Array<T>){
+    for(var item of items){
+      this.addUpdate(item);
+    }
+  }
+
   getMaxKey(){
     if(typeof(this.array)!=null){
       var max=Math.max.apply(Math,this.array.map(function(o){return o.key;}))
@@ -164,7 +176,7 @@ export class Itm{
     public label?: string;
     public options?: any=[];
 
-    constructor(key_:number,value_: string, label_?: string,options_?: any){
+    constructor(key_:number,name_:string,value_: string,label_?: string,options_?: any){
       this.key=key_;
       this.value=value_;
       this.label=label_;
@@ -177,8 +189,8 @@ export class Qt extends Itm{
   toStore:boolean=true;
   type:string="text";
 
-  constructor(key_:number,value_: string, type_:string, toStore_:boolean,label_?: string,aw_?: Aw[]){
-    super(key_,value_,label_,aw_);
+  constructor(key_:number,number_:string,value_: string, type_:string, toStore_:boolean,label_?: string,aw_?: Aw[]){
+    super(key_,number_,value_,label_,aw_);
     this.toStore=toStore_;
     this.type=type_;
   };
@@ -337,10 +349,17 @@ export class Quiz extends PrimitiveItem{
   selectedQuestion:Qt=null;
   types: answerTypes=new answerTypes();
 
-  constructor(key_?:number,name_?:string,dateFrom_?:Date,dateTo_?:Date,qt_?:Qt[]){
+  created:Date;
+  changed:Date;
+  GUID:string;
+
+  constructor(key_?:number,name_?:string,value_?:string,dateFrom_?:Date,dateTo_?:Date,qt_?:Qt[]){
     super();
     if(name_!=null){
       this.name=name_
+    }
+    if(value_!=null){
+      this.value=value_
     }
     if(key_!=null){
       this.key=key_;
@@ -351,7 +370,7 @@ export class Quiz extends PrimitiveItem{
   };
 
   newQuestionInit(){
-    return new Qt(-1,"","",true);
+    return new Qt(-1,"","","",true);
   }
 
   addQuestion(a:Qt){
@@ -415,7 +434,6 @@ export class Quizes{
 
 
 
-
 // Service functions for array indexes find and get
 //---------------------------------------------------------------
 
@@ -453,6 +471,7 @@ function getMaxID(arr:any[],field:string){
   serviceCl.log([arr,field,max]);
   return max;
 }
+
 
 
 //Service class with toLog booolesan console log and generators
@@ -498,7 +517,7 @@ export class serviceCl{
     var a:Qt[]=[];
     var aw:Aw[]=[];
     for(var i=0;i<abs;i++){
-      a.push(new Qt(i,"Question "+i,"text",true,"",this.generateAnswers(2)))
+        a.push(new Qt(i,"Question "+i,"text","text",true,"",this.generateAnswers(2)))
     }
     serviceCl.log(["Generated: ",a]);
 
@@ -512,7 +531,7 @@ export class serviceCl{
     serviceCl.log(["generateAnswers for ",n," abs ",Math.abs(n)]);
     var qz:Quiz[]=[];
     for(var i=0;i<n;i++){
-      qz.push(new Quiz(i,"Quiz "+i,new Date(),new Date(),this.generateQuestions(2)))
+      qz.push(new Quiz(i,"Quiz "+i,"Quiz "+i,new Date(),new Date(),this.generateQuestions(2)))
     }
     serviceCl.log(["Generated quizes: ",qz]);
 
@@ -550,7 +569,7 @@ export class serviceCl{
     let q: Quiz = new Quiz();
 
     q.addQuestions([
-      new Qt(0,"Question 1",'text',true,"",[
+      new Qt(0,"Question 1",'text',"text",true,"",[
         new Aw(0,"Aw 1",true)
         ,new Aw(1,"Aw 2",true)
       ])
@@ -572,7 +591,7 @@ export class serviceCl{
 
   questShema(){
     let q: Qt[]=[
-      new Qt(0,"",'text',true,"Question text")
+      new Qt(0,"","text","text",true,"Question text")
     ];
 
     return q;
@@ -610,7 +629,7 @@ export class serviceCl{
     return new Aw(0,"",true,"");
   }
   newQuestion():Qt{
-    return new Qt(0,"question text",'text',true,"",[]);
+      return new Qt(0,"question text",'text',"",true,"",[]);
   }
   questTypes(){
     let types:string[]=[
@@ -625,8 +644,8 @@ export class serviceCl{
 
   quizesArr(){
     var a:Quiz[]=[
-      new Quiz(null,"",null,null,[
-        new Qt(0,"","text",true,"",[] )
+      new Quiz(null,"","",null,null,[
+        new Qt(0,"","text","",true )
       ])
     ]
 
@@ -731,12 +750,20 @@ export class serviceCl{
     return col;
   }
 
+  ImprimitiveCollectionInit(){
+
+    var col:IPrimitiveCollection<Quiz>=new PrimitiveCollection<Quiz>();
+    col.addUpdateArr([new Quiz(0,"name"),new Quiz(1,"name2")])
+    serviceCl.log(["Cols :",col.array]);
+
+  }
+
   test(){
     var ln=
     "--------------------------------------------------------------------";
     serviceCl.log(ln)
 
-    this.genericQuizCollection();
+    this.ImprimitiveCollectionInit();
 
     serviceCl.log(ln)
   }

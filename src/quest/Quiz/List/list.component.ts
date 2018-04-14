@@ -17,7 +17,7 @@ export class listComponent
 
   service_:serviceCl;
 
-  @Input() quizes_:IPrimitiveCollection<Quiz>;
+  @Input() quizes_:IPrimitiveCollection<Quiz>=null;
   _quiz:Quiz;
 
   constructor(){
@@ -25,8 +25,8 @@ export class listComponent
     this.service_=new serviceCl();
     serviceCl.log(["quizes get: ",this.quizes_]);
   }
-  onInit(){
-      serviceCl.log(["quizes list : ",this.quizes_]);
+  ngOnInit(){
+    serviceCl.log(["listComponent quizes get: ",this.quizes_]);
   }
   quizCreate()
   {
