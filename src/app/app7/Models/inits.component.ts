@@ -362,8 +362,8 @@ export class CollectionG_<T extends NodeG> implements ICollection_<T>{
 
 export class Node implements INode{
   key:number=0;
-  name:string="13";
-  value:string="13";
+  name:string;
+  value:string;
   constructor(key_?:number,name_?:string, value_?:string)
   {
     if(key_!=null){this.key=key_;}
@@ -572,8 +572,8 @@ export class Collection_<T extends Node> implements ICollection_<T>{
 export class NodeCollection extends Node{
 
   key:number=0;
-  name:string="12";
-  value:string="12";
+  name:string;
+  value:string;
   collection:ICollection_<INodeCollection>;
   constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>)
   {
@@ -584,13 +584,14 @@ export class NodeCollection extends Node{
 }
 
 export class Factory_{
+
   node():INodeCollection{
     return new  NodeCollection();
   }
 
   answers(n:number):ICollection_<NodeCollection>{
     var answer:ICollection_<NodeCollection>=new Collection_<NodeCollection>();
-    answer.tolog=true;
+    answer.tolog=false;
     for(var i=0;i<n;i++){
       answer.add(new NodeCollection(i,"Answer " +i,"Answer " +i));
     }
@@ -598,17 +599,29 @@ export class Factory_{
   }
 
   questions(n:number){
-    var question:ICollection_<Node>=new Collection_<Node>();
+    var question:ICollection_<NodeCollection>=new Collection_<NodeCollection>();
     question.tolog=false;
     for(var i=0;i<n;i++){
-      question.add(new Node(i,"Question " +i,"Question " +i));
+      question.add(new NodeCollection(i,"Question " +i,"Question " +i));
 
     }
     return question;
   }
 
+  quizes(n:number){
+    var quizes:ICollection_<NodeCollection>=new Collection_<NodeCollection>();
+    quizes.tolog=false;
+    for(var i=0;i<n;i++){
+      quizes.add(new NodeCollection(i,"Quiz " +i,"Quiz " +i));
+
+    }
+    return quizes;
+  }
+
 }
+
 export class Test{
+
 
     //obsolette
 
@@ -637,14 +650,19 @@ export class Test{
     //NEW
 
     public static GenNewColl(bol_:boolean){
-      var factory:Factory_=new Factory_();
 
-      ServiceCl.log(["New answer: ",new NodeCollection(11,"Answer " +11,"Answer " +11)])
+      if(bol_==true ){
+        var factory:Factory_=new Factory_();
 
-      ServiceCl.log(["New factory NodeCollection: ",new Factory_().node()])
-      var answers:ICollection_<INodeCollection> = factory.answers(5);
-      ServiceCl.log(["New factory AnswersCollection: "])
-      ServiceCl.log(answers);
+        ServiceCl.log(["New answer: ",new NodeCollection(11,"Answer "+11,"Answer "+11)])
+
+        ServiceCl.log(["New factory NodeCollection: ",new Factory_().node()])
+
+        ServiceCl.log(["New factory AnswersCollection: ",factory.answers(5)]);
+
+        ServiceCl.log(["New factory QuestionsCollection: ",factory.questions(5)]);
+
+      }
 
 
     }
@@ -654,12 +672,57 @@ export class Test{
         new Collection_<NodeCollection>();
     }
 
+    public static Gen(bol_:boolean,lw_?:number,up_?:number)
+    :ICollection_<INodeCollection> {
+
+      var col_:ICollection_<INodeCollection> =new Collection_<NodeCollection> ();
+
+      var lw:number;
+      var up:number;
+
+      if(bol_!=null){
+        var factory:Factory_=new Factory_();
+
+        if(lw_!=null) {lw=lw_;
+        }else{
+          lw=Math.floor(Math.random()*10)+1;
+        }
+        if(up_!=null){up=up_;
+        }else{
+          up=Math.floor(Math.random()*5)+lw;
+        }
+
+
+        var gn_:number=Math.floor(Math.random()*up)+lw;
+        ServiceCl.log(["Gen value: ",gn_]);
+
+        col_=factory.quizes(gn_)
+        for(var qz_ of col_.array)
+        {
+          gn_=Math.floor(Math.random()*up)+lw;
+          qz_.collection=factory.questions(gn_)
+
+          for(var qt_ of qz_.collection.array){
+            gn_=Math.floor(Math.random()*up)+lw;
+            qt_.collection=factory.answers(gn_);
+          }
+        }
+
+        ServiceCl.log(["Gen borders: ",lw,up]);
+        ServiceCl.log(["Quizes genned: ",col_]);
+        return col_;
+      }
+
+    }
+
     public static GO(){
 
       Test.GenerateItems(false);
       Test.GenerateAnswers(false);
 
-      Test.GenNewColl(true);
+      Test.GenNewColl(false);
+
+      Test.Gen(true,1,3);
 
       /*
       //item facory test
