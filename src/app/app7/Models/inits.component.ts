@@ -13,6 +13,7 @@ class NodeG implements INode{
   key:number;
   name:string;
   value:string;
+  typeName:string;
   constructor(options:{key_:number,name_:string, value_:string}={key_:0,name_ : "",value_:""})
   {
     this.key=options.key_;
@@ -156,7 +157,11 @@ class CollectionG_<T extends NodeG> implements ICollection_<T>{
     }
     return false;
   }
-
+  getType(){
+    if(typeof(this.array)!=null){
+      return typeof this.array[0];
+    }
+  }
 }
 
 //parameter constructions
@@ -165,7 +170,7 @@ class Node implements INode{
   key:number;
   name:string;
   value:string;
-
+  typeName:string;
   static _key:number;
 
   constructor(key_?:number,name_?:string, value_?:string)
@@ -175,7 +180,9 @@ class Node implements INode{
     }
     if(name_!=null){this.name=name_;}
     if(value_!=null){this.value=value_;}
+    this.typeName=this.constructor.name;
   }
+
 }
 class Collection_<T extends Node> implements ICollection_<T>{
   array:Array<T>=new Array<T>();
@@ -322,7 +329,7 @@ class Collection_<T extends Node> implements ICollection_<T>{
     if(typeof(this.array)!=null){
       var max=Math.max.apply(Math,this.array.map(function(o){return o.key;}))
       if(!isFinite(max)){
-        ServiceCl.log("Max infinite")
+        //ServiceCl.log("Max infinite")
         max=-1
       }
       if(max!=null){
@@ -372,7 +379,11 @@ class Collection_<T extends Node> implements ICollection_<T>{
     return false;
   }
 
-
+  getType(){
+    if(typeof(this.array)!=null){
+      return typeof this.array[0].constructor.name;
+    }
+  }
 }
 export class NodeCollection extends Node{
 
@@ -389,11 +400,39 @@ export class NodeCollection extends Node{
     if(collection_!=null){this.collection=collection_;}
     if(collection_===undefined){this.collection=new Collection_<NodeCollection>();}
     if(collection_===null){this.collection=null;}
+    this.typeName=this.constructor.name;
+  }
+
+  getType_(){
+    //return this.collection.getType();
+    if(this.collection.array!=null){
+      return this.collection.array[0].constructor.name;
+    }
   }
 
 }
 
-export class Quiz extends NodeCollection{}
+export class Quiz extends NodeCollection{
+
+  replay:boolean;
+  anonimous:boolean;
+
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,replay_?:boolean,anonimous_?:boolean)
+  {
+    super(key_,name_,value_,collection_);
+    this.replay=true;
+    this.anonimous=false;
+    if(replay_!=null){
+      this.replay=replay_;
+    }
+    if(anonimous_!=null){
+      this.anonimous=anonimous_;
+    }
+  }
+}
+export class Questionarie extends Quiz{}
+export class Victorine extends Quiz{}
+
 export class Question extends NodeCollection{}
 export class Answer extends NodeCollection{}
 
@@ -416,12 +455,13 @@ class ButtonAction {
   }
 }
 export class Button extends NodeCollection {
-  displayText:string;
+
   htmlClass:string;
   clicked:boolean;
+  toolTipText:string;
 
   constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
-    ,htmlClass_?:string,clicked_?:boolean){
+    ,htmlClass_?:string,clicked_?:boolean,toolTipText_?:string){
     super(key_,name_,value_,collection_);
     this.htmlClass="";
     if(htmlClass_!=null){
@@ -431,29 +471,52 @@ export class Button extends NodeCollection {
     if(clicked_!=null){
       this.clicked=clicked_;
     }
+    this.toolTipText="";
+    if(toolTipText_!=null){
+      this.toolTipText=toolTipText_;
+    }
   }
 
 }
 export class itemButtons extends Button{
 
   constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
-    ,displayText_?:string,htmlClass_?:string,clicked_?:boolean){
-      super(key_,name_,value_,collection_,htmlClass_,clicked_);
+    ,htmlClass_?:string,clicked_?:boolean,toolTipText_?:string){
+      super(key_,name_,value_,collection_,htmlClass_,clicked_,toolTipText_);
 
-      this.collection.add(new Button(null,"Edit_","Edit",null,"btn btn-primary",false))
-      this.collection.add(new Button(null,"Delete_","Delete",null,"btn btn-danger",false))
+      this.collection.add(new Button(null,"Edit_","Edit",null,"btn btn-primary",false,"Edit "))
+      this.collection.add(new Button(null,"Delete_","Delete",null,"btn btn-danger",false,"Delete "))
 
     }
 }
 export class menuButtons extends Button{
 
     constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
-      ,displayText_?:string,htmlClass_?:string,clicked_?:boolean){
-      super(key_,name_,value_,collection_,htmlClass_,clicked_);
-      this.collection.add(new Button(null,"Add_","Add new",null,"btn btn-outline-primary",false))
+      ,htmlClass_?:string,clicked_?:boolean,toolTipText_?:string){
+      super(key_,name_,value_,collection_,htmlClass_,clicked_,toolTipText_);
+      this.collection.add(new Button(null,"Add_","Add new",null,"btn btn-outline-primary",false,null))
+
+      this.collection.add(new Button(null,"Test1","Test button 1",null,"btn",false,"Button for test1"))
+      this.collection.add(new Button(null,"Test2","Test button 2",null,"btn",false,"Testing button"))
+      this.collection.add(new Button(null,"Test3","Test button 3",null,"btn",false))
+      this.collection.add(new Button(null,"Test4","Test button 4",null,"btn",false))
     }
 }
 
+export class editButtons extends Button{
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
+    ,htmlClass_?:string,clicked_?:boolean){
+    super(key_,name_,value_,collection_,htmlClass_,clicked_);
+      this.collection.add(new Button(null,"Save_","Save",null,"btn btn-success",false,"Save currently edited object"))
+  }
+}
+export class editNewButtons extends Button{
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
+    ,htmlClass_?:string,clicked_?:boolean){
+    super(key_,name_,value_,collection_,htmlClass_,clicked_);
+      this.collection.add(new Button(null,"SaveNew_","Save",null,"btn btn-success",false,"Save object addition"))
+  }
+}
 
 export class ModelContainer{
 
@@ -467,7 +530,10 @@ export class ModelContainer{
   static buttonClicked:Button;
 
   @Output() static nodeEmitted=new EventEmitter<NodeCollection>();
+  @Output() static nodeSavedNew=new EventEmitter();
   @Output() static nodeSaved=new EventEmitter();
+
+  @Output() static nodeAdded=new EventEmitter<NodeCollection>();
 
   static nodeMethodCall(b_:Button,n_:NodeCollection){
     ServiceCl.log(["nodeMethodCall",b_,n_]);
@@ -477,12 +543,22 @@ export class ModelContainer{
     }
     if(b_.name=="Add_"){
       ServiceCl.log("Add_");
+      ModelContainer.nodeNewSelect(n_)
     }
     if(b_.name=="Delete_"){
       ServiceCl.log("Delete_");
+      ModelContainer.nodeDelete(n_);
+    }
+    if(b_.name=="Save_"){
+      ServiceCl.log("Save_");
+      ModelContainer.nodeSave(n_);
+    }
+    if(b_.name=="SaveNew_"){
+      ServiceCl.log("SaveNew_");
+      ModelContainer.nodeSaveNew(n_);
     }
   }
-  static classDetect(n_:NodeCollection){
+  static classDetectNState(n_:NodeCollection){
     if(n_ instanceof Quiz){
       ServiceCl.log(["Quiz selected",n_]);
       ModelContainer.QuizToEdit=n_;
@@ -500,6 +576,21 @@ export class ModelContainer{
     }
   }
 
+  static nodeNewSelect(n_:NodeCollection){
+    let type_:string=n_.getType_();
+    ServiceCl.log(["nodeAdd emitted",n_,type_]);
+    if(type_ == "Quiz"){
+      n_=new Quiz(0,"Add new Quiz","Add new Quiz");
+    }
+    if(type_ == "Question"){
+      n_=new Question(0,"Add new question","Add new question");
+    }
+    if(type_ == "Answer"){
+      n_=new Answer(0,"Add new answer");
+    }
+    ModelContainer.nodeToEdit=n_;
+    ModelContainer.nodeAdded.emit();
+  }
   static nodeSave(n_:NodeCollection){
     ServiceCl.log(["nodeSave",n_,ModelContainer]);
     if(n_ instanceof Answer)
@@ -508,28 +599,49 @@ export class ModelContainer{
         let questionEditable:NodeCollection=quizEditable.collection.getByItem(ModelContainer.QuestionToEdit);
         let answerEditable:NodeCollection=questionEditable.collection.getByItem(ModelContainer.AnswerToEdit);
         answerEditable=n_;
-        ServiceCl.log(["Answer",ModelContainer]);
+        ServiceCl.log(["Answer",n_]);
     }
     if(n_ instanceof Question)
     {
-        ServiceCl.log(["Question"]);
+        ServiceCl.log(["Question",n_]);
     }
     if(n_ instanceof Quiz)
     {
-        ServiceCl.log(["Quiz"]);
+        let quizEditable:NodeCollection=ModelContainer.nodesPassed_.collection.getByItem(ModelContainer.QuizToEdit);
+        quizEditable=n_;
+        ServiceCl.log(["Quiz",n_]);
     }
     ModelContainer.nodeSaved.emit();
+  }
+  static nodeSaveNew(n_:NodeCollection){
+    ServiceCl.log(["nodeSaveNew",n_,ModelContainer]);
+    if(n_ instanceof Answer)
+    {
+        ServiceCl.log(["Answer",n_]);
+        this.QuestionToEdit.collection.add(n_);
+    }
+    if(n_ instanceof Question)
+    {
+        ServiceCl.log(["Question",n_]);
+        this.QuizToEdit.collection.add(n_);
+    }
+    if(n_ instanceof Quiz)
+    {
+        ServiceCl.log(["Quiz",n_]);
+        this.nodesPassed_.collection.add(n_);
+    }
+    ModelContainer.nodeSavedNew.emit();
   }
   static nodeSelect(n_:NodeCollection){
     ModelContainer.nodeToEdit=n_;
 
-    ModelContainer.classDetect(n_);
+    ModelContainer.classDetectNState(n_);
 
-    ModelContainer.nodeEmitted.emit();
+    ModelContainer.nodeEmitted.emit(n_);
     ServiceCl.log(["ModelContainer:",ModelContainer]);
   }
   static nodeDelete(n_:NodeCollection){
-
+      ServiceCl.log(["nodeDelete",n_,ModelContainer]);
   }
 
 }
@@ -725,6 +837,7 @@ export class Test{
 
     public static GO(){
 
+
       //Test.GenNewColl(false);
       //Test.Gen(false,1,3);
 
@@ -749,8 +862,16 @@ export class Test{
       ServiceCl.log(["ItemCollection: ",new ItemCollection()]);
 
       ServiceCl.log(new Button(1,"a","b",null,"button1",false));
+
+      //checking collection type get
+      var cl_:Collection_<NodeCollection>=new Collection_<Quiz>();
+      cl_.add(new Quiz(0,"Quiz " +0,"Quiz " +0));
+      ServiceCl.log(["Test GO :", "Quizes type ",cl_.array[0].constructor.name])
       */
 
+      var cl2:NodeCollection=new NodeCollection();
+      cl2.collection.add(new Quiz(0,"Quiz " +0,"Quiz " +0));
+      ServiceCl.log(["Test GO :", "Quizes type ",cl2.collection.array[0].constructor.name,cl2.collection.getType(),cl2.getType_()])
     }
 
 }

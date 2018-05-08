@@ -17,7 +17,7 @@ export class MenuListComponent implements OnInit {
   AnswerToEdit:Question;
 
   nodesPassed_:NodeCollection;
-
+  typePassed_:string;
   constructor(private service:Service_) {
     //service.test=false;
     ServiceCl.log(["ModelContainer",ModelContainer])
@@ -26,16 +26,11 @@ export class MenuListComponent implements OnInit {
     this.genTest();
   }
   genTest(){
-    this.nodesPassed_ =Test.GenClasses(true,8,10);
+    this.nodesPassed_=Test.GenClasses(true,3,5);
     ModelContainer.nodesPassed_=this.nodesPassed_;
     ServiceCl.log(["nodesPassed_",this.nodesPassed_,ModelContainer]);
   }
   ngOnInit() {
-
-    ModelContainer.nodeSaved.subscribe(s=>{
-      this.nodesPassed_=ModelContainer.nodesPassed_;
-      ServiceCl.log(["nodeSaved",this.nodesPassed_]);
-    });
 
     ModelContainer.nodeEmitted.subscribe(s=>{
       ServiceCl.log([this.constructor.name+" NodeEmitted: ",s])
