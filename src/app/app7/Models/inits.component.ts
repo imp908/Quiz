@@ -587,6 +587,23 @@ export class ModelContainer{
       ModelContainer.AnswerToEdit=n_;
     }
   }
+  static createCopy(item_:NodeCollection):NodeCollection{
+    let _item:NodeCollection;
+    if(item_ instanceof Quiz){
+      _item=new Quiz(item_.key,item_.name,item_.value);
+    }
+    if(item_ instanceof Question){
+      _item=new Question(item_.key,item_.name,item_.value);
+    }
+    if(item_ instanceof Answer){
+      _item=new Answer(item_.key,item_.name,item_.value);
+    }
+    return _item;
+  }
+  static saveTo(from_:NodeCollection,to_:NodeCollection){
+    to_.name=from_.name;
+    to_.value=from_.value;
+  }
 
   static nodeNewSelect(n_:NodeCollection){
     let type_:string=n_.typeName;
@@ -601,8 +618,8 @@ export class ModelContainer{
     if(type_ == "Answer"){
       nd_=new Answer(0,"Add new answer","Add new answer");
     }
-    ModelContainer.nodeToEdit=nd_;
-    ModelContainer.nodeAdded.emit();
+    //ModelContainer.nodeToEdit=nd_;
+    ModelContainer.nodeAdded.emit(nd_);
   }
   static nodeSaveNew(n_:NodeCollection){
     ServiceCl.log(["nodeSaveNew",n_,ModelContainer]);
@@ -628,13 +645,15 @@ export class ModelContainer{
     ModelContainer.nodeToEdit=n_;
 
     ModelContainer.classDetectNState(n_);
-    ModelContainer.nodeEmitted.emit(n_);
+    let nd_:NodeCollection=ModelContainer.createCopy(n_);
+    ModelContainer.nodeEmitted.emit(nd_);
 
     ServiceCl.log(["ModelContainer:",ModelContainer]);
   }
   static nodeDelete(n_:NodeCollection){
       ServiceCl.log(["nodeDelete",n_,ModelContainer]);
   }
+
   static nodeSave(n_:NodeCollection){
     ServiceCl.log(["nodeSave",n_,ModelContainer]);
     if(n_ instanceof Answer)
@@ -642,20 +661,23 @@ export class ModelContainer{
         let quizEditable:NodeCollection=ModelContainer.nodesPassed_.collection.getByItem(ModelContainer.QuizToEdit);
         let questionEditable:NodeCollection=quizEditable.collection.getByItem(ModelContainer.QuestionToEdit);
         let answerEditable:NodeCollection=questionEditable.collection.getByItem(ModelContainer.AnswerToEdit);
-        answerEditable=n_;
-        ServiceCl.log(["Answer",n_]);
+        ServiceCl.log(["Save to ","Answer",n_,answerEditable]);
+        ModelContainer.saveTo(n_,answerEditable);
     }
     if(n_ instanceof Question)
     {
-        ServiceCl.log(["Question",n_]);
+        let quizEditable:NodeCollection=ModelContainer.nodesPassed_.collection.getByItem(ModelContainer.QuizToEdit);
+        let questionEditable:NodeCollection=quizEditable.collection.getByItem(ModelContainer.QuestionToEdit);
+        ServiceCl.log(["Save to ","Question",n_,questionEditable]);
+        ModelContainer.saveTo(n_,questionEditable);
     }
     if(n_ instanceof Quiz)
     {
         let quizEditable:NodeCollection=ModelContainer.nodesPassed_.collection.getByItem(ModelContainer.QuizToEdit);
-        quizEditable=n_;
-        ServiceCl.log(["Quiz",n_]);
+        ServiceCl.log(["Save to ","Quiz",n_,quizEditable]);
+        ModelContainer.saveTo(n_,quizEditable);
     }
-    ModelContainer.nodeSaved.emit();
+    ModelContainer.nodeSaved.emit(n_);
   }
 
 }

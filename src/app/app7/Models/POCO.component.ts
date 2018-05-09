@@ -11,7 +11,7 @@ export interface ICollection_<T>{
   tolog:boolean;
   array:Array<T>;
   type_:string;
-  
+
   add(item:T);
   delete(item:T);
   update(item:T);
@@ -36,4 +36,5 @@ export interface INodeCollection extends INode{
   parentKey:number;
   collection:ICollection_<INodeCollection>;
   getType_();
+
 }
