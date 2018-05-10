@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NodeCollection } from 'app/app7/Models/inits.component';
-import {ServiceCl} from '../Services/services.component';
+import {ServiceCl} from 'app/app7/Services/services.component';
 
 @Component({
   selector: 'app-button',

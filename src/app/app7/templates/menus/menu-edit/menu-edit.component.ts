@@ -20,10 +20,17 @@ export class MenuEditComponent implements OnInit {
     this.test=service.test;
     this.cName=this.constructor.name;
     this.editButtons_ = new editButtons();
+
+  
+
     ServiceCl.log(['Constructor : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
+  }
+  nodeTypeGet(){
+    return this.nodeToEdit_.getType_();
   }
   ngOnInit(){
 
+    //edit new item
     ModelContainer.nodeAdded.subscribe(s=>{
       ServiceCl.log(['nodeAdded Received : ' + this.constructor.name,s])
       this.editButtons_=new editNewButtons();
@@ -31,11 +38,13 @@ export class MenuEditComponent implements OnInit {
       ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
     })
 
+    //edit existing item
     ModelContainer.nodeEmitted.subscribe(s=>{
       ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
       ServiceCl.log([this.constructor.name+" NodeEmitted: ",s])
       this.editButtons_ = new editButtons();
       this.nodeToEdit_=s;
+      ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
     });
 
     ModelContainer.nodeSavedNew.subscribe(s=>{
@@ -43,8 +52,8 @@ export class MenuEditComponent implements OnInit {
       this.nodeToEdit_=null;
     });
     ModelContainer.nodeSaved.subscribe(s=>{
-      this.nodeToEdit_=null;
       ServiceCl.log([this.constructor.name + " nodeSave: ",s])
+      this.nodeToEdit_=null;
     });
   }
 

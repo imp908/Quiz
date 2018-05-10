@@ -6,7 +6,6 @@ import * as Collections from 'typescript-collections';
 
 import {INode,ICollection_,INodeCollection} from './POCO.component';
 
-
 //option constructors
 
 class NodeG implements INode{
@@ -395,6 +394,7 @@ class Collection_<T extends Node> implements ICollection_<T>{
     }
   }
 }
+
 export class NodeCollection extends Node{
 
   key:number=0;
@@ -414,18 +414,64 @@ export class NodeCollection extends Node{
   }
 
   getType_():string {
+
     //return this.collection.getType();
     if(this.collection!=null){
-      return this.collection.getType();
+      return this.constructor.name;
     }
   }
 
 }
 
+export class ItemParameter extends NodeCollection{
+  value:any;
+  valueType:string;
+
+  cssType:string;
+  templateClass:string;
+
+  constructor(value__:any,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,key_?:number)
+  {
+    super(key_,name_,value_,collection_);
+    this.cssType="";
+    this.value=value__;
+    if( typeof this.value === "boolean")
+    {
+      this.valueType="boolean";
+      this.cssType+="checkbox"
+      this.templateClass=null;
+    }
+    if( typeof this.value === "string")
+    {
+      this.valueType="text";
+      this.cssType+="text";
+      this.templateClass=null;
+    }
+    if( this.value instanceof Date)
+    {
+      this.valueType="date";
+      this.cssType=null;
+      this.templateClass="datepicker";
+    }
+    if( this.name == "TimeGap")
+    {
+      this.valueType="date";
+      this.cssType=null;
+      this.templateClass="gappicker";
+    }
+  }
+}
+
+
 export class Quiz extends NodeCollection{
 
   replay:boolean;
+  startTime:Date;
+  timeGap:Date;
+
   anonimous:boolean;
+
+  itemParameter:ItemParameter;
 
   constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,replay_?:boolean,anonimous_?:boolean)
   {
@@ -438,14 +484,42 @@ export class Quiz extends NodeCollection{
     if(anonimous_!=null){
       this.anonimous=anonimous_;
     }
-    this.typeName=this.constructor.name;
+    this.typeName="Question";
+    if(collection_==null){
+      this.collection=new Collection_<Question>();
+    }
+
+    this.itemParameter=new ItemParameter(null,"","",new Collection_<ItemParameter>([
+      new ItemParameter(true,"Replayabe","Replay",null,0)
+      ,new ItemParameter(new Date(),"StartTime","StartTime",null,1)
+      ,new ItemParameter(new Date(),"TimeGap","TimeGap",null,2)
+      ,new ItemParameter(false,"Anonimous","Anonimous",null,3)
+    ]),null);
+
   }
+
+
 }
 export class Questionarie extends Quiz{}
 export class Victorine extends Quiz{}
 
-export class Question extends NodeCollection{}
-export class Answer extends NodeCollection{}
+export class Question extends NodeCollection{
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,replay_?:boolean,anonimous_?:boolean)
+  {
+    super(key_,name_,value_,collection_);
+    this.typeName="Answer";
+    if(collection_==null){
+      this.collection=new Collection_<Answer>();
+    }
+  }
+}
+export class Answer extends NodeCollection{
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,replay_?:boolean,anonimous_?:boolean)
+  {
+    super(key_,name_,value_,collection_);
+    this.typeName="null";
+  }
+}
 
 //unused temp
 
@@ -632,13 +706,18 @@ export class ModelContainer{
     {
         ServiceCl.log(["Question",n_]);
         this.QuizToEdit.collection.add(n_);
+        this.AnswerToEdit=null;
+        this.QuestionToEdit=null;
     }
     if(n_ instanceof Quiz)
     {
         ServiceCl.log(["Quiz",n_]);
         this.nodesPassed_.collection.add(n_);
+        this.AnswerToEdit=null;
+        this.QuestionToEdit=null;
+        this.QuizToEdit=null;
     }
-    ModelContainer.nodeSavedNew.emit();
+    ModelContainer.nodeSavedNew.emit(n_);
   }
 
   static nodeSelect(n_:NodeCollection){

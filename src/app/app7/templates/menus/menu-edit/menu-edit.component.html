@@ -8,5 +8,8 @@
        <button class="btn btn-outline-primary" (click)="nodeSave(nodeToEdit_)">Save</button>
        <app-button [_buttons]="editButtons_" [_obj]="nodeToEdit_"></app-button>
     </div>
+    <ng-container *ngIf="((nodeTypeGet()=='Quiz') && (nodeToEdit_!=null))">
+      <app-nodes [nodesPassed_]="nodeToEdit_.itemParameter"></app-nodes>
+    </ng-container>
   </ng-container>
 </ng-container>
