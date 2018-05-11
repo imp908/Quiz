@@ -21,8 +21,6 @@ export class MenuEditComponent implements OnInit {
     this.cName=this.constructor.name;
     this.editButtons_ = new editButtons();
 
-  
-
     ServiceCl.log(['Constructor : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
   }
   nodeTypeGet(){
@@ -35,6 +33,7 @@ export class MenuEditComponent implements OnInit {
       ServiceCl.log(['nodeAdded Received : ' + this.constructor.name,s])
       this.editButtons_=new editNewButtons();
       this.nodeToEdit_=s;
+      ModelContainer.nodeToEdit=  this.nodeToEdit_;
       ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
     })
 
@@ -44,6 +43,7 @@ export class MenuEditComponent implements OnInit {
       ServiceCl.log([this.constructor.name+" NodeEmitted: ",s])
       this.editButtons_ = new editButtons();
       this.nodeToEdit_=s;
+      //ModelContainer.nodeToEdit=  this.nodeToEdit_;
       ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
     });
 

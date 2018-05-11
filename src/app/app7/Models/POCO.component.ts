@@ -27,6 +27,7 @@ export interface ICollection_<T>{
   isUndefined(arr_:Array<T>):boolean;
   getType();
 
+  sort(asc:boolean);
 }
 
 export interface INodeCollection extends INode{

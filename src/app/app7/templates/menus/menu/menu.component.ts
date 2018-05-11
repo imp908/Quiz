@@ -32,9 +32,7 @@ export class MenuComponent implements OnInit {
 
   }
   ngOnInit(){
-    ServiceCl.log("Inited: " +this.constructor.name);
-    var draw = SVG('drawing').size(300, 300)
-    var rect = draw.rect(100, 100).attr({ fill: '#f06' })
+
   }
 
 

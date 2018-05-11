@@ -161,6 +161,10 @@ class CollectionG_<T extends NodeG> implements ICollection_<T>{
   getType(){
     return typeof this.type_;
   }
+
+  sort(asc:boolean){
+    ServiceCl.log(["Mot implemented"]);
+  }
 }
 
 //parameter constructions
@@ -174,7 +178,7 @@ class Node implements INode{
 
   constructor(key_?:number,name_?:string, value_?:string)
   {
-    if(key_!=null){Node._key=key_;}else{
+    if(key_!=null){Node._key=key_;this.key=key_;}else{
       if(Node._key!=null){Node._key+1;}else{Node._key=0;}
     }
     if(name_!=null){this.name=name_;}
@@ -393,13 +397,27 @@ class Collection_<T extends Node> implements ICollection_<T>{
 
     }
   }
+
+  sortAsc(a:T,b:T){
+    if(a.key>b.key){return 1}
+    if(a.key<b.key){return -1}
+    return 0;
+  }
+  sortDesc(a:T,b:T){
+    if(a.key>b.key){return -1}
+    if(a.key<b.key){return 1}
+    return 0;
+  }
+  sort(asc:boolean){
+    let a:Array<T>;
+    if(asc){
+      a=this.array.sort(this.sortAsc);
+    }else{a=this.array.sort(this.sortDesc);}
+    return a;
+  }
 }
 
 export class NodeCollection extends Node{
-
-  key:number=0;
-  name:string;
-  value:string;
 
   parentKey:number;
 
@@ -424,42 +442,74 @@ export class NodeCollection extends Node{
 }
 
 export class ItemParameter extends NodeCollection{
-  value:any;
+  valueItem:any;
   valueType:string;
 
   cssType:string;
   templateClass:string;
+  show:boolean;
 
-  constructor(value__:any,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,key_?:number)
+  constructor(value__:any,name_?:string, value_?:string,show_?:boolean,collection_?:ICollection_<INodeCollection>,key_?:number)
   {
     super(key_,name_,value_,collection_);
     this.cssType="";
-    this.value=value__;
-    if( typeof this.value === "boolean")
+    this.valueItem=value__;
+    this.show=false;
+
+    if(show_!=null){
+      this.show=show_;
+    }
+    if( typeof this.valueItem === "boolean")
     {
       this.valueType="boolean";
       this.cssType+="checkbox"
       this.templateClass=null;
     }
-    if( typeof this.value === "string")
+    if( typeof this.valueItem === "string")
     {
       this.valueType="text";
       this.cssType+="text";
       this.templateClass=null;
     }
-    if( this.value instanceof Date)
+    if( this.valueItem instanceof Date)
     {
       this.valueType="date";
       this.cssType=null;
       this.templateClass="datepicker";
     }
-    if( this.name == "TimeGap")
+    if( this.name == "TimePicker")
+    {
+      this.valueType="date";
+      this.cssType=null;
+      this.templateClass="timepicker";
+    }
+    if( this.name == "GapPicker")
     {
       this.valueType="date";
       this.cssType=null;
       this.templateClass="gappicker";
     }
   }
+}
+export class QuizParameter extends ItemParameter{
+  constructor(value__:any,name_?:string, value_?:string,show_?:boolean,collection_?:ICollection_<INodeCollection>,key_?:number)
+  {
+    super(value__,name_,value_,show_,collection_,key_);
+    this.defaultInit();
+  }
+
+    defaultInit(){
+      this.collection=new Collection_<ItemParameter>([
+      new ItemParameter(true,"Replayabe","Replayable",true,null,10)
+      ,new ItemParameter(new Date(),"StartTime","Start date",true,null,0)
+      ,new ItemParameter(new Date(),"TimePicker","Start time",true,null,5)
+      ,new ItemParameter(false,"Anonimous","Anonimous",true,null,20)
+      ,new ItemParameter(false,"GapPicker","Replay gap pick",false,null,15)
+      ,new ItemParameter("","Test","test text element",true,null,100)
+    ]);
+
+      this.collection.sort(true);
+    }
 }
 
 
@@ -489,12 +539,7 @@ export class Quiz extends NodeCollection{
       this.collection=new Collection_<Question>();
     }
 
-    this.itemParameter=new ItemParameter(null,"","",new Collection_<ItemParameter>([
-      new ItemParameter(true,"Replayabe","Replay",null,0)
-      ,new ItemParameter(new Date(),"StartTime","StartTime",null,1)
-      ,new ItemParameter(new Date(),"TimeGap","TimeGap",null,2)
-      ,new ItemParameter(false,"Anonimous","Anonimous",null,3)
-    ]),null);
+    this.itemParameter=new QuizParameter("",null,null,null,null,null);
 
   }
 
@@ -757,6 +802,32 @@ export class ModelContainer{
         ModelContainer.saveTo(n_,quizEditable);
     }
     ModelContainer.nodeSaved.emit(n_);
+  }
+
+  static checkedToggle(nodes_:ItemParameter,item_:ItemParameter){
+
+    if(ModelContainer.nodeToEdit instanceof Quiz){
+      let a=ModelContainer.nodeToEdit.itemParameter.collection.getByItem(item_);
+      ServiceCl.log(["checkedToggle: " ,a]);
+      a.valueVal=!a.valueVal;
+    }
+  }
+  static changeShowStatus(name_:string){
+
+    let a:ItemParameter;
+
+    if(ModelContainer.nodeToEdit instanceof Quiz){
+      let b=ModelContainer.nodeToEdit.itemParameter.collection.array.find(s=>s.name==name_);
+
+      if(b instanceof ItemParameter){
+        a=b;
+        a.show=!a.show;
+      }
+      ServiceCl.log(["changeShowStatus: " ,a,ModelContainer.nodesPassed_]);
+      return ModelContainer.nodeToEdit.itemParameter;
+    }
+
+
   }
 
 }

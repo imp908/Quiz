@@ -22,13 +22,14 @@ import { ButtonComponent } from './templates/buttons/button/button.component';
 import { NodesComponent } from './templates/nodes/nodes.component';
 import { DatepickerPopupComponent } from './templates/Elements/datepicker-popup/datepicker-popup.component';
 import { TimepickerComponent } from './templates/Elements/timepicker/timepicker.component';
+import { NodeComponent } from './templates/nodes/node/node.component';
 
 @NgModule({
   imports: [
     BrowserModule,ReactiveFormsModule,FormsModule,CommonModule
     ,NgbModule.forRoot()
   ],
-  declarations:[App7Component, ListComponent, ItemComponent, TestComponent, MenuComponent, MenuListComponent, MenuEditComponent, ClickComponent,ButtonComponent, NodesComponent, DatepickerPopupComponent, TimepickerComponent],
+  declarations:[App7Component, ListComponent, ItemComponent, TestComponent, MenuComponent, MenuListComponent, MenuEditComponent, ClickComponent,ButtonComponent, NodesComponent, DatepickerPopupComponent, TimepickerComponent, NodeComponent],
   bootstrap:[App7Component],
   providers:[Service_]
 })
