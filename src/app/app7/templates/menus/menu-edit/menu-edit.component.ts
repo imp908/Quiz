@@ -38,17 +38,18 @@ export class MenuEditComponent implements OnInit {
     })
 
     //edit existing item
+
     ModelContainer.nodeEmitted.subscribe(s=>{
-      ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
-      ServiceCl.log([this.constructor.name+" NodeEmitted: ",s])
+      ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_,s])
       this.editButtons_ = new editButtons();
       this.nodeToEdit_=s;
-      //ModelContainer.nodeToEdit=  this.nodeToEdit_;
+      ModelContainer.nodeToEdit=  this.nodeToEdit_;
       ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
     });
 
+
     ModelContainer.nodeSavedNew.subscribe(s=>{
-      ServiceCl.log([this.constructor.name + " nodeSave: ",s])
+      ServiceCl.log([this.constructor.name + " nodeSavedNew: ",s])
       this.nodeToEdit_=null;
     });
     ModelContainer.nodeSaved.subscribe(s=>{
@@ -59,7 +60,7 @@ export class MenuEditComponent implements OnInit {
 
   nodeSave(n_:NodeCollection){
     ModelContainer.nodeSave(n_);
-    ServiceCl.log([this.constructor.name + " nodeSave: ",n_])
+    ServiceCl.log([this.constructor.name + " nodeSave_: ",n_])
 
   }
 }

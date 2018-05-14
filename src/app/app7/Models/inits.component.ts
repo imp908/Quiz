@@ -162,6 +162,10 @@ class CollectionG_<T extends NodeG> implements ICollection_<T>{
     return typeof this.type_;
   }
 
+  setType(type_:string){
+    this.type_=type_;
+  }
+
   sort(asc:boolean){
     ServiceCl.log(["Mot implemented"]);
   }
@@ -194,7 +198,6 @@ class Collection_<T extends Node> implements ICollection_<T>{
 
   constructor(array_?:Array<T>){
     if(array_!=null){this.array=array_;}
-    this.setType();
   }
 
   add(item:T){
@@ -271,7 +274,7 @@ class Collection_<T extends Node> implements ICollection_<T>{
       if(this.tolog){ServiceCl.log(["pushing item with key: ",item,max])}
       this.array.push(item);
     }
-    this.setType();
+    this.setType(item.name);
     return item;
   }
 
@@ -388,14 +391,8 @@ class Collection_<T extends Node> implements ICollection_<T>{
   getType():string {
     return this.type_;
   }
-
-  setType(){
-    let a:{new(): T};
-    if(a != null){
-      this.type_=a.name;
-    }else{
-
-    }
+  setType(type_:string){
+    this.type_=type_;
   }
 
   sortAsc(a:T,b:T){
@@ -442,18 +439,26 @@ export class NodeCollection extends Node{
 }
 
 export class ItemParameter extends NodeCollection{
+  //instance if value to get type, not to pass string
   valueItem:any;
+  //name of velue type
   valueType:string;
+  //value of passed value type
+  //exmpl: new Date(), new Date(2015,01,01)
+  //or: "text type","text value"
+  valueVal:any;
 
   cssType:string;
   templateClass:string;
   show:boolean;
 
-  constructor(value__:any,name_?:string, value_?:string,show_?:boolean,collection_?:ICollection_<INodeCollection>,key_?:number)
+  constructor(valueItem_:any,valueVal_:any,name_?:string, value_?:string,show_?:boolean,collection_?:ICollection_<INodeCollection>,key_?:number)
   {
     super(key_,name_,value_,collection_);
     this.cssType="";
-    this.valueItem=value__;
+    this.valueItem=valueItem_;
+    this.valueVal=valueVal_;
+
     this.show=false;
 
     if(show_!=null){
@@ -492,23 +497,38 @@ export class ItemParameter extends NodeCollection{
   }
 }
 export class QuizParameter extends ItemParameter{
-  constructor(value__:any,name_?:string, value_?:string,show_?:boolean,collection_?:ICollection_<INodeCollection>,key_?:number)
+
+  constructor(valueItem_:any,valueVal_:any,name_?:string, value_?:string,show_?:boolean,collection_?:ICollection_<INodeCollection>,key_?:number)
   {
-    super(value__,name_,value_,show_,collection_,key_);
+    super(valueItem_,valueVal_,name_,value_,show_,collection_,key_);
     this.defaultInit();
+    this.conditionsCheck();
   }
 
     defaultInit(){
       this.collection=new Collection_<ItemParameter>([
-      new ItemParameter(true,"Replayabe","Replayable",true,null,10)
-      ,new ItemParameter(new Date(),"StartTime","Start date",true,null,0)
-      ,new ItemParameter(new Date(),"TimePicker","Start time",true,null,5)
-      ,new ItemParameter(false,"Anonimous","Anonimous",true,null,20)
-      ,new ItemParameter(false,"GapPicker","Replay gap pick",false,null,15)
-      ,new ItemParameter("","Test","test text element",true,null,100)
+      new ItemParameter(true,false,"Replayabe","Replayable",true,null,10)
+      ,new ItemParameter(new Date(),null,"StartDate","Start date",true,null,0)
+      ,new ItemParameter(new Date(),null,"TimePicker","Start time",true,null,5)
+      ,new ItemParameter(true,true,"Anonimous","Anonimous",true,null,20)
+      ,new ItemParameter(true,false,"GapPicker","Replay gap pick",false,null,15)
+      ,new ItemParameter("","value test text","Test","Test Text",true,null,100)
     ]);
-
+      this.collection.setType("ItemParameter");
       this.collection.sort(true);
+    }
+
+    conditionsCheck(){
+
+      let i=this.collection.array.find(s=>s.name=="Replayabe");
+        if(i instanceof ItemParameter){
+        let ii=this.collection.array.find(s=>s.name=="GapPicker");
+          if( ii instanceof ItemParameter){
+            ii.show=i.valueVal;
+            console.log("conditionsCheck: ",i,ii)
+          }
+        }
+
     }
 }
 
@@ -523,26 +543,23 @@ export class Quiz extends NodeCollection{
 
   itemParameter:ItemParameter;
 
-  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,replay_?:boolean,anonimous_?:boolean)
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,itemParameter_?:ItemParameter)
   {
     super(key_,name_,value_,collection_);
     this.replay=true;
     this.anonimous=false;
-    if(replay_!=null){
-      this.replay=replay_;
-    }
-    if(anonimous_!=null){
-      this.anonimous=anonimous_;
-    }
+    this.itemParameter=itemParameter_;
+
     this.typeName="Question";
     if(collection_==null){
       this.collection=new Collection_<Question>();
     }
 
-    this.itemParameter=new QuizParameter("",null,null,null,null,null);
+    if(itemParameter_==null){
+      this.itemParameter=new QuizParameter("",null,null,null,null,null);
+    }
 
   }
-
 
 }
 export class Questionarie extends Quiz{}
@@ -709,7 +726,7 @@ export class ModelContainer{
   static createCopy(item_:NodeCollection):NodeCollection{
     let _item:NodeCollection;
     if(item_ instanceof Quiz){
-      _item=new Quiz(item_.key,item_.name,item_.value);
+      _item=new Quiz(item_.key,item_.name,item_.value,item_.collection,item_.itemParameter);
     }
     if(item_ instanceof Question){
       _item=new Question(item_.key,item_.name,item_.value);
@@ -797,17 +814,17 @@ export class ModelContainer{
     }
     if(n_ instanceof Quiz)
     {
-        let quizEditable:NodeCollection=ModelContainer.nodesPassed_.collection.getByItem(ModelContainer.QuizToEdit);
-        ServiceCl.log(["Save to ","Quiz",n_,quizEditable]);
-        ModelContainer.saveTo(n_,quizEditable);
+      let quizEditable:NodeCollection=ModelContainer.nodesPassed_.collection.getByItem(ModelContainer.QuizToEdit);
+      ServiceCl.log(["Save to ","Quiz",n_,quizEditable]);
+      ModelContainer.saveTo(n_,quizEditable);
     }
     ModelContainer.nodeSaved.emit(n_);
   }
 
-  static checkedToggle(nodes_:ItemParameter,item_:ItemParameter){
+  static checkedToggle(nodeEdited_:NodeCollection, parameterClicked_:ItemParameter){
 
-    if(ModelContainer.nodeToEdit instanceof Quiz){
-      let a=ModelContainer.nodeToEdit.itemParameter.collection.getByItem(item_);
+    if(nodeEdited_ instanceof Quiz){
+      let a=nodeEdited_.itemParameter.collection.getByItem(parameterClicked_);
       ServiceCl.log(["checkedToggle: " ,a]);
       a.valueVal=!a.valueVal;
     }

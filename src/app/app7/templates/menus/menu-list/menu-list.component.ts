@@ -40,9 +40,10 @@ export class MenuListComponent implements OnInit {
     ngOnInit(){
 
       ModelContainer.nodeEmitted.subscribe(s=>{
-      ServiceCl.log([this.constructor.name+" NodeEmitted: ",s])
+      ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name,s])      
         this.conatinerBind();
       });
+
 
       ModelContainer.nodeSavedNew.subscribe(s=>{
         ServiceCl.log([this.constructor.name+" nodeSaveNew received: ",s])

@@ -26,7 +26,7 @@ export interface ICollection_<T>{
 
   isUndefined(arr_:Array<T>):boolean;
   getType();
-
+  setType(type_:string);
   sort(asc:boolean);
 }
 
