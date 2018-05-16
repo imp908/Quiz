@@ -29,7 +29,8 @@ export class DatepickerPopupComponent implements OnInit {
       ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name,s])
     });
     this.dateToModel();
-/*
+
+    /*
     ModelContainer.nodeEmitted.subscribe(s=>{
         ServiceCl.log(['nodeEmitted Rreceived: ' + this.constructor.name, s])
       if(s instanceof Quiz){
@@ -53,7 +54,9 @@ export class DatepickerPopupComponent implements OnInit {
 
     ServiceCl.log(['Inited : ' + this.constructor.name, this.itemParameter_,this.model])
   }
-
+  navigate_($event){
+        ServiceCl.log(["navigate_ ",$event])
+  }
   changed(){
     this.modelToItemDate();
     ServiceCl.log(["changed ",this.model,this.itemParameter_])
@@ -77,5 +80,8 @@ export class DatepickerPopupComponent implements OnInit {
         this.model={year: this.itemParameter_.valueVal.getFullYear(), month: this.itemParameter_.valueVal.getMonth()+1, day:this.itemParameter_.valueVal.getDate()};
       }
       ServiceCl.log(["dateToModel ",this.model,this.itemParameter_])
+  }
+  modelChange($event){
+    ServiceCl.log(["modelChange ",$event])
   }
 }

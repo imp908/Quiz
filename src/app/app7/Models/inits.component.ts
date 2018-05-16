@@ -494,7 +494,9 @@ export class ItemParameter extends NodeCollection{
       this.cssType=null;
       this.templateClass="gappicker";
     }
+
   }
+
 }
 export class QuizParameter extends ItemParameter{
 
@@ -525,13 +527,60 @@ export class QuizParameter extends ItemParameter{
         let ii=this.collection.array.find(s=>s.name=="GapPicker");
           if( ii instanceof ItemParameter){
             ii.show=i.valueVal;
-            console.log("conditionsCheck: ",i,ii)
           }
         }
 
     }
 }
 
+//Model generating form controls from code
+
+class FormControlParameter extends NodeCollection{
+
+  //inherited
+  //key,name,value
+
+  //input
+  HtmlClass:string;
+  //input type:"" [text,checkbox,radio]
+  HtmlTypeAttr:string;
+  //default initialize value to pass to form
+  displayValue:any
+  //submitted value
+  HtmlValue:any;
+
+  constructor(key_:number,name_:string, HtmlClass_:string,HtmlTypeAttr_:string,displayValue_:any,HtmlValue_:any
+    ,collection_?:ICollection_<INodeCollection>){
+    super(key_,name_,null,collection_)
+    this.HtmlClass=HtmlClass_;
+    this.HtmlTypeAttr=HtmlTypeAttr_;
+    this.displayValue=displayValue_;
+    this.HtmlValue=HtmlValue_;
+  }
+}
+export class TextControl extends FormControlParameter{
+
+  pattern:string;
+  maxLength:number;
+  minLength:number;
+  pattern:string,maxLength_:number,minLength_:number
+  constructor(key_:number,name_:string, HtmlClass_:string,HtmlTypeAttr_:string,displayValue_:any,HtmlValue_:any
+
+    ,collection_?:ICollection_<INodeCollection>){
+    super(key_,name_,HtmlClass_,HtmlTypeAttr_,displayValue_,HtmlValue_,collection_)
+  }
+}
+
+class ItemValue {key:string;value:number;min:number;max:number}
+class ItemDrop {key:string;values:[{value:number;checked:boolean}]}
+export class TestGapPickerParameter{
+  itemValueArr_:Array<ItemValue>;
+  itemValueArrDrop_:Array<ItemDrop>;
+  constructor(itemValue_:[ItemValue],itemDrop:[ItemDrop]){
+    this.itemValueArr_=itemValue_;
+    this.itemValueArrDrop_=itemDrop;
+  }
+}
 
 export class Quiz extends NodeCollection{
 

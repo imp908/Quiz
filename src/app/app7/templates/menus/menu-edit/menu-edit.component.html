@@ -9,7 +9,7 @@
        <app-button [_buttons]="editButtons_" [_obj]="nodeToEdit_"></app-button>
     </div>
     <ng-container *ngIf="((nodeTypeGet()=='Quiz') && (nodeToEdit_!=null))">
-      <app-nodes [nodePassed_]="nodeToEdit_"></app-nodes>
+      <app-nodes [nodePassed_]="nodeToEdit_.itemParameter"></app-nodes>
     </ng-container>
   </ng-container>
 </ng-container>
