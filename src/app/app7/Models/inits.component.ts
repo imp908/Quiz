@@ -563,7 +563,7 @@ export class TextControl extends FormControlParameter{
   pattern:string;
   maxLength:number;
   minLength:number;
-  pattern:string,maxLength_:number,minLength_:number
+  
   constructor(key_:number,name_:string, HtmlClass_:string,HtmlTypeAttr_:string,displayValue_:any,HtmlValue_:any
 
     ,collection_?:ICollection_<INodeCollection>){
