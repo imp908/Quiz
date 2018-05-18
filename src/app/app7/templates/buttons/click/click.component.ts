@@ -16,6 +16,7 @@ export class ClickComponent implements OnInit {
 
   @Input() button_:Button;
   @Input() obj_:any;
+  @Input() e_:any;
 
   constructor(private service:Service_){
     //ServiceCl.toLog=true;
@@ -33,7 +34,10 @@ export class ClickComponent implements OnInit {
   }
 
   clicked_(o_:any){
-    ServiceCl.log(["Clicked: ",o_])
+    ServiceCl.log(["clicked_: ",o_])
     ModelContainer.nodeMethodCall(this.button_,o_);
+  }
+  clickEvent_(e:any){
+    ServiceCl.log(["clickEvent_ : ",e,this.e_])
   }
 }

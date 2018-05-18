@@ -11,7 +11,7 @@ export class MenuEditComponent implements OnInit {
   cName:string;
   test: boolean;
 
-  nodeToEdit_:NodeCollection;
+  @Input() nodeToEdit_:NodeCollection;
   editButtons_:Button;
 
   constructor(private service:Service_){

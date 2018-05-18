@@ -14,12 +14,15 @@ export class ButtonComponent implements OnInit {
   @Input() _buttons:NodeCollection;
   @Input() _obj:any;
 
+  @Input() _e:any;
+
   cName:string;
   test: boolean;
 
   constructor(private service:Service_) {
     this.test=service.test;
     this.cName=this.constructor.name;
+    this._e=null;
   }
 
   ngOnInit() {
@@ -27,4 +30,7 @@ export class ButtonComponent implements OnInit {
 
   }
 
+  clicked_(event: any){
+    ServiceCl.log(["clicked_: ",event])
+  }
 }

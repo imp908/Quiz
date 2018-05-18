@@ -166,8 +166,22 @@ class CollectionG_<T extends NodeG> implements ICollection_<T>{
     this.type_=type_;
   }
 
+  sortAsc(a:T,b:T){
+    if(a.key>b.key){return 1}
+    if(a.key<b.key){return -1}
+    return 0;
+  }
+  sortDesc(a:T,b:T){
+    if(a.key>b.key){return -1}
+    if(a.key<b.key){return 1}
+    return 0;
+  }
   sort(asc:boolean){
-    ServiceCl.log(["Mot implemented"]);
+    let a:Array<T>;
+    if(asc){
+      a=this.array.sort(this.sortAsc);
+    }else{a=this.array.sort(this.sortDesc);}
+    return a;
   }
 }
 
@@ -191,7 +205,7 @@ class Node implements INode{
   }
 
 }
-class Collection_<T extends Node> implements ICollection_<T>{
+export class Collection_<T extends Node> implements ICollection_<T>{
   array:Array<T>=new Array<T>();
   tolog:boolean=false;
   type_:string;
@@ -430,13 +444,15 @@ export class NodeCollection extends Node{
 
   getType_():string {
 
-    //return this.collection.getType();
+      //return this.collection.getType();
     if(this.collection!=null){
       return this.constructor.name;
     }
   }
 
 }
+
+// obsolete ItemParameters replaced with HtmlItem
 
 export class ItemParameter extends NodeCollection{
   //instance if value to get type, not to pass string
@@ -533,43 +549,158 @@ export class QuizParameter extends ItemParameter{
     }
 }
 
+
 //Model generating form controls from code
 
-class FormControlParameter extends NodeCollection{
+export class HtmlItem extends NodeCollection{
 
   //inherited
-  //key,name,value
+
+  //key - sorting ID
+  //name - grouping name
+  //value - display name
 
   //input
   HtmlClass:string;
   //input type:"" [text,checkbox,radio]
   HtmlTypeAttr:string;
-  //default initialize value to pass to form
-  displayValue:any
-  //submitted value
-  HtmlValue:any;
 
-  constructor(key_:number,name_:string, HtmlClass_:string,HtmlTypeAttr_:string,displayValue_:any,HtmlValue_:any
-    ,collection_?:ICollection_<INodeCollection>){
-    super(key_,name_,null,collection_)
+  //submitted value
+  HtmlSubmittedValue:any;
+
+  //show checkedToggle
+  show:boolean;
+
+  cssClass:string;
+
+  constructor(key_:number,name_:string,value_:string,HtmlClass_:string,HtmlTypeAttr_:string,HtmlSubmittedValue_:any
+    ,show_:boolean,cssClass_?:string,collection_?:ICollection_<INodeCollection>){
+    super(key_,name_,value_,collection_)
     this.HtmlClass=HtmlClass_;
     this.HtmlTypeAttr=HtmlTypeAttr_;
-    this.displayValue=displayValue_;
-    this.HtmlValue=HtmlValue_;
+    this.HtmlSubmittedValue=HtmlSubmittedValue_;
+    this.show=true;
+    if(show_==null){this.show=show_};
+    this.cssClass=cssClass_;
   }
 }
-export class TextControl extends FormControlParameter{
+export class TextControl extends HtmlItem{
 
   pattern:string;
   maxLength:number;
   minLength:number;
-  
-  constructor(key_:number,name_:string, HtmlClass_:string,HtmlTypeAttr_:string,displayValue_:any,HtmlValue_:any
+  //default initialize value to pass to form
+  displayValue:any
 
-    ,collection_?:ICollection_<INodeCollection>){
-    super(key_,name_,HtmlClass_,HtmlTypeAttr_,displayValue_,HtmlValue_,collection_)
+  constructor(key_:number,name_:string,value_:string, displayValue_:any,HtmlSubmittedValue_:any
+    ,pattern_?:string,minLen_?:number,maxLen_?:number,show_?:boolean){
+
+    super(key_,name_,value_,"input","text",HtmlSubmittedValue_,show_,null,null)
+
+    this.maxLength=null;
+    this.minLength=null;
+    this.pattern==null;
+    this.displayValue=null;
+
+    if(maxLen_!=null){
+      this.maxLength=maxLen_;}
+    if(minLen_!=null){
+      this.minLength=minLen_;}
+    if(pattern_!=null){
+      this.pattern=pattern_};
+    if(displayValue_!=null){
+      this.displayValue=displayValue_;}
+
   }
 }
+export class CheckBoxControl extends HtmlItem{
+  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:any
+    ,show_?:boolean){
+    super(key_,name_,value_,"input","checkbox",HtmlSubmittedValue_,show_,null,null)
+  }
+}
+export class RadioButtonControl extends HtmlItem{
+  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:string
+      ,show_:boolean
+      ,cssClass_:string
+      ,collection_:ICollection_<INodeCollection>){
+    super(key_,name_,value_,"input","radio",HtmlSubmittedValue_,show_,cssClass_,collection_)
+  }
+}
+export class DatePickerControl extends HtmlItem{
+  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:Date ,show_:boolean){
+    super(key_,name_,value_,"input","datepicker",HtmlSubmittedValue_,show_,null,null)
+  }
+}
+export class NumberPickerControl extends HtmlItem{
+
+  minN?:number;
+  maxN?:number;
+
+  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:number,min_?:number,max_?:number,show_?:boolean){
+    super(key_,name_,value_,"input","numberpicker",HtmlSubmittedValue_,show_,null,null)
+
+    this.minN=null;
+    this.maxN=null;
+
+    if(min_!=null){this.minN=min_;}
+    if(max_!=null){this.maxN=max_;}
+
+  }
+
+}
+
+// Default Quiz form controllers
+
+export class QuizControls extends HtmlItem{
+
+  constructor(HtmlCssAttr_:string,show_:boolean,collection_?:ICollection_<HtmlItem>)
+  {
+
+    let qzcl:Collection_<HtmlItem>;
+    qzcl=collection_;
+
+    if(collection_==null){
+
+      let rb=new Collection_<HtmlItem>([
+      new RadioButtonControl(0,"Rb","What to shoose?","Choice 2",true,"flex-container horizontal",new Collection_<HtmlItem>([
+          new HtmlItem(0,"Rb","Choice 1","option","",null,true,null,null)
+          ,new HtmlItem(1,"Rb","Choice 2","option","",null,true,null,null)
+          ,new HtmlItem(2,"Rb","Choice 3","option","",null,true,null,null)
+        ]))
+      ]);
+
+      let tx = new Collection_<HtmlItem>([
+        new TextControl(0,"Tb","text_nm","Type text","Type here",null,2,4,true)
+        ,new CheckBoxControl(1,"Cb","To Check or not to check",true,true)
+        ,new CheckBoxControl(1,"Cb","To Check or not to check2",true,true)
+      ]);
+
+      let cb = new Collection_<HtmlItem>([
+        new CheckBoxControl(0,"Cb","To Check or not to check1",true)
+        ,new CheckBoxControl(1,"Cb","To Check or not to check2",true)
+      ]);
+
+      rb.setType("HtmlItem");
+      tx.setType("HtmlItem");
+      cb.setType("HtmlItem");
+
+      let rbcl=new HtmlItem(0,"RadioColl","RadioColl","f-c","wrt",null,true,"flex-container horizontal",rb);
+      let txcl=new HtmlItem(1,"TextBoxColl","TextBoxColl","f-c","wrt",null,true,"flex-container horizontal",tx);
+      let cbcl=new HtmlItem(2,"CheckColl","CheckColl","f-c","wrt",null,true,"flex-container horizontal",cb);
+
+      qzcl=new Collection_<HtmlItem>([rbcl,txcl,cbcl]);
+
+      qzcl.setType("HtmlItem");
+
+    }
+
+    super(0,"QuizControlGroup","QuizControlGroup","div",HtmlCssAttr_,null,show_,"flex-container horizontal",qzcl);
+  }
+
+}
+
+// obsolete est itemp params
 
 class ItemValue {key:string;value:number;min:number;max:number}
 class ItemDrop {key:string;values:[{value:number;checked:boolean}]}
@@ -582,6 +713,7 @@ export class TestGapPickerParameter{
   }
 }
 
+
 export class Quiz extends NodeCollection{
 
   replay:boolean;
@@ -590,22 +722,22 @@ export class Quiz extends NodeCollection{
 
   anonimous:boolean;
 
-  itemParameter:ItemParameter;
+  itemParameter:NodeCollection;
 
-  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,itemParameter_?:ItemParameter)
+  constructor(key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,itemParameter_?:NodeCollection)
   {
     super(key_,name_,value_,collection_);
     this.replay=true;
     this.anonimous=false;
-    this.itemParameter=itemParameter_;
+    this.itemParameter=new QuizControls("flex-container horizontal",true,null);
 
     this.typeName="Question";
     if(collection_==null){
       this.collection=new Collection_<Question>();
     }
 
-    if(itemParameter_==null){
-      this.itemParameter=new QuizParameter("",null,null,null,null,null);
+    if(itemParameter_!=null){
+      this.itemParameter=itemParameter_;
     }
 
   }
@@ -870,7 +1002,7 @@ export class ModelContainer{
     ModelContainer.nodeSaved.emit(n_);
   }
 
-  static checkedToggle(nodeEdited_:NodeCollection, parameterClicked_:ItemParameter){
+  static checkedToggle(nodeEdited_:NodeCollection, parameterClicked_:HtmlItem){
 
     if(nodeEdited_ instanceof Quiz){
       let a=nodeEdited_.itemParameter.collection.getByItem(parameterClicked_);
@@ -878,6 +1010,9 @@ export class ModelContainer{
       a.valueVal=!a.valueVal;
     }
   }
+
+  // rewrite to new Htmlitem
+
   static changeShowStatus(name_:string){
 
     let a:ItemParameter;
@@ -893,6 +1028,16 @@ export class ModelContainer{
       return ModelContainer.nodeToEdit.itemParameter;
     }
 
+
+  }
+
+  static HtmlItemType(i:NodeCollection): string {
+
+    if(i instanceof TextControl){return "TextControl"}
+    if(i instanceof CheckBoxControl){return "CheckBoxControl"}
+    if(i instanceof RadioButtonControl){return "RadioButtonControl"}
+    if(i instanceof DatePickerControl){return "DatePickerControl"}
+    if(i instanceof NumberPickerControl){return "NumberPickerControl"}
 
   }
 
@@ -962,6 +1107,14 @@ export class Factory_{
 
 export class Test{
 
+    public static HtmlItems(){
+      return [
+        new TextControl(0,"Tb","text_nm","Type text","Type here",null,2,4,true)
+        ,new TextControl(0,"Tb","text_nm","Type text","Type here2",null,1,3,true)
+        ,new CheckBoxControl(0,"Cb","To Check or not to check",true,true)
+        ,new DatePickerControl(0,"Dp","Choose date",new Date(2001,11,11,11,11,1),true)
+      ];
+    }
     //NEW
 
     public static GenNewColl(bol_:boolean){
@@ -1128,10 +1281,17 @@ export class Test{
       cl2.collection.add(new Quiz(0,"Quiz " +0,"Quiz " +0));
       ServiceCl.log(["Test GO :", "Quizes type ",cl2.collection.array[0].constructor.name,cl2.collection.getType(),cl2.getType_()])
       ServiceCl.log(["Test GO2 :",cl2.getType_(),cl2.collection.type_,cl2.typeName]);
-      */
 
       let cl3:NodeCollection=this.GenClasses(false,2,3);
-      ServiceCl.log(["GO 3",cl3,cl3.typeName]);
+
+
+      let text_:TextControl=new TextControl(0,"Tb","display val cl",null,null,2,4);
+      let check_:CheckBoxControl=new CheckBoxControl(0,"Tb",true,null);
+      let itemPassed_:NodeCollection;
+      itemPassed_=text_;
+      */
+
+      ServiceCl.log(["GO "]);
     }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {ServiceCl,Service_} from 'app/app7/Services/services.component'
-import {ModelContainer,Quiz,ItemParameter} from 'app/app7/Models/inits.component'
+import {ModelContainer,Quiz,NumberPickerControl} from 'app/app7/Models/inits.component'
 
 
 @Component({
@@ -12,9 +12,9 @@ export class GappickerNgComponent implements OnInit {
   cName:string;
   test: boolean;
 
-  @Input() itemValue_:{key:string,value:number,min:number,max:number};
-  min:number;
-  max:number;
+  @Input() itemValue_:NumberPickerControl;
+  min?:number;
+  max?:number;
 
   cstmSpin:boolean;
 
@@ -28,8 +28,8 @@ export class GappickerNgComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.min=this.itemValue_.min;
-    this.max=this.itemValue_.max;
+    this.min=this.itemValue_.minN;
+    this.max=this.itemValue_.maxN;
     ModelContainer.nodeEmitted.subscribe(s=>{
       ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name,s])
     });
@@ -37,18 +37,20 @@ export class GappickerNgComponent implements OnInit {
     ServiceCl.log(['Inited : ' + this.constructor.name,this.itemValue_])
   }
   increase(){
-    if(this.itemValue_.value+1<=this.max){
-      this.itemValue_.value+=1;
-    }
-    ServiceCl.log(['increased to : ',this.itemValue_.value])
+    if(this.max!=null){
+      if(this.itemValue_.HtmlSubmittedValue+1<=this.max){
+      this.itemValue_.HtmlSubmittedValue+=1;}
+    }else{ this.itemValue_.HtmlSubmittedValue+=1;}
+    ServiceCl.log(['increased to : ',this.itemValue_.HtmlSubmittedValue])
   }
   decrease(){
-    if(this.itemValue_.value-1>=this.min){
-      this.itemValue_.value-=1;
-    }
-    ServiceCl.log(['decreased to : ',this.itemValue_.value])
+    if((this.min!=null)){
+      if(this.itemValue_.HtmlSubmittedValue-1>=this.min){
+      this.itemValue_.HtmlSubmittedValue-=1;}
+    }else{  this.itemValue_.HtmlSubmittedValue-=1;}
+    ServiceCl.log(['decreased to : ',this.itemValue_.HtmlSubmittedValue])
   }
   input_(){
-      ServiceCl.log(['inputed to : ',this.itemValue_.value])
+    ServiceCl.log(['inputed to : ',this.itemValue_.HtmlSubmittedValue])
   }
 }
