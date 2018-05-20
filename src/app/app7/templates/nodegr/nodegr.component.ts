@@ -19,14 +19,13 @@ export class NodesGroups implements OnInit {
 
   htmlItemsGroup_:Collection_<NodeCollection>;
 
-  constructor(private service:Service_) {
-
+  constructor(private service:Service_){
     this.test=service.test;
     this.cName=this.constructor.name;
     ServiceCl.log(["Constructor: " + this.constructor.name,this.nodePassed_]);
   }
 
-  ngOnInit() {
+  ngOnInit(){
     this.bindItems();
     ServiceCl.log(["Inited: " + this.constructor.name,this.nodePassed_,this.htmlItemsGroup_]);
   }
