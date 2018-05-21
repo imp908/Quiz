@@ -593,9 +593,9 @@ export class TextControl extends HtmlItem{
   displayValue:any
 
   constructor(key_:number,name_:string,value_:string, displayValue_:any,HtmlSubmittedValue_:any
-    ,pattern_?:string,minLen_?:number,maxLen_?:number,show_?:boolean){
+    ,pattern_?:string,minLen_?:number,maxLen_?:number,show_?:boolean,cssClass_?:string){
 
-    super(key_,name_,value_,"input","text",HtmlSubmittedValue_,show_,null,null)
+    super(key_,name_,value_,"input","text",HtmlSubmittedValue_,show_,cssClass_,null)
 
     this.maxLength=null;
     this.minLength=null;
@@ -615,8 +615,8 @@ export class TextControl extends HtmlItem{
 }
 export class CheckBoxControl extends HtmlItem{
   constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:any
-    ,show_?:boolean){
-    super(key_,name_,value_,"input","checkbox",HtmlSubmittedValue_,show_,null,null)
+    ,show_?:boolean,cssClass_?:string){
+    super(key_,name_,value_,"input","checkbox",HtmlSubmittedValue_,show_,cssClass_,null)
   }
 }
 export class RadioButtonControl extends HtmlItem{
@@ -663,7 +663,8 @@ export class QuizControls extends HtmlItem{
     if(collection_==null){
 
       let rb=new Collection_<HtmlItem>([
-      new RadioButtonControl(0,"Rb","What to shoose?","Choice 2",true,"flex-container fxvt",new Collection_<HtmlItem>([
+      new RadioButtonControl(0,"Rb","What to shoose?","Choice 2",true,"flex-container fxvt"
+        ,new Collection_<HtmlItem>([
           new HtmlItem(0,"Rb","Choice 1","option","",null,true,null,null)
           ,new HtmlItem(1,"Rb","Choice 2","option","",null,true,null,null)
           ,new HtmlItem(2,"Rb","Choice 3","option","",null,true,null,null)

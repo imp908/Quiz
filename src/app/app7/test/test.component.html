@@ -1,4 +1,9 @@
 <ng-container *ngIf="test==true" class="container">
   {{cName}}
-  <app-menu></app-menu>
+  <!-- <app-menu></app-menu> -->
+  <ng-container *ngFor="let i_ of htmlItemsArr">
+    <div style="margin-left:10vw; padding-left:10vw;">
+      <app-nodeitem [htmlItem_]="i_"></app-nodeitem>
+    </div>
+  </ng-container>
 </ng-container>

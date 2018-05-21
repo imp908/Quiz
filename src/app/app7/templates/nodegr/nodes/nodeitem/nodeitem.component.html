@@ -6,9 +6,10 @@
 
   <br style="margin-top:5ch">
 
+  <div [class]="this.htmlItem_.cssClass">
+    <div>{{this.htmlItem_.value}}</div>
+
     <ng-container *ngIf="controlType()=='TextControl'">
-      <div class="row">
-        {{this.htmlItem_.value}}
         <input type="text"
         [(ngModel)]="this.htmlItem_.displayValue"
         [maxlength]="this.htmlItem_.maxLength"
@@ -16,15 +17,13 @@
         [pattern]="this.htmlItem_.pattern"
         [placeholder]="this.htmlItem_.displayValue"
         (ngModelChange)="changeTextbox_($event)" #t>
-      </div>
     </ng-container>
-
     <ng-container *ngIf="controlType()=='CheckBoxControl'">
-      <div class="row">
-        {{this.htmlItem_.value}}
-        <input type="checkbox" value="check" [(ngModel)]="this.htmlItem_.HtmlSubmittedValue">
-      </div>
+    <input type="checkbox" value="check" [(ngModel)]="this.htmlItem_.HtmlSubmittedValue">
     </ng-container>
+    
+  </div>
+
 
     <ng-container *ngIf="controlType()=='RadioButtonControl'">
       <div class="flex-container vertical">

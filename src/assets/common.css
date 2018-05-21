@@ -218,13 +218,15 @@ h1 {
   display: flex;
 
   flex-direction:column;
+  flex-wrap: wrap;
   align-items: flex-start;
+  
 }
 
 .fxhr{
   display: -webkit-flex;
   display: flex;
-
+  flex-wrap: wrap;
   flex-direction:row;
   align-items: flex-start;
 }
