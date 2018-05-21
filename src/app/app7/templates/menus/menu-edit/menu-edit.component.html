@@ -1,13 +1,14 @@
 <ng-container *ngIf="test==true" >
   <ng-container *ngIf="nodeToEdit_!=null">
-    <div class="editarea">
+    <div class="listarea editarea">
       <div class="textinputarea">
-         <input type="text" [(ngModel)]="nodeToEdit_.value" size="80" class="input_edit">
+         <input type="text" [(ngModel)]="nodeToEdit_.value" size="80" id="input_edit">
          <button class="btn btn-outline-primary" (click)="nodeSave(nodeToEdit_)">Save</button>
          <app-button [_buttons]="editButtons_" [_obj]="nodeToEdit_"></app-button>
       </div>
 
         <div *ngIf="((nodeTypeGet()=='Quiz') && (nodeToEdit_!=null))">
+          CSS1:{{nodeToEdit_.cssClass}},{{nodeToEdit_.name}}
           <app-grps [nodePassed_]="nodeToEdit_.itemParameter"></app-grps>
         </div>
 

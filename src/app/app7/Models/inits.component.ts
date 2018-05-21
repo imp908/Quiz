@@ -663,7 +663,7 @@ export class QuizControls extends HtmlItem{
     if(collection_==null){
 
       let rb=new Collection_<HtmlItem>([
-      new RadioButtonControl(0,"Rb","What to shoose?","Choice 2",true,"flex-container fxhr",new Collection_<HtmlItem>([
+      new RadioButtonControl(0,"Rb","What to shoose?","Choice 2",true,"flex-container fxvt",new Collection_<HtmlItem>([
           new HtmlItem(0,"Rb","Choice 1","option","",null,true,null,null)
           ,new HtmlItem(1,"Rb","Choice 2","option","",null,true,null,null)
           ,new HtmlItem(2,"Rb","Choice 3","option","",null,true,null,null)
@@ -685,9 +685,9 @@ export class QuizControls extends HtmlItem{
       tx.setType("HtmlItem");
       cb.setType("HtmlItem");
 
-      let rbcl=new HtmlItem(0,"RadioColl","RadioColl","f-c","wrt",null,true,"flex-container fxvt",rb);
-      let txcl=new HtmlItem(1,"TextBoxColl","TextBoxColl","f-c","wrt",null,true,"flex-container fxvt",tx);
-      let cbcl=new HtmlItem(2,"CheckColl","CheckColl","f-c","wrt",null,true,"flex-container fxvt",cb);
+      let rbcl=new HtmlItem(0,"RadioColl","RadioColl","f-c","wrt",null,true,"flex-container fxhr",rb);
+      let txcl=new HtmlItem(1,"TextBoxColl","TextBoxColl","f-c","wrt",null,true,"flex-container fxhr",tx);
+      let cbcl=new HtmlItem(2,"CheckColl","CheckColl","f-c","wrt",null,true,"flex-container fxhr",cb);
 
       qzcl=new Collection_<HtmlItem>([rbcl,txcl,cbcl]);
 
@@ -831,7 +831,7 @@ export class menuButtons extends Button{
       this.collection.add(new Button(null,"Test2","Test button 2",null,"btn btn-red-sunset",false,"Testing button"))
       this.collection.add(new Button(null,"Test3","Test button 3",null,"btn",false))
       this.collection.add(new Button(null,"Test3","Test button 4",null,"btn",false))
-      this.collection.add(new Button(null,"Test3","Test button 5",null,"btn",false))   
+      this.collection.add(new Button(null,"Test3","Test button 5",null,"btn",false))
     }
 }
 

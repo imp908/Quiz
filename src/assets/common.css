@@ -23,13 +23,19 @@ html, body { height: 100%; padding: 0; margin: 0; }
 .two { width: 50%; height: 50%; float: left; }
 */
 
-.input_edit{
+.container{
+
+  margin-right: 20vw;
+  /* padding-right: 15vw; */
+}
+
+#input_edit{
   width: 70%;
   height: 35px;
   border: none;
   border:solid 1px;
   border-color: rgb(157, 163, 173);
-  border-radius: 15px;
+  border-radius: var(--menuBorderRads);
 }
 
 
@@ -51,36 +57,60 @@ html, body { height: 100%; padding: 0; margin: 0; }
 }
 
 .editarea{
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  margin-top: 2%;
-  z-index: 2;
-  background: white;
-  opacity:  0%;
-
-  height: 45vh;
-  width: 99vw;
-
-  overflow-x: hidden;
-  overflow-y: scroll;
-
-  background-image: linear-gradient(0deg, rgba(0, 0, 0,0.0) ,rgba(207, 199, 248,1) , rgba(171, 244, 233,1));
+  display: -webkit-flex;
+  display: flex;
+  align-items: end;
+  padding-left: 5vh;
+  top: 3vh;
+  margin-top: 0%;
+  padding-top: var(--shadowHeight);
+  z-index: var(--menuZ);
+  border-radius: var(--menuBorderRads);
 }
+
+
+.editarea::before{
+  position: fixed;
+  content: '';
+  z-index: var(--shadowZ);
+  height: var( --shadowHeight);
+  width: 100%;
+  top:3vh;
+  left:0;
+  background-image:var(--ShadowTopWhite);
+
+}
+
+.editarea::after {
+  position: fixed;
+  content: '';
+  z-index: var(--shadowZ);
+  height: var( --shadowHeight);
+  width: 100%;
+  top: calc((var(--editAreaHeight) -  var( --shadowHeight)) + 3vh );
+  left:0;
+  background-image: var(--ShadowBottomWhite);
+
+}
+
 .textinputarea{
   position: fixed;
+
   height: 5vh;
   width: 99vw;
-  z-index: -1;
-  top: 0;
-
+  z-index: 3;
+  top: 3vh;
 
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   flex-flow: row wrap;
   justify-content: flex-center;
+  border-radius: var(--menuBorderRads);
+  /*background: radial-gradient(rgba(171, 244, 233,1) 5%,rgba(217, 210, 250,0.8) 25%,rgba(255, 255, 255,0.5) 50%  );*/
+
 }
+
 .listarea{
   /*
   position: sticky;
@@ -89,6 +119,8 @@ html, body { height: 100%; padding: 0; margin: 0; }
 
   height: 50vh
   */
+
+z-index: var(--menuZ);
 
 position: fixed;
 position: -webkit-sticky;
@@ -101,7 +133,8 @@ flex-wrap: wrap;
 flex-flow: row wrap;
 justify-content: flex-center;
 
-height: 45vh;
+
+height: var(--listAreaH);
 width: 99vw;
 
 /* max-height:1ch;
@@ -110,11 +143,47 @@ margin-top: 1ch;*/
 /* border-style: double; */
 /* border-width: 0.1ch; */
 /* color: yellow; */
-background-image: linear-gradient(0deg  ,rgba(171, 244, 233,1) ,rgba(207, 199, 248,1) ,  rgba(0,0,0,0.0) );
+background-image: var(--tealBackground);
 overflow-y: scroll;
 
 }
 
+.listarea::before{
+  position: fixed;
+  content: '';
+  z-index: var(--shadowZ);
+  height: var(--shadowHeight);
+  bottom: var(--shadowBottom);
+  width: 100%;
+  left:0;
+  /* background-image:  var(--tealShadowListTop);
+
+  */
+
+  background-image:var(--ShadowTopWhite);
+
+
+  /*
+  background-image:
+  linear-gradient(0deg
+  ,rgba(250,250,250,0.1)
+  ,rgba(250,250,250,1)
+  );
+  */
+
+}
+
+.listarea::after {
+  position: fixed;
+  content: '';
+  z-index: var(--shadowZ);
+  height: var(--shadowHeight);
+  width: 100%;
+  bottom:  0vh ;
+  left:0;
+  background-image: var(--ShadowBottomWhite);
+  /* background: red; */
+}
 
 h1 {
   font-size: 50px;
@@ -134,7 +203,15 @@ h1 {
   display: -webkit-flex;
   display: flex;
   align-items: center;
+
+  width: 100%;
+
+  /* background-image: var(--ShadowBottomWhite); */
+  /* background: red; */
 }
+
+
+
 
 .fxvt{
   display: -webkit-flex;
