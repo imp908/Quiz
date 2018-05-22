@@ -2,14 +2,13 @@
   <!-- {{cName}} -->
   <!-- Generate form control from model class -->
 
-    CSS_4: {{htmlItems_.cssClass}}, {{htmlItems_.name}}
+    CSS_4: {{htmlItems_.cssClass}},{{htmlItems_.name}}
     <ng-container *ngFor="let i_ of htmlItems_.collection.array">
       <div [class]="i_.cssClass">
         CSS_5:{{i_.cssClass}}, {{htmlItems_.name}}
         <app-nodeitem [htmlItem_]="i_"></app-nodeitem>
       </div>
     </ng-container>
-
 
 </ng-container>
 <ng-container *ngIf="test==false">

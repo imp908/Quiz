@@ -628,8 +628,8 @@ export class RadioButtonControl extends HtmlItem{
   }
 }
 export class DatePickerControl extends HtmlItem{
-  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:Date ,show_:boolean){
-    super(key_,name_,value_,"input","datepicker",HtmlSubmittedValue_,show_,null,null)
+  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:Date ,show_:boolean,cssClass_?:string){
+    super(key_,name_,value_,"input","datepicker",HtmlSubmittedValue_,show_,cssClass_,null)
   }
 }
 export class NumberPickerControl extends HtmlItem{
@@ -637,8 +637,9 @@ export class NumberPickerControl extends HtmlItem{
   minN?:number;
   maxN?:number;
 
-  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:number,min_?:number,max_?:number,show_?:boolean){
-    super(key_,name_,value_,"input","numberpicker",HtmlSubmittedValue_,show_,null,null)
+  constructor(key_:number,name_:string,value_:string, HtmlSubmittedValue_:number
+    ,min_?:number,max_?:number,show_?:boolean,cssClass_?:string){
+    super(key_,name_,value_,"input","numberpicker",HtmlSubmittedValue_,show_,cssClass_,null)
 
     this.minN=null;
     this.maxN=null;
@@ -668,7 +669,8 @@ export class QuizControls extends HtmlItem{
           new HtmlItem(0,"Rb","Choice 1","option","",null,true,null,null)
           ,new HtmlItem(1,"Rb","Choice 2","option","",null,true,null,null)
           ,new HtmlItem(2,"Rb","Choice 3","option","",null,true,null,null)
-        ]))
+          ])
+        )
       ]);
 
       let tx = new Collection_<HtmlItem>([
