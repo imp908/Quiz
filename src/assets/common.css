@@ -35,9 +35,12 @@ html, body { height: 100%; padding: 0; margin: 0; }
   border: none;
   border:solid 1px;
   border-color: rgb(157, 163, 173);
-  border-radius: var(--menuBorderRads);
+  border-radius: var(--textBorderRads);
 }
 
+.input[type="text"]{
+  border-radius: var(--textBorderRads);
+}
 
 /*vertical gaps between menu and lsit items*/
 .item{
@@ -149,6 +152,7 @@ overflow-y: scroll;
 }
 
 .listarea::before{
+
   position: fixed;
   content: '';
   z-index: var(--shadowZ);
@@ -156,24 +160,12 @@ overflow-y: scroll;
   bottom: var(--shadowBottom);
   width: 100%;
   left:0;
-  /* background-image:  var(--tealShadowListTop);
-
-  */
-
   background-image:var(--ShadowTopWhite);
-
-
-  /*
-  background-image:
-  linear-gradient(0deg
-  ,rgba(250,250,250,0.1)
-  ,rgba(250,250,250,1)
-  );
-  */
-
+  /* background: red; */
 }
 
 .listarea::after {
+
   position: fixed;
   content: '';
   z-index: var(--shadowZ);
@@ -204,31 +196,35 @@ h1 {
   display: flex;
   align-items: center;
 
-  width: 100%;
+  /* width: 100%; */
 
   /* background-image: var(--ShadowBottomWhite); */
   /* background: red; */
 }
 
 
-
-
 .fxvt{
+
   display: -webkit-flex;
   display: flex;
 
   flex-direction:column;
   flex-wrap: wrap;
   align-items: flex-start;
-  
+  /* justify-content: flex-end; */
+  /* border-color: green;  border-width : 1px;   border-style: solid; */
 }
 
 .fxhr{
+
   display: -webkit-flex;
   display: flex;
+
   flex-wrap: wrap;
   flex-direction:row;
-  align-items: flex-start;
+  /* justify-content: flex-start; */
+  /* align-items: flex-start; */
+  /* border-color:blue;  border-width : 1px;   border-style: solid; */
 }
 
 .chevron::before {
@@ -243,4 +239,19 @@ h1 {
 	transform: rotate(-45deg);
 	vertical-align: top;
 	width: 0.45em;
+}
+
+.up{
+  transform:rotate(90deg);
+  margin-left:1.2ch;
+}
+.down{
+  transform:rotate(-90deg);
+  margin-left:1.8ch;
+}
+.left{
+  transform:rotate(0deg);
+}
+.right{
+  transform:rotate(180deg);  
 }
