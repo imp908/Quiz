@@ -13,6 +13,7 @@
   --editAreaHeight:calc(var(--vH_)/2.1);
 
   --listAreaH:calc((var(--vH_) - var(--editAreaHeight)) - 5vh);
+  --editAreaPadBtm:5ch;
 
   /* --shadowHeight:10vh; */
   --shadowHeight:calc(var(--listAreaH) / 8);

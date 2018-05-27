@@ -38,8 +38,11 @@ html, body { height: 100%; padding: 0; margin: 0; }
   border-radius: var(--textBorderRads);
 }
 
-.input[type="text"]{
+input[type="text"],input[type="number"]{
   border-radius: var(--textBorderRads);
+}
+input[type="number"]{
+  width:5ch;
 }
 
 /*vertical gaps between menu and lsit items*/
@@ -63,7 +66,9 @@ html, body { height: 100%; padding: 0; margin: 0; }
   display: -webkit-flex;
   display: flex;
   align-items: end;
+
   padding-left: 5vh;
+
   top: 3vh;
   margin-top: 0%;
   padding-top: var(--shadowHeight);
@@ -73,6 +78,7 @@ html, body { height: 100%; padding: 0; margin: 0; }
 
 
 .editarea::before{
+  pointer-events: none;
   position: fixed;
   content: '';
   z-index: var(--shadowZ);
@@ -85,6 +91,7 @@ html, body { height: 100%; padding: 0; margin: 0; }
 }
 
 .editarea::after {
+  pointer-events: none;
   position: fixed;
   content: '';
   z-index: var(--shadowZ);
@@ -115,13 +122,6 @@ html, body { height: 100%; padding: 0; margin: 0; }
 }
 
 .listarea{
-  /*
-  position: sticky;
-  position: -webkit-sticky;
-  bottom: 0;
-
-  height: 50vh
-  */
 
 z-index: var(--menuZ);
 
@@ -130,11 +130,15 @@ position: -webkit-sticky;
 
 bottom: 0;
 
+padding-top: var(--editAreaPadBtm);
+padding-bottom: var(--editAreaPadBtm);
+
 display: flex;
-flex-direction: row;
-flex-wrap: wrap;
-flex-flow: row wrap;
-justify-content: flex-center;
+flex-direction: column;
+flex-wrap: nowrap;
+/*
+flex-flow: column wrap;
+justify-content: flex-center; */
 
 
 height: var(--listAreaH);
@@ -148,11 +152,11 @@ margin-top: 1ch;*/
 /* color: yellow; */
 background-image: var(--tealBackground);
 overflow-y: scroll;
-
+left:0;
 }
 
 .listarea::before{
-
+  pointer-events: none;
   position: fixed;
   content: '';
   z-index: var(--shadowZ);
@@ -165,7 +169,7 @@ overflow-y: scroll;
 }
 
 .listarea::after {
-
+  pointer-events: none;
   position: fixed;
   content: '';
   z-index: var(--shadowZ);
@@ -222,6 +226,10 @@ h1 {
 
   flex-wrap: wrap;
   flex-direction:row;
+
+  margin-left:var(--fxhrMargWidth);
+  margin-right:var(--fxhrMargWidth);
+
   /* justify-content: flex-start; */
   /* align-items: flex-start; */
   /* border-color:blue;  border-width : 1px;   border-style: solid; */
@@ -253,5 +261,9 @@ h1 {
   transform:rotate(0deg);
 }
 .right{
-  transform:rotate(180deg);  
+  transform:rotate(180deg);
+}
+
+.label_{
+   font-weight: 450;
 }

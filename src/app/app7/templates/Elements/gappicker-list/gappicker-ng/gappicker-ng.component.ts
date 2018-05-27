@@ -47,10 +47,12 @@ export class GappickerNgComponent implements OnInit {
     ServiceCl.log(['Inited : ' + this.constructor.name,this.itemValue_,this.first])
   }
   shevronFirst(){
-    return return this.sanitizer.bypassSecurityTrustStyle(this.first);
+    // return this.sanitizer.bypassSecurityTrustStyle(this.first);
+    return this.first;
   }
   shevronSecind(){
-    return return this.sanitizer.bypassSecurityTrustStyle(this.second);
+    // return this.sanitizer.bypassSecurityTrustStyle(this.second);
+    return this.second;
   }
   increase(){
     if(this.max!=null){

@@ -1,0 +1,20 @@
+<ng-container *ngIf="test==true">
+{{cName}}
+  <button (click)="sl.hidden=!sl.hidden">Select</button>
+  <div #sl>
+    nodeitem
+    <ng-container *ngFor="let i_ of htmlItem_.collection.array">
+      <app-nodeitem [htmlItem_]="i_"></app-nodeitem>
+    </ng-container>
+  </div>
+
+</ng-container>
+
+<ng-container *ngIf="test==false">
+  <button (click)="sl.hidden=!sl.hidden">Select</button>
+  <div #sl>
+    <ng-container *ngFor="let i_ of htmlItem_.collection.array">
+      <app-nodeitem [htmlItem_]="i_"></app-nodeitem>
+    </ng-container>
+  </div>
+</ng-container>
