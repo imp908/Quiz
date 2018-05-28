@@ -18,7 +18,9 @@
         (ngModelChange)="changeTextbox_($event)" #t>
     </div>
 
-    <div *ngIf="controlType()=='CheckBoxControl'">
+    <div *ngIf="controlType()=='CheckBoxControl'"
+    (mouseenter)="mouseenter_($event)" (mouseleave)="mouseleave_($event)">
+
       <input type="checkbox" value="check" [(ngModel)]="this.htmlItem_.HtmlSubmittedValue">
     </div>
 

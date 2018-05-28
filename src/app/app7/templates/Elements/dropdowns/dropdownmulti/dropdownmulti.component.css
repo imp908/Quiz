@@ -11,6 +11,7 @@
 .dd{
   position: relative;
   pointer-events: none;
+  z-index: 1;
 }
 .ddbtn{
   pointer-events: visiblePainted;
@@ -35,9 +36,11 @@
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.25rem;
+  z-index: 2;
 }
 
 .dd-item {
+  left:0;
   display: block;
   width: 100%;
   padding-bottom: 0.009ch;
@@ -49,4 +52,5 @@
   white-space: nowrap;
   background-color: transparent;
   border: 0;
+  z-index: 3;
 }

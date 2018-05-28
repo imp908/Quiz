@@ -12,6 +12,8 @@ export class DropdownmultiComponent implements OnInit {
   cName:string;
   test: boolean;
 
+  itemColor:any;
+
   @Input() htmlItem_:HtmlItem;
   constructor(private service:Service_) {
     this.test=service.test;
@@ -20,6 +22,7 @@ export class DropdownmultiComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.itemColor={background:'rgba(200,200,200,0.0)'};
     ServiceCl.log(["Inited: " + this.constructor.name,this.htmlItem_]);
   }
 

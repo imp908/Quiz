@@ -1211,7 +1211,7 @@ export class Factory_{
         let r = new Collection_<HtmlItem>();
         for(let i=0;i<31;i++){
           // r.add(new HtmlItem(0,"days",i+1+"","option","",null,true,null,null))
-          r.add(new CheckBoxControl(i,"days","day " + String(i+1),false,true,"row"))
+          r.add(new CheckBoxControl(i,"days","day " + String(i+1),false,true,"fxhr"))
         }
         return r;
       }

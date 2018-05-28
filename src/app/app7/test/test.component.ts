@@ -6,6 +6,7 @@ import {Button} from 'app/app7/Models/inits.component'
 
 import * as SVG from 'assets/svg.js'
 
+
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
@@ -20,6 +21,7 @@ export class TestComponent implements OnInit {
 
   constructor(private service:Service_){
     //service.test=false;
+
     this.test=service.test;
     this.cName=this.constructor.name;
     this.genTest();
@@ -33,6 +35,7 @@ export class TestComponent implements OnInit {
   }
 
   ngOnInit(){
+  
     this.checkDropBox();
     ServiceCl.log(["Inited: " + this.constructor.name,this.nodesToPass_]);
   }

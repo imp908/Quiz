@@ -27,4 +27,18 @@ export class NodeitemComponent implements OnInit {
   controlType(){
     return ModelContainer.HtmlItemType(this.htmlItem_);
   }
+  mouseenter_(i_:any){
+    ServiceCl.log(["mouseenter_",i_]);
+    i_.stopPropagation();
+    i_.fromElement.style.background='grey';
+    // this.itemColor= {background:'rgba(200,200,200,0.8)'};
+  }
+  mouseleave_(i_:any){
+    ServiceCl.log(["mouseleave_",i_]);
+    i_.stopPropagation();
+    i_.fromElement.style.background='white';
+  }
+  mouseIsHovered_(i_:any){
+
+  }
 }
