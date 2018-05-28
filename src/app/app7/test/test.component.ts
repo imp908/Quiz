@@ -43,7 +43,7 @@ export class TestComponent implements OnInit {
     ServiceCl.log(["submitNew: ",this.nodesToPass_,event]);
   }
   checkDropBox(){
-    this.itemsToPass_=Factory_.CalendarDropDowns().array[3];
+    this.itemsToPass_=Factory_.CalendarDropDowns().array[2];
     ServiceCl.log(["checkDropBox: ",this.itemsToPass_]);
   }
 }
