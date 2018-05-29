@@ -1173,7 +1173,7 @@ export class Factory_{
       static QuizCheckboxes(){
         let r = new Collection_<HtmlItem>();
 
-        let cssClass_="fxvr";
+        let cssClass_="fxvt";
 
         r= new Collection_<HtmlItem>([
           new CheckBoxControl(0,"Anonimous","Is question anonimous?",true,true,cssClass_)
@@ -1272,7 +1272,7 @@ export class Factory_{
 
       static QuizControlsGen(){
 
-        let checkboxes=new HtmlItem(0,"Checkboxes","Select Quiz parameters","","","Select Quiz parameters",true,"row"
+        let checkboxes=new HtmlItem(0,"Checkboxes","Select Quiz parameters","","","Select Quiz parameters",true,"fxhr"
           , Factory_.QuizCheckboxes()
           );
 
