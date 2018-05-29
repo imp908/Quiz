@@ -215,6 +215,10 @@ h1 {
   flex-direction:column;
   flex-wrap: wrap;
   align-items: flex-start;
+
+  margin-left:var(--fxhrMargWidth);
+  margin-right:var(--fxhrMargWidth);
+
   /* justify-content: flex-end; */
   /* border-color: green;  border-width : 1px;   border-style: solid; */
 }

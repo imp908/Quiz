@@ -18,25 +18,28 @@ export class TestComponent implements OnInit {
 
   nodesToPass_:NodeCollection;
   itemsToPass_:HtmlItem;
+  nodeToPass_:NodeCollection;
 
   constructor(private service:Service_){
     //service.test=false;
 
     this.test=service.test;
     this.cName=this.constructor.name;
-    this.genTest();
 
     ServiceCl.log(["Constructor: " + this.constructor.name,this.nodesToPass_]);
   }
   genTest(){
       this.nodesToPass_=Test.GenClasses(false,1,4);
-
+      this.nodeToPass_=this.nodesToPass_.collection.array[0];
+      ModelContainer.nodeToEdit=this.nodeToPass_;
+      ModelContainer.nodesPassed_=this.nodesToPass_;
+      ModelContainer.CheckCycleDisplay();
       ServiceCl.log(this.nodesToPass_);
   }
 
   ngOnInit(){
-  
-    this.checkDropBox();
+    this.genTest();
+
     ServiceCl.log(["Inited: " + this.constructor.name,this.nodesToPass_]);
   }
   click_($event){
@@ -46,7 +49,8 @@ export class TestComponent implements OnInit {
     ServiceCl.log(["submitNew: ",this.nodesToPass_,event]);
   }
   checkDropBox(){
-    this.itemsToPass_=Factory_.CalendarDropDowns().array[2];
+    // this.itemsToPass_=Factory_.CalendarDropDowns().array[2];
+    this.nodesToPass_.collection=Factory_.CalendarDropDowns();
     ServiceCl.log(["checkDropBox: ",this.itemsToPass_]);
   }
 }

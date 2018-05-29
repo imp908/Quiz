@@ -22,23 +22,20 @@ export class NodeitemComponent implements OnInit {
    }
 
   ngOnInit() {
+
     ServiceCl.log(["Inited: " + this.constructor.name,this.htmlItem_]);
   }
   controlType(){
     return ModelContainer.HtmlItemType(this.htmlItem_);
   }
-  mouseenter_(i_:any){
-    ServiceCl.log(["mouseenter_",i_]);
-    i_.stopPropagation();
-    i_.fromElement.style.background='grey';
-    // this.itemColor= {background:'rgba(200,200,200,0.8)'};
-  }
-  mouseleave_(i_:any){
-    ServiceCl.log(["mouseleave_",i_]);
-    i_.stopPropagation();
-    i_.fromElement.style.background='white';
-  }
-  mouseIsHovered_(i_:any){
+  clicked_(e){
+    ServiceCl.log(["clicked: ",e])
+
+    if(this.controlType() =="CheckBoxControl")
+    {
+      this.htmlItem_.HtmlSubmittedValue=!this.htmlItem_.HtmlSubmittedValue;
+      ModelContainer.toggleCycleShow(this.htmlItem_);
+    }
 
   }
 }
