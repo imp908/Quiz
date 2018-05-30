@@ -44,6 +44,9 @@ input[type="text"],input[type="number"]{
 input[type="number"]{
   width:5ch;
 }
+input[type="text"]{
+  width: 70vw;
+}
 
 /*vertical gaps between menu and lsit items*/
 .item{
@@ -63,17 +66,28 @@ input[type="number"]{
 }
 
 .editarea{
-  display: -webkit-flex;
+  z-index: var(--menuZ);
+
+  position: fixed;
+  position: -webkit-sticky;
+
   display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
   align-items: end;
 
   padding-left: 5vh;
-
+  background-image: var(--tealBackgroundTop);
   top: 3vh;
   margin-top: 0%;
   padding-top: var(--shadowHeight);
   z-index: var(--menuZ);
   border-radius: var(--menuBorderRads);
+  height: var(--listAreaH);
+  width: 99vw;
+  overflow-y: scroll;
+  left:0;
 }
 
 
@@ -103,7 +117,8 @@ input[type="number"]{
 
 }
 
-.textinputarea{
+
+.textinputEditArea{
   position: fixed;
 
   height: 5vh;
@@ -136,21 +151,9 @@ padding-bottom: var(--editAreaPadBtm);
 display: flex;
 flex-direction: column;
 flex-wrap: nowrap;
-/*
-flex-flow: column wrap;
-justify-content: flex-center; */
-
-
 height: var(--listAreaH);
 width: 99vw;
-
-/* max-height:1ch;
-
-margin-top: 1ch;*/
-/* border-style: double; */
-/* border-width: 0.1ch; */
-/* color: yellow; */
-background-image: var(--tealBackground);
+background-image: var(--tealBackgroundBottom);
 overflow-y: scroll;
 left:0;
 }
@@ -218,6 +221,8 @@ h1 {
 
   margin-left:var(--fxhrMargWidth);
   margin-right:var(--fxhrMargWidth);
+  margin-top:var(--fxhrMargWidth);
+  margin-bottom:var(--fxhrMargWidth);
 
 
   /* justify-content: flex-end; */
@@ -234,6 +239,8 @@ h1 {
 
   margin-left:var(--fxhrMargWidth);
   margin-right:var(--fxhrMargWidth);
+  margin-top:var(--fxhrMargWidth);
+  margin-bottom:var(--fxhrMargWidth);
 
   /* justify-content: flex-start; */
   /* align-items: flex-start; */

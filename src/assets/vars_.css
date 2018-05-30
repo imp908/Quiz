@@ -26,6 +26,8 @@
   --bottomGradRad:0deg;
 
   --tealBackground: linear-gradient(0deg, rgba(0, 0, 0,0.0), rgba(207, 199, 248,1), rgba(171, 244, 233,1));
+  --tealBackgroundTop: linear-gradient(0deg, rgba(0, 0, 0,0.0), rgba(207, 199, 248,1), rgba(171, 244, 233,1));
+  --tealBackgroundBottom: linear-gradient(180deg, rgba(0, 0, 0,0.0), rgba(207, 199, 248,1), rgba(171, 244, 233,1));
 
   --tealShadowListTop: linear-gradient(180deg
   ,rgba(171, 244, 233,0.9) 1%

@@ -17,7 +17,7 @@ export class App7Component implements OnInit {
 
   constructor(private service:Service_){
 
-      service.test=false;
+      service.test=true;
       service.toLog=false;
       ServiceCl.toLog=true;
       this.test=service.test;

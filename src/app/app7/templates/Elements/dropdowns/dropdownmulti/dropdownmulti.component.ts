@@ -34,6 +34,7 @@ export class DropdownmultiComponent implements OnInit {
   clicked_(event_,obj_){
     ServiceCl.log(["clicked_ in " +  this.constructor.name,event_,obj_])
     this.toggle_(obj_);
+
   }
   isSelected(i_){
     if(i_.HtmlSubmittedValue==null){

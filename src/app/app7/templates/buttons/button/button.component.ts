@@ -26,7 +26,7 @@ export class ButtonComponent implements OnInit {
   }
 
   ngOnInit() {
-    //ServiceCl.log(["Inited " + this.constructor.name,this._buttons,this._obj])
+    ServiceCl.log(["Inited " + this.constructor.name,this._buttons,this._obj])
 
   }
 

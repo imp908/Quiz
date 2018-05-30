@@ -19,6 +19,7 @@ export class TestComponent implements OnInit {
   nodesToPass_:NodeCollection;
   itemsToPass_:HtmlItem;
   nodeToPass_:NodeCollection;
+  buttonsToPass_:NodeCollection;
 
   constructor(private service:Service_){
     //service.test=false;
@@ -39,7 +40,7 @@ export class TestComponent implements OnInit {
 
   ngOnInit(){
     this.genTest();
-
+    this.checkButton();
     ServiceCl.log(["Inited: " + this.constructor.name,this.nodesToPass_]);
   }
   click_($event){
@@ -52,5 +53,10 @@ export class TestComponent implements OnInit {
     // this.itemsToPass_=Factory_.CalendarDropDowns().array[2];
     this.nodesToPass_.collection=Factory_.CalendarDropDowns();
     ServiceCl.log(["checkDropBox: ",this.itemsToPass_]);
+  }
+  checkButton(){
+    this.buttonsToPass_=new NodeCollection;
+    this.buttonsToPass_.collection.add(Factory_.editButton());
+    this.buttonsToPass_.collection.add(Factory_.editNewButton());
   }
 }

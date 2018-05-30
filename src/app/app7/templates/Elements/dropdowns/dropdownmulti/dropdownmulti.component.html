@@ -9,9 +9,8 @@
         <div #di class="dd-item" (click)="clicked_($event,i_)"
         [class.ddSelected]="isSelected(i_)"
         (mouseenter)="mouseenter_($event)"
-        (mouseleave)="mouseleave_($event)"
-        >
-          <app-nodeitem [htmlItem_]="i_"></app-nodeitem>
+        (mouseleave)="mouseleave_($event)">
+        <app-nodeitem [htmlItem_]="i_"></app-nodeitem>
         </div>
       </ng-container>
     </div>

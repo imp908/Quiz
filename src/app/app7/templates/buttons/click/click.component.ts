@@ -29,12 +29,22 @@ export class ClickComponent implements OnInit {
   }
 
   ngOnInit() {
-    //ServiceCl.log(["Inited " + this.constructor.name,this.button_,this.obj_])
+    if(this.button_.toolTipText!=null){
+      if(this.obj_!=null){
+        if(this.obj_.typeName!=null){
+          this.button_.toolTipText=this.button_.toolTipText+" "+this.obj_.typeName;
+        }
+      }
+    }else{
+
+    }
+
+    ServiceCl.log(["Inited " + this.constructor.name,this.button_,this.obj_])
 
   }
 
   clicked_(o_:any){
-    ServiceCl.log(["clicked_: ",o_])
+    ServiceCl.log(["clicked_: ",o_,this.button_])
     ModelContainer.nodeMethodCall(this.button_,o_);
   }
   clickEvent_(e:any){

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {ServiceCl,Service_} from 'app/app7/Services/services.component'
-import {Test,NodeCollection,ModelContainer,Quiz,Question,Answer} from 'app/app7/Models/inits.component'
+import {Test,NodeCollection,ModelContainer,Quiz,Question,Answer,editButtons,editNewButtons} from 'app/app7/Models/inits.component'
 
 
 @Component({
@@ -31,6 +31,9 @@ export class MenuListComponent implements OnInit {
       this.QuestionToEdit=ModelContainer.QuestionToEdit;
       this.AnswerToEdit=ModelContainer.AnswerToEdit;
       ModelContainer.CheckCycleDisplay();
+      ModelContainer.editButtons_=new editButtons();
+      ModelContainer.editButtons_.disabled_=true;
+      ModelContainer.editNewButtons_=new editNewButtons();
       ServiceCl.log([this.constructor.name+" container binded ",
       this.QuizToEdit,this.QuestionToEdit,this.AnswerToEdit]);
     }

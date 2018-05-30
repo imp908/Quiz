@@ -19,7 +19,7 @@ export class MenuEditComponent implements OnInit {
     //ServiceCl.toLog=true;
     this.test=service.test;
     this.cName=this.constructor.name;
-    this.editButtons_ = new editButtons();
+    // this.editButtons_ = ModelContainer.editButtons_;
 
     ServiceCl.log(['Constructor : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
   }
@@ -27,28 +27,28 @@ export class MenuEditComponent implements OnInit {
     return this.nodeToEdit_.getType_();
   }
   ngOnInit(){
-
+    ServiceCl.log(['Inited  : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
     //edit new item
     ModelContainer.nodeAdded.subscribe(s=>{
       ServiceCl.log(['nodeAdded Received : ' + this.constructor.name,s])
-      this.editButtons_=new editNewButtons();
+      this.editButtons_=ModelContainer.editButtons_;
       this.nodeToEdit_=s;
-      ModelContainer.nodeToEdit=  this.nodeToEdit_;
+      ModelContainer.nodeToEdit=this.nodeToEdit_;
       ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
     })
 
     //edit existing item
     ModelContainer.nodeEmitted.subscribe(s=>{
-      ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_])
-      ServiceCl.log([this.constructor.name+" NodeEmitted: ",s])
-      this.editButtons_ = new editButtons();
+      ServiceCl.log(['nodeEmitted Received : ' + this.constructor.name, this.editButtons_,this.nodeToEdit_,s])
+      this.editButtons_ = ModelContainer.editButtons_;
       this.nodeToEdit_=s;
       ModelContainer.nodeToEdit=  this.nodeToEdit_;
-      ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
+      ServiceCl.log(['nodeEmitted Received : ',this.editButtons_]);
     });
 
     ModelContainer.nodeSavedNew.subscribe(s=>{
       ServiceCl.log([this.constructor.name + " nodeSave: ",s])
+        this.editButtons_ = ModelContainer.editNewButtons_;
       this.nodeToEdit_=null;
     });
     ModelContainer.nodeSaved.subscribe(s=>{
