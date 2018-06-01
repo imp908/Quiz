@@ -23,7 +23,7 @@ export class ClickComponent implements OnInit {
     this.test=service.test;
     //ServiceCl.toLog=true;
     this.cName=this.constructor.name;
-    this.button_=new Button();
+    // this.button_=new Button();
     this.obj_=null;
     //ServiceCl.log(['Constructor : ' + this.constructor.name,this.button_,this.obj_])
   }
@@ -48,6 +48,6 @@ export class ClickComponent implements OnInit {
     ModelContainer.nodeMethodCall(this.button_,o_);
   }
   clickEvent_(e:any){
-    ServiceCl.log(["clickEvent_ : ",e,this.e_])
+    ServiceCl.log(["clickEvent_ : ",e])
   }
 }
