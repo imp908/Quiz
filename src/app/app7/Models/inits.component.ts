@@ -1014,7 +1014,7 @@ export class ModelContainer{
 
   static nodeMethodCall(b_:NodeCollection,n_:any){
     ServiceCl.log(["nodeMethodCall",b_,n_]);
-    console.log(["instanceof: ",b_.parentKey]);
+    console.log(["instanceof: ",b_]);
 
     if(b_._name=="Edit_"){
       ServiceCl.log(["Edit_"]);
@@ -1038,7 +1038,7 @@ export class ModelContainer{
       ServiceCl.log("Save_");
       ModelContainer.nodeSave(n_);
     }
-
+    ModelContainer.CheckAnswerAmount();
   }
   static classDetectNState(n_:NodeCollection){
     if(n_ instanceof Quiz){
@@ -1133,7 +1133,7 @@ export class ModelContainer{
     if(n_ instanceof Answer ){
       if(ModelContainer.QuestionToEdit != null){
         ModelContainer.QuestionToEdit.collection.delete(n_);
-        ModelContainer.CheckAnswerAmount();
+
       }
     }
     ModelContainer.nodeDeleted.emit(n_);
@@ -1251,9 +1251,11 @@ export class ModelContainer{
         let tx=ModelContainer.nodeToEdit.scan("QuestionTypes",ModelContainer.nodeToEdit.itemParameter)
         console.log(["tx: ",tx]);
 
+        btn_.disabled_=false;
+
         if(tx instanceof HtmlItem){
           if(tx.HtmlSubmittedValue=="Text answer"){
-            btn_.disabled_=false;
+
             console.log(["not disabled_: ",btn_,tx])
 
             if(ModelContainer.nodeToEdit.collection.array.length>1){
@@ -1527,7 +1529,7 @@ export class Factory_{
     }
 
     static saveNewButton(){
-      let q=new Button(null,"Save_","Save",null,"btn btn-darkgreen",false,"Save currently edited object");
+      let q=new Button(null,"SaveNew_","Save",null,"btn btn-darkgreen",false,"Save currently created object");
       return q;
     }
 

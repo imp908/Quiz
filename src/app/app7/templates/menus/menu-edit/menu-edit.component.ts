@@ -32,12 +32,15 @@ export class MenuEditComponent implements OnInit {
     ServiceCl.log(['Inited  : ' + this.constructor.name, this.saveButtons_, this.nodeToEdit_])
     //edit new item
     ModelContainer.nodeAdded.subscribe(s=>{
-      ServiceCl.log(['nodeAdded Received : ' + this.constructor.name,s])
+      ServiceCl.log(['nodeAdded Received start: ' + this.constructor.name
+      ,s])
 
-      this.saveButtons_=ModelContainer.saveButtons_;
+      // this.saveButtons_=ModelContainer.saveButtons_;
+      this.saveButtons_ = ModelContainer.saveNewButtons_;
       this.nodeToEdit_=s;
       ModelContainer.nodeToEdit=this.nodeToEdit_;
-      ServiceCl.log(['nodeToEdit_ :',this.nodeToEdit_])
+      ServiceCl.log(['nodeAdded Received finished: ' + this.constructor.name
+      ,this.nodeToEdit_,this.saveButtons_,ModelContainer.saveNewButtons_])
     })
 
     //edit existing item
