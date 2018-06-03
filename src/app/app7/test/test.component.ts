@@ -77,6 +77,6 @@ export class TestComponent implements OnInit {
     let cl=this.nodesToPass_.scan("Question 0",this.nodesToPass_);
     // console.log(["disable_: ",cl])
     ModelContainer.nodeToEdit=cl;
-    ModelContainer.CheckAnswerAmount("Text answer");
+    ModelContainer.CheckAnswerAmount(false);
    }
 }

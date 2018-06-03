@@ -36,11 +36,12 @@ export class MenuEditComponent implements OnInit {
       ,s])
 
       // this.saveButtons_=ModelContainer.saveButtons_;
-      this.saveButtons_ = ModelContainer.saveNewButtons_;
+      this.saveButtons_=ModelContainer.saveNewButtons_;
       this.nodeToEdit_=s;
       ModelContainer.nodeToEdit=this.nodeToEdit_;
       ServiceCl.log(['nodeAdded Received finished: ' + this.constructor.name
       ,this.nodeToEdit_,this.saveButtons_,ModelContainer.saveNewButtons_])
+
     })
 
     //edit existing item
@@ -64,13 +65,15 @@ export class MenuEditComponent implements OnInit {
 
     ModelContainer.nodeDeleted.subscribe(s=>{
       ServiceCl.log(['nodeDeleted Received : ' + this.constructor.name,s])
-      ModelContainer.nodesPassed_=null;
+      ModelContainer.nodeToEdit=null;
     });
 
     ModelContainer.saveDisabled.subscribe(s=>{
       this.saveButtons_.disabled_=s;
       ServiceCl.log(["received saveDisabled " + this.constructor.name,s]);
     });
+
+
   }
 
   nodeSave(n_:NodeCollection){

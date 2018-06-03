@@ -770,6 +770,18 @@ export class QuestionControls extends HtmlItem{
 
 }
 
+export class AnswerControls extends HtmlItem{
+
+  constructor(option:{cssClass_:string,show_:boolean,collection_?:Collection_<HtmlItem>}
+  ={cssClass_:"",show_:true,collection_:null})
+  {
+    let qzcl=Factory_.AnswerControlsGen();
+
+    super(0,"AnswerControlGroup","Answer","div","",null,option.show_,option.cssClass_,qzcl);
+    this.sortHierarhy(true);
+  }
+
+}
 
 // obsolete est itemp params
 
@@ -802,31 +814,31 @@ export class Quiz extends NodeCollection{
 
   quizStatistic:QuizStatistic;
 
-    constructor(
-      option:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
-      ,itemParameter_?:QuizControls,quizStatistic_?:QuizStatistic}
-      ={key_:0,name_:"Quiz",value_:null,collection_:null,itemParameter_:new QuizControls(),quizStatistic_:new QuizStatistic()}
-    ){
-      super(option.key_,option.name_,option.value_,option.collection_);
-      this.replay=true;
-      this.anonimous=false;
+  constructor(
+    option:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
+    ,itemParameter_?:QuizControls,quizStatistic_?:QuizStatistic}
+    ={key_:0,name_:"Quiz",value_:null,collection_:null,itemParameter_:new QuizControls(),quizStatistic_:new QuizStatistic()}
+  ){
+    super(option.key_,option.name_,option.value_,option.collection_);
+    this.replay=true;
+    this.anonimous=false;
 
-      this.typeName="Question";
-      if(option.collection_==null){
-        this.collection=new Collection_<Question>();
-      }
-
-      if(option.itemParameter_!=null){
-        this.itemParameter=option.itemParameter_;
-      }else{this.itemParameter=new QuizControls();}
-
-      if(option.quizStatistic_!=null){
-        this.quizStatistic=option.quizStatistic_;
-      }else{
-        this.quizStatistic=new QuizStatistic();
-      }
-
+    this.typeName="Question";
+    if(option.collection_==null){
+      this.collection=new Collection_<Question>();
     }
+
+    if(option.itemParameter_!=null){
+      this.itemParameter=option.itemParameter_;
+    }else{this.itemParameter=new QuizControls();}
+
+    if(option.quizStatistic_!=null){
+      this.quizStatistic=option.quizStatistic_;
+    }else{
+      this.quizStatistic=new QuizStatistic();
+    }
+
+  }
 
 }
 export class Questionarie extends Quiz{}
@@ -853,14 +865,14 @@ export class Question extends NodeCollection{
 export class Answer extends NodeCollection{
   itemParameter:HtmlItem;
   constructor(option_:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,itemParameter_:HtmlItem}
-  ={key_:0,name_:"Answer",value_:"Answer",collection_:new Collection_<Answer>(),itemParameter_:new QuizControls()})
+  ={key_:0,name_:"Answer",value_:"Answer",collection_:new Collection_<Answer>(),itemParameter_:new AnswerControls()})
   {
     super(option_.key_,option_.name_,option_.value_,option_.collection_);
     this.typeName="Answer";
     this.itemParameter=option_.itemParameter_;
     this.collection=option_.collection_;
     if(option_.itemParameter_==null){
-      this.itemParameter=new QuizControls();
+      this.itemParameter=new AnswerControls();
     }
     if(option_.collection_==null){
       this.collection=null;
@@ -997,6 +1009,9 @@ export class ModelContainer{
   @Output() static nodeDeleted=new EventEmitter<NodeCollection>();
 
   @Output() static saveDisabled=new EventEmitter<boolean>();
+  @Output() static addNewToggle=new EventEmitter<boolean>();
+
+  @Output() static questionTypeAlert=new EventEmitter<string>();
 
   //Buutons to be disabled on conditions
 
@@ -1004,6 +1019,8 @@ export class ModelContainer{
   static saveNewButtons_:Button;
 
   static Init(){
+
+    ModelContainer.nodesPassed_=Test.GenClasses(false,1,4);
     ModelContainer.CheckCycleDisplay();
     ModelContainer.saveButtons_=Factory_.saveButton();
     ModelContainer.saveNewButtons_=Factory_.saveNewButton();
@@ -1016,29 +1033,42 @@ export class ModelContainer{
     ServiceCl.log(["nodeMethodCall",b_,n_]);
     console.log(["instanceof: ",b_]);
 
-    if(b_._name=="Edit_"){
-      ServiceCl.log(["Edit_"]);
-        let bt= ModelContainer.saveButtons_;
-        // if(bt instanceof Button){ bt.disabled_=false;}
-      ModelContainer.nodeSelect(n_);
+    if((b_._name!="SaveNew_") && (b_._name!="Add_")){
+
+      if(b_._name=="Edit_"){
+        ServiceCl.log(["Edit_"]);
+          let bt= ModelContainer.saveButtons_;
+          // if(bt instanceof Button){ bt.disabled_=false;}
+        ModelContainer.nodeSelect(n_);
+      }
+      if(b_._name=="Delete_"){
+        ServiceCl.log("Delete_");
+        ModelContainer.nodeDelete(n_);
+      }
+      if(b_._name=="Save_"){
+        ServiceCl.log("Save_");
+        ModelContainer.nodeSave(n_);
+      }
+      if(b_._name=="Copy_"){
+      ServiceCl.log("Copy_");
+      ModelContainer.nodeCopySelect(n_);
     }
-    if(b_._name=="Add_"){
-      ServiceCl.log(["Add_"]);
-      ModelContainer.nodeNewSelect(n_)
+
+      ModelContainer.CheckAnswerAmount(false);
     }
-    if(b_._name=="Delete_"){
-      ServiceCl.log("Delete_");
-      ModelContainer.nodeDelete(n_);
+
+    if((b_._name=="SaveNew_") || (b_._name=="Add_")){
+      if(b_._name=="Add_"){
+        ServiceCl.log(["Add_"]);
+        ModelContainer.nodeNewSelect(n_)
+      }
+      if(b_._name=="SaveNew_"){
+        ServiceCl.log("SaveNew_");
+        ModelContainer.nodeSaveNew(n_);
+      }
+      ModelContainer.CheckAnswerAmount(true);
     }
-    if(b_._name=="SaveNew_"){
-      ServiceCl.log("SaveNew_");
-      ModelContainer.nodeSaveNew(n_);
-    }
-    if(b_._name=="Save_"){
-      ServiceCl.log("Save_");
-      ModelContainer.nodeSave(n_);
-    }
-    ModelContainer.CheckAnswerAmount();
+
   }
   static classDetectNState(n_:NodeCollection){
     if(n_ instanceof Quiz){
@@ -1079,20 +1109,42 @@ export class ModelContainer{
     }
   }
 
+  static nodeCopySelect(n_:NodeCollection){
+    let type_:string=n_.typeName;
+    ServiceCl.log(["nodeAdd emitted",n_,type_]);
+    let nd_:any;
+
+    if(n_ instanceof Quiz){
+      let var_={key_:n_._key,name_:n_._name,value_:n_._value,collection_:n_.collection,itemParameter_:n_.itemParameter};
+      nd_=new Quiz(var_);
+    }
+    if(n_ instanceof Question){
+      let var_={key_:n_._key,name_:n_._name,value_:n_._value,collection_:n_.collection,itemParameter_:n_.itemParameter};
+      nd_=new Question(var_);
+    }
+    if(n_ instanceof Answer){
+      let var_={key_:n_._key,name_:n_._name,value_:n_._value,collection_:n_.collection,itemParameter_:n_.itemParameter};
+      nd_=new Answer(var_);
+    }
+    //ModelContainer.nodeToEdit=nd_;
+    ModelContainer.nodeAdded.emit(nd_);
+  }
+
   static nodeNewSelect(n_:NodeCollection){
     let type_:string=n_.typeName;
     ServiceCl.log(["nodeAdd emitted",n_,type_]);
     let nd_:any;
-    if(type_ == "Quiz"){
+    if(n_ instanceof NodeCollection){
       nd_=new Quiz({key_:0,name_:"Add new Quiz",value_:"Add new Quiz",collection_:null,itemParameter_:null});
     }
-    if(type_ == "Question"){
+    if(n_ instanceof Quiz){
       nd_=new Question({key_:0,name_:"Add new question",value_:"Add new question"});
     }
-    if(type_ == "Answer"){
+    if(n_ instanceof Question){
       nd_=new Answer({key_:0,name_:"Add new answer",value_:"Add new answer",collection_:null,itemParameter_:null});
     }
     //ModelContainer.nodeToEdit=nd_;
+
     ModelContainer.nodeAdded.emit(nd_);
   }
   static nodeSaveNew(n_:NodeCollection){
@@ -1111,11 +1163,11 @@ export class ModelContainer{
     }
     if(n_ instanceof Quiz)
     {
-        ServiceCl.log(["Quiz",n_]);
-        this.nodesPassed_.collection.add(n_);
-        this.AnswerToEdit=null;
-        this.QuestionToEdit=null;
-        this.QuizToEdit=null;
+        ServiceCl.log(["Quiz to collection",n_,this.nodesPassed_]);
+        ModelContainer.nodesPassed_.collection.add(n_);
+        ModelContainer.AnswerToEdit=null;
+        ModelContainer.QuestionToEdit=null;
+        ModelContainer.QuizToEdit=null;
     }
     ModelContainer.nodeSavedNew.emit(n_);
   }
@@ -1133,7 +1185,21 @@ export class ModelContainer{
     if(n_ instanceof Answer ){
       if(ModelContainer.QuestionToEdit != null){
         ModelContainer.QuestionToEdit.collection.delete(n_);
-
+      }
+    }
+    if(n_ instanceof Question ){
+      if(ModelContainer.QuizToEdit!=null){
+        ModelContainer.QuizToEdit.collection.delete(n_);
+        ModelContainer.QuestionToEdit=null;
+        ModelContainer.AnswerToEdit=null;
+      }
+    }
+    if(n_ instanceof Quiz ){
+      if(ModelContainer.nodesPassed_ != null){
+        ModelContainer.nodesPassed_.collection.delete(n_);
+        ModelContainer.QuizToEdit=null;
+        ModelContainer.QuestionToEdit=null;
+        ModelContainer.AnswerToEdit=null;
       }
     }
     ModelContainer.nodeDeleted.emit(n_);
@@ -1236,13 +1302,16 @@ export class ModelContainer{
     if(i instanceof DropDownControlMulti){return "DropDownControlMulti"}
   }
 
-  static CheckAnswerAmount(){
+  static CheckAnswerAmount(isNew_:boolean){
 
     let bntObj=ModelContainer.saveButtons_;
     let btn_:Button;
     if(bntObj instanceof Button){
       btn_=bntObj;
     }
+
+    let addNewToggle_:boolean=false;
+    btn_.disabled_=false;
 
     console.log(["ModelContainer.nodeToEdit: ",ModelContainer.nodeToEdit]);
     if(ModelContainer.nodeToEdit !=null){
@@ -1258,21 +1327,44 @@ export class ModelContainer{
 
             console.log(["not disabled_: ",btn_,tx])
 
+            //disable add new button for question answers if text answer and answers >0
+
+            if(ModelContainer.nodeToEdit.collection.array.length>0)
+            {
+              addNewToggle_=true;
+            }
+
+            //Inform save Questionreceivers about wrong answer amount
+            //for TextAnswer type
+
             if(ModelContainer.nodeToEdit.collection.array.length>1){
               console.log(["disabled_: ",btn_,tx])
               btn_.disabled_=true;
 
+              ModelContainer.questionTypeAlert.emit(Factory_.questionTypeAlert());
             }
+
           }
         }
 
-        if(ModelContainer.nodeToEdit.collection.array.length<=0){
-          btn_.disabled_=true;
-        }
 
-        ModelContainer.saveDisabled.emit(btn_.disabled_);
+        //if adding new item enable buttons
+
+        if(!isNew_){
+          console.log(["!isNew_: "])
+          if(ModelContainer.nodeToEdit.collection.array.length<=0){
+            console.log(["disabled_: ",btn_,tx])
+            btn_.disabled_=true;
+          }
+        }else{
+          console.log(["isNew_: "])
+            console.log(["not disabled_: ",btn_,tx])
+            btn_.disabled_=false;
+        }
       }
     }
+    ModelContainer.addNewToggle.emit(addNewToggle_);
+    ModelContainer.saveDisabled.emit(btn_.disabled_);
   }
 
 }
@@ -1498,6 +1590,14 @@ export class Factory_{
       return q;
     }
 
+    //Answer text controll
+
+    static AnswerTextControl(){
+      let q=new Collection_<HtmlItem>([
+        new TextControl(0,"AnswerTextControl","Answer text: ","enter text here",null,null,null,null,true,"fxvt")
+      ]);
+      return q;
+    }
 
     //Generates controlls for Question
 
@@ -1517,6 +1617,18 @@ export class Factory_{
       return q;
     }
 
+    static AnswerControlsGen(){
+      let q:Collection_<HtmlItem>=null;
+
+      let txtCtrl=new HtmlItem(0,"AnswerTextContainer","","","","",true,"fxhr",
+        Factory_.AnswerTextControl());
+
+      q=new Collection_<HtmlItem>([
+        txtCtrl
+      ]);
+
+      return q;
+    }
 
     //--------------------
 
@@ -1548,9 +1660,30 @@ export class Factory_{
       return q;
     }
 
+    static copyButton(){
+      let q=new Button(null,"Cpoy_","Copy",null,"btn btn-unique",false,"Copy ");
+      return q;
+    }
+
+    static itemButtons(){
+      return new Button(0,"ItemCollection","ItemCollection",
+        new Collection_<Button>([
+          new Button(null,"Edit_","Edit",null,"btn btn-purple",false,"Edit ")
+          ,new Button(null,"Copy_","Copy",null,"btn btn-warning",false,"Copy ")
+          ,new Button(null,"Delete_","Delete",null,"btn btn-danger",false,"Delete ")
+        ])
+        ,"fvhr",false,"")
+    }
 
     //--------------------
 
+    //Alerts
+
+    //--------------------
+
+    static questionTypeAlert(){
+      return "Wrong qnswers count for this type. Only 1 allowed.";
+    }
 
 }
 
@@ -1901,11 +2034,7 @@ export class Test{
       //Test.GenClasses(true,1,3);
 
 
-      let qzSt:QuizStatistic= new QuizStatistic();
-      let qzCt:QuizControls=new QuizControls();
-      let qs:Question=new Question();
-      let qs2=new Question({key_:0,name_:"Question " +0,value_:"Question " +0});
-      ServiceCl.log(["GO ",qs2 ]);
+      ServiceCl.log(["GO " ]);
     }
 
 }
