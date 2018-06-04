@@ -27,6 +27,7 @@ export class MenuListComponent implements OnInit {
 
     }
     ngOnInit(){
+
       // this.genTest();
       this.conatinerBind();
 

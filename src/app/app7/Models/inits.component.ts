@@ -193,6 +193,7 @@ class CollectionG_<T extends NodeG> implements ICollection_<T>{
     return a;
   }
 
+  shallowCopy(){};
 }
 
 //parameter constructions
@@ -516,6 +517,50 @@ export class NodeCollection extends Node{
       return ret_;
   }
 
+  shallowCopy(){
+
+    let r = this._sliceArr(this);
+
+    return r;
+  }
+
+  _sliceArr(nc:NodeCollection){
+
+    if(
+      (nc.collection !=null)
+      && (nc.collection.array !=null)
+      && (nc.collection.array.length>0)
+    ){
+      for(let cl_ of nc.collection.array)
+      {
+        this._sliceArr(cl_);
+      }
+    }else{
+      let bindArr=new Collection_<NodeCollection>();
+      if(this.collection==null){this.collection=new Collection_<NodeCollection>(new Array<NodeCollection>()); }
+      else{
+        if(this.collection.array==null){this.collection.array=new Array<NodeCollection>()}
+      }
+
+      for(let i=0;i<this.collection.array.length;i++){
+        bindArr.array[i]=this.collection.array[i];
+      }
+      let r=new NodeCollection(nc._key,nc._name,nc._value,bindArr);
+      nc=r;
+    }
+    return nc;
+  }
+
+  _deepСopy(o:any) {
+     var output, v, key;
+     output = Array.isArray(o) ? [] : {};
+       for (key in o) {
+           v = o[key];
+           output[key] = (typeof v === "object") ? this._deepСopy(v) : v;
+       }
+     return output;
+  }
+
 }
 
 // obsolete ItemParameters replaced with HtmlItem
@@ -798,7 +843,38 @@ export class TestGapPickerParameter{
 }
 
 
-export class Quiz extends NodeCollection{
+export class QuizItem extends NodeCollection{
+
+  //Collection of formcontroll to generate for user input
+
+  itemParameter:NodeCollection;
+
+  //Collection of gormcontrols to generate for read
+
+  quizStatistic:NodeCollection;
+
+  constructor(
+    option:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
+    ,itemParameter_?:NodeCollection,quizStatistic_?:NodeCollection}
+    ={key_:0,name_:"Quiz",value_:null,collection_:null,itemParameter_:new NodeCollection()}
+    ){
+      super(option.key_,option.name_,option.value_,option.collection_);
+
+
+      this.typeName="Question";
+      if(option.collection_==null){
+        this.collection=new Collection_<NodeCollection>();
+      }
+
+      if(option.itemParameter_!=null){
+        this.itemParameter=option.itemParameter_;
+      }else{this.itemParameter=new NodeCollection();}
+
+    }
+
+}
+
+export class Quiz extends QuizItem{
 
   replay:boolean;
   startTime:Date;
@@ -811,73 +887,74 @@ export class Quiz extends NodeCollection{
 
   //Collection of gormcontrols to generate for read
 
-
   quizStatistic:QuizStatistic;
 
   constructor(
     option:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
     ,itemParameter_?:QuizControls,quizStatistic_?:QuizStatistic}
     ={key_:0,name_:"Quiz",value_:null,collection_:null,itemParameter_:new QuizControls(),quizStatistic_:new QuizStatistic()}
-  ){
-    super(option.key_,option.name_,option.value_,option.collection_);
-    this.replay=true;
-    this.anonimous=false;
+    ){
+      super(option);
+      this.replay=true;
+      this.anonimous=false;
 
-    this.typeName="Question";
-    if(option.collection_==null){
-      this.collection=new Collection_<Question>();
+      this.typeName="Question";
+      if(option.collection_==null){
+        this.collection=new Collection_<Question>();
+      }
+
+      if(option.itemParameter_!=null){
+        this.itemParameter=option.itemParameter_;
+      }else{this.itemParameter=new QuizControls();}
+
+      if(option.quizStatistic_!=null){
+        this.quizStatistic=option.quizStatistic_;
+      }else{
+        this.quizStatistic=new QuizStatistic();
+      }
+
     }
-
-    if(option.itemParameter_!=null){
-      this.itemParameter=option.itemParameter_;
-    }else{this.itemParameter=new QuizControls();}
-
-    if(option.quizStatistic_!=null){
-      this.quizStatistic=option.quizStatistic_;
-    }else{
-      this.quizStatistic=new QuizStatistic();
-    }
-
-  }
 
 }
 export class Questionarie extends Quiz{}
 export class Victorine extends Quiz{}
 
-export class Question extends NodeCollection{
+export class Question extends QuizItem{
   itemParameter:HtmlItem;
+
   constructor(option_:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,itemParameter_?:HtmlItem}
-  ={key_:0,name_:"Question",value_:"Question",collection_:new Collection_<Answer>(null),itemParameter_:new QuestionControls()})
-  {
-    super(option_.key_,option_.name_,option_.value_,option_.collection_);
-    this.typeName="Question";
-    this.itemParameter=option_.itemParameter_;
-    this.collection=option_.collection_;
-    if(option_.itemParameter_==null){
-      this.itemParameter=new QuestionControls();
+    ={key_:0,name_:"Question",value_:"Question",collection_:new Collection_<Answer>(null),itemParameter_:new QuestionControls()})
+    {
+      super(option_);
+      this.typeName="Question";
+      this.itemParameter=option_.itemParameter_;
+      this.collection=option_.collection_;
+      if(option_.itemParameter_==null){
+        this.itemParameter=new QuestionControls();
+      }
+      if(option_.collection_==null){
+        this.collection=new Collection_<Answer>(null);
+      }
     }
-    if(option_.collection_==null){
-      this.collection=new Collection_<Answer>(null);
-    }
-  }
 
 }
-export class Answer extends NodeCollection{
+export class Answer extends QuizItem{
   itemParameter:HtmlItem;
+
   constructor(option_:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>,itemParameter_:HtmlItem}
-  ={key_:0,name_:"Answer",value_:"Answer",collection_:new Collection_<Answer>(),itemParameter_:new AnswerControls()})
-  {
-    super(option_.key_,option_.name_,option_.value_,option_.collection_);
-    this.typeName="Answer";
-    this.itemParameter=option_.itemParameter_;
-    this.collection=option_.collection_;
-    if(option_.itemParameter_==null){
-      this.itemParameter=new AnswerControls();
+    ={key_:0,name_:"Answer",value_:"Answer",collection_:new Collection_<Answer>(),itemParameter_:new AnswerControls()})
+    {
+      super(option_);
+      this.typeName="Answer";
+      this.itemParameter=option_.itemParameter_;
+      this.collection=option_.collection_;
+      if(option_.itemParameter_==null){
+        this.itemParameter=new AnswerControls();
+      }
+      if(option_.collection_==null){
+        this.collection=null;
+      }
     }
-    if(option_.collection_==null){
-      this.collection=null;
-    }
-  }
 
 }
 
@@ -1027,18 +1104,19 @@ export class ModelContainer{
     // ModelContainer.saveButtons_.collection.add(Factory_.saveButton());
     // ModelContainer.saveNewButtons_.collection.add(Factory_.saveNewButton());
 
+
   }
 
-  static nodeMethodCall(b_:NodeCollection,n_:any){
-    ServiceCl.log(["nodeMethodCall",b_,n_]);
+  static clickStageDetect(b_:NodeCollection,n_:any){
+    ServiceCl.log(["clickStageDetect",b_,n_]);
     console.log(["instanceof: ",b_]);
 
     if((b_._name!="SaveNew_") && (b_._name!="Add_")){
 
       if(b_._name=="Edit_"){
         ServiceCl.log(["Edit_"]);
-          let bt= ModelContainer.saveButtons_;
-          // if(bt instanceof Button){ bt.disabled_=false;}
+        let bt= ModelContainer.saveButtons_;
+        // if(bt instanceof Button){ bt.disabled_=false;}
         ModelContainer.nodeSelect(n_);
       }
       if(b_._name=="Delete_"){
@@ -1050,9 +1128,9 @@ export class ModelContainer{
         ModelContainer.nodeSave(n_);
       }
       if(b_._name=="Copy_"){
-      ServiceCl.log("Copy_");
-      ModelContainer.nodeCopySelect(n_);
-    }
+        ServiceCl.log("Copy_");
+        ModelContainer.nodeCopySelect(n_);
+      }
 
       ModelContainer.CheckAnswerAmount(false);
     }
@@ -1115,19 +1193,18 @@ export class ModelContainer{
     let nd_:any;
 
     if(n_ instanceof Quiz){
-      let var_={key_:n_._key,name_:n_._name,value_:n_._value,collection_:n_.collection,itemParameter_:n_.itemParameter};
-      nd_=new Quiz(var_);
+      nd_=n_.shallowCopy();
     }
     if(n_ instanceof Question){
-      let var_={key_:n_._key,name_:n_._name,value_:n_._value,collection_:n_.collection,itemParameter_:n_.itemParameter};
-      nd_=new Question(var_);
+        nd_=n_.shallowCopy();
     }
     if(n_ instanceof Answer){
-      let var_={key_:n_._key,name_:n_._name,value_:n_._value,collection_:n_.collection,itemParameter_:n_.itemParameter};
-      nd_=new Answer(var_);
+      nd_=n_.shallowCopy();
     }
+
     //ModelContainer.nodeToEdit=nd_;
     ModelContainer.nodeAdded.emit(nd_);
+
   }
 
   static nodeNewSelect(n_:NodeCollection){
@@ -1173,6 +1250,8 @@ export class ModelContainer{
   }
 
   static nodeSelect(n_:NodeCollection){
+    ServiceCl.log(["nodeSelect:",n_]);
+
     ModelContainer.nodeToEdit=n_;
 
     ModelContainer.classDetectNState(n_);
@@ -1240,9 +1319,11 @@ export class ModelContainer{
       ServiceCl.log(["checkedToggle: " ,a]);
       a.valueVal=!a.valueVal;
     }
+
   }
 
   //Checks if cycle controlls need to be shown
+
   static CheckCycleDisplay(){
     if(ModelContainer.nodeToEdit instanceof Quiz)
     {
@@ -1301,6 +1382,7 @@ export class ModelContainer{
     if(i instanceof DropDownControlMultiNg){return "DropDownControlMultiNg"}
     if(i instanceof DropDownControlMulti){return "DropDownControlMulti"}
   }
+
 
   static CheckAnswerAmount(isNew_:boolean){
 
@@ -2026,13 +2108,102 @@ export class Test{
 
     }
 
+    public static CheckNullArr(){
+
+      //collection null
+
+      let ncCn=new NodeCollection(null,null,null,null);
+
+      //array null
+
+      let ncAn=new NodeCollection(null,null,null,new Collection_<NodeCollection>());
+
+      //no nulls
+
+      let ncNN=new NodeCollection(null,null,null,new Collection_<NodeCollection>([new NodeCollection()]));
+
+      Test.checkNull("ncCn",ncCn);
+      Test.checkNull("ncAn",ncAn);
+      Test.checkNull("ncNN",ncNN);
+
+      Test.checkNull2("ncCn",ncCn);
+      Test.checkNull2("ncAn",ncAn);
+      Test.checkNull2("ncNN",ncNN);
+
+    }
+    public static checkNull(name:string,ns:NodeCollection){
+
+      if(ns.collection!=null){
+        console.log([name,"ns.collection!=null",ns])
+        if(ns.collection.array!=null){
+          console.log([name,"ns.collection.array!=null",ns])
+          if(ns.collection.array.length>0){
+            console.log([name,"ns.collection.array.length>0",ns])
+          }
+        }
+      }
+
+    }
+    public static checkNull2(name:string,ns:NodeCollection){
+
+      if(
+        (ns.collection!=null)
+        && (ns.collection.array!=null)
+        && (ns.collection.array.length>0)
+      ){
+        console.log([name,"ns.collection.array.length>0",ns])
+      }
+
+    }
+
+
+    //shallow copy test
+
+    public static CheckshallowCopy(){
+      let cl0=new NodeCollection(0,"Cl00","Cl00"
+      ,new Collection_<NodeCollection>([
+        new NodeCollection(1,"Cl01","Cl01",
+            new Collection_<NodeCollection>([
+              new NodeCollection(0,"Cl10","Cl10",null)
+              ,new NodeCollection(0,"Cl11","Cl11",null)
+            ])
+        )
+        ,new NodeCollection(1,"Cl02","Cl02",null)
+      ])
+
+      );
+
+      let cl1=cl0._deepСopy(cl0);
+
+      let cl_0_10=cl0.scan("Cl10",cl0);
+      let cl_1_10=cl1.scan("Cl10",cl1);
+
+      cl_1_10._name="cl_1_10";
+
+      console.log(["CheckshallowCopy, cl0 to cl1. item",cl0,cl1]);
+      console.log(["Items, cl_0_10cl_1_10",cl_0_10,cl_1_10]);
+
+      let qrr0=new NodeCollection(0,"Node_00","Node_00",new Collection_<NodeCollection>([
+        new NodeCollection(0,"Node_01",null,null)
+        ,new NodeCollection(1,"Node_02",null,null)
+      ]));
+
+      let qrr1=qrr0._deepСopy(qrr0.collection.array);
+      // qrr0.collection.array[0]._name="namechanged";
+      qrr0.collection.array[0]._name="namechanged";
+      console.log(["Qrr1:",qrr1])
+    }
+
     public static GO(){
 
       //Test.GenNewColl(false);
       //Test.Gen(false,1,3);
-
       //Test.GenClasses(true,1,3);
 
+
+      //test of shallow copy
+
+      Test.CheckshallowCopy();
 
       ServiceCl.log(["GO " ]);
     }
