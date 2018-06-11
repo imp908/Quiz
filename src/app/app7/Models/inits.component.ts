@@ -1,7 +1,9 @@
 import {ServiceCl} from '../Services/services.component';
 import { EventEmitter,Output } from '@angular/core';
+
 //TS Collections
 //npm install typescript-collections [-g] --save
+
 import * as Collections from 'typescript-collections';
 
 import {INode,ICollection_,INodeCollection} from './POCO.component';
@@ -888,33 +890,45 @@ export class QuizItem extends NodeCollection{
   }
   _Clone(){
     let r=new QuizItem();
-      this._deepClone(this,r);
+      r=this._deepClone(this,r);
     return r;
   }
-  _deepClone(nc_:QuizItem,r_:QuizItem){
+  _deepClone(from_:QuizItem,to_:QuizItem){
 
-      if(this._checkCollection(nc_)){
 
-      r=new QuizItem({key_:this._key+1,name_:this._name,value_:this._value,collection_:null});
 
-        if(this._checkArray(nc_.collection)){
-          for(let n_ of nc_.collection.array){
-            if(n_ instanceof QuizItem){
-              this._deepClone(n_,r_);
-            }
+      if(this._checkCollection(from_)){
+      //console.log(["Parent create from,to:",from_,to_]);
+
+      if(this._checkArray(from_.collection)){
+
+      //has children
+
+        for(let n_ of from_.collection.array){
+        //console.log(["Collection loop:item,of",n_,from_]);
+
+          let temp_=Factory_.CloneItemByClass(n_);
+
+          if(n_ instanceof QuizItem){
+            //console.log(["Pushed to parent from,to:",from_,to_]);
+
+            this._deepClone(n_,temp_);
           }
+
+          to_.collection.array.push(temp_);
+
         }
 
       }else{
+        //head element
 
-        let new_=Factory_.CloneItemByClass(nc_);
-
-        if(this._checkCollection(r_)!=null){
-          r_.collection.array.push(new_);
-        }
+        to_=Factory_.CloneItemByClass(from_);
       }
 
-      return r_;
+      }
+
+      console.log(["Return :",to_,to_._key]);
+      return to_;
     }
 
 }
@@ -1824,6 +1838,7 @@ export class Factory_{
       }
       return r_;
     }
+
 }
 
 export class Test{
@@ -2032,80 +2047,6 @@ export class Test{
       return htmlItemsArr3;
     }
 
-    //obsolette
-
-    /*
-    public static GenNewColl(bol_:boolean){
-
-      if(bol_==true ){
-        var factory:Factory_=new Factory_();
-
-        ServiceCl.log(["New answer: ",new NodeCollection(11,"Answer "+11,"Answer "+11)])
-
-        ServiceCl.log(["New factory NodeCollection: ",new Factory_().node()])
-
-        ServiceCl.log(["New factory AnswersCollection: ",factory.answers(5)]);
-
-        ServiceCl.log(["New factory QuestionsCollection: ",factory.questions(5)]);
-
-      }
-
-    }
-
-    public static AnswersAddDeleteUpdate(bol_:boolean){
-        var answers:ICollection_<NodeCollection> =
-        new Collection_<NodeCollection>();
-    }
-
-
-
-    //Generates NodeCollection array
-
-    public static Gen_(bol_:boolean,lw_?:number,up_?:number)
-    :ICollection_<INodeCollection> {
-
-      var col_:ICollection_<INodeCollection> =new Collection_<NodeCollection> ();
-
-      var lw:number;
-      var up:number;
-
-      if(bol_!=null){
-        var factory:Factory_=new Factory_();
-
-        if(lw_!=null) {lw=lw_;
-        }else{
-          lw=Math.floor(Math.random()*10)+1;
-        }
-        if(up_!=null){up=up_;
-        }else{
-          up=Math.floor(Math.random()*5)+lw;
-        }
-
-
-        var gn_:number=Math.floor(Math.random()*up)+lw;
-        ServiceCl.log(["Gen value: ",gn_]);
-
-        col_=factory.quizes(gn_)
-        for(var qz_ of col_.array)
-        {
-          gn_=Math.floor(Math.random()*up)+lw;
-          qz_.collection=factory.questions(gn_)
-
-          for(var qt_ of qz_.collection.array){
-            gn_=Math.floor(Math.random()*up)+lw;
-            qt_.collection=factory.answers(gn_);
-          }
-        }
-
-        ServiceCl.log(["Gen borders: ",lw,up]);
-        ServiceCl.log(["Quizes genned: ",col_]);
-        return col_;
-      }
-
-    }
-
-    */
-
     //Generates NodeCollection from classes
 
     public static GenClasses(bol_:boolean,lw_?:number,up_?:number)
@@ -2255,8 +2196,23 @@ export class Test{
 
       let qz_0=new QuizItem({key_:0,name_:"qz00",value_:"qz00",collection_:new Collection_<QuizItem>(
         [
-          new QuizItem({key_:1,name_:"qz01",value_:"qz01",collection_:null})
-          ,new QuizItem({key_:2,name_:"qz02",value_:"qz02",collection_:null})
+          new QuizItem({key_:1,name_:"qz01",value_:"qz01",collection_:
+            new Collection_<QuizItem>(
+              [
+                new QuizItem({key_:3,name_:"qz03",value_:"qz03",collection_:null})
+                ,new QuizItem({key_:4,name_:"qz04",value_:"qz04",collection_:null})
+                ,new QuizItem({key_:5,name_:"qz05",value_:"qz05",collection_:null})
+              ]
+            )
+        })
+          ,new QuizItem({key_:2,name_:"qz02",value_:"qz02",collection_:
+            new Collection_<QuizItem>(
+              [
+                new QuizItem({key_:6,name_:"qz06",value_:"qz06",collection_:null})
+                ,new QuizItem({key_:7,name_:"qz07",value_:"qz07",collection_:null})
+              ]
+            )
+        })
         ]
       )
       });
