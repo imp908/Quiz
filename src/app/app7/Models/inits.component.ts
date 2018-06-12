@@ -519,46 +519,21 @@ export class NodeCollection extends Node{
       return ret_;
   }
 
-  shallowCopy(){
-
-    let r = this._sliceArr(this);
-
-    return r;
-  }
-  _sliceArr(nc:NodeCollection){
-
-    if(
-      (nc.collection !=null)
-      && (nc.collection.array !=null)
-      && (nc.collection.array.length>0)
-    ){
-      for(let cl_ of nc.collection.array)
-      {
-        this._sliceArr(cl_);
+  _hasArray(){
+    if(this._hasCollection()){
+      if(this.collection.array!=null){
+        if(this.collection.array.length>0){
+          return true;
+        }
       }
-    }else{
-      let bindArr=new Collection_<NodeCollection>();
-      if(this.collection==null){this.collection=new Collection_<NodeCollection>(new Array<NodeCollection>()); }
-      else{
-        if(this.collection.array==null){this.collection.array=new Array<NodeCollection>()}
-      }
-
-      for(let i=0;i<this.collection.array.length;i++){
-        bindArr.array[i]=this.collection.array[i];
-      }
-      let r=new NodeCollection(nc._key,nc._name,nc._value,bindArr);
-      nc=r;
     }
-    return nc;
+    return false;
   }
-  _deepСopy(o:any){
-     var output, v, key;
-     output = Array.isArray(o) ? [] : {};
-       for (key in o) {
-           v = o[key];
-           output[key] = (typeof v === "object") ? this._deepСopy(v) : v;
-       }
-     return output;
+  _hasCollection(){
+    if((this.collection!=null)
+    ){
+      return true;
+    }else{return false;}
   }
 
 }
@@ -587,6 +562,12 @@ export class ItemParameter extends NodeCollection{
     this.valueVal=valueVal_;
 
     this.show=false;
+
+    //different html input CSS types for variable classes
+    //boolean -> checlbox
+
+    //++ template classes for custom html elements
+    //datepicker -> datepicker component
 
     if(show_!=null){
       this.show=show_;
@@ -658,6 +639,7 @@ export class QuizParameter extends ItemParameter{
         }
 
     }
+
 }
 
 
@@ -830,7 +812,6 @@ export class AnswerControls extends HtmlItem{
 
 // obsolete est itemp params
 
-
 class ItemValue {key:string;value:number;min:number;max:number}
 class ItemDrop {key:string;values:[{value:number;checked:boolean}]}
 export class TestGapPickerParameter{
@@ -843,11 +824,11 @@ export class TestGapPickerParameter{
 }
 
 
-export class QuizItem extends NodeCollection{
+export class QuizItem extends HtmlItem{
 
   //Collection of formcontroll to generate for user input
 
-  itemParameter:NodeCollection;
+  itemParameter:HtmlItem;
 
   //Collection of gormcontrols to generate for read
 
@@ -855,11 +836,17 @@ export class QuizItem extends NodeCollection{
 
   constructor(
     option:{key_?:number,name_?:string, value_?:string,collection_?:ICollection_<INodeCollection>
-    ,itemParameter_?:NodeCollection,quizStatistic_?:NodeCollection}
-    ={key_:0,name_:"QuizItem",value_:null,collection_:null,itemParameter_:new NodeCollection()}
+    ,itemParameter_?:HtmlItem,quizStatistic_?:NodeCollection}
+    ={key_:0,name_:"QuizItem",value_:null,collection_:null,itemParameter_:new HtmlItem(0,"","","","","",true,"",null)}
     ){
-      super(option.key_,option.name_,option.value_,option.collection_);
 
+      //NodeCollection initializer
+
+      // super(option.key_,option.name_,option.value_,option.collection_);
+
+      //HtmlItem super init
+
+      super(option.key_,option.name_,option.value_,"","",null,true,"",option.collection_);
 
       this.typeName="QuizItem";
       if(option.collection_==null){
@@ -868,68 +855,9 @@ export class QuizItem extends NodeCollection{
 
       if(option.itemParameter_!=null){
         this.itemParameter=option.itemParameter_;
-      }else{this.itemParameter=new NodeCollection();}
+      }else{this.itemParameter=new HtmlItem(0,"","","","","",true,"",null);}
 
   }
-
-  _checkArray(n_:Collection_<NodeCollection>){
-    if(n_.array!=null){
-      if(n_.array.length>0){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  _checkCollection(n_:QuizItem){
-    if((n_!=null)
-    && (n_.collection!=null)
-    ){
-      return true;
-    }else{return false;}
-  }
-  _Clone(){
-    let r=new QuizItem();
-      r=this._deepClone(this,r);
-    return r;
-  }
-  _deepClone(from_:QuizItem,to_:QuizItem){
-
-
-
-      if(this._checkCollection(from_)){
-      //console.log(["Parent create from,to:",from_,to_]);
-
-      if(this._checkArray(from_.collection)){
-
-      //has children
-
-        for(let n_ of from_.collection.array){
-        //console.log(["Collection loop:item,of",n_,from_]);
-
-          let temp_=Factory_.CloneItemByClass(n_);
-
-          if(n_ instanceof QuizItem){
-            //console.log(["Pushed to parent from,to:",from_,to_]);
-
-            this._deepClone(n_,temp_);
-          }
-
-          to_.collection.array.push(temp_);
-
-        }
-
-      }else{
-        //head element
-
-        to_=Factory_.CloneItemByClass(from_);
-      }
-
-      }
-
-      console.log(["Return :",to_,to_._key]);
-      return to_;
-    }
 
 }
 
@@ -973,7 +901,9 @@ export class Quiz extends QuizItem{
       }
 
     }
-
+  scanParameters(name_:string){
+    return this.scan(name_,this.itemParameter);
+  }
 }
 export class Questionarie extends Quiz{}
 export class Victorine extends Quiz{}
@@ -1252,7 +1182,7 @@ export class ModelContainer{
     let nd_:any;
 
     if(n_ instanceof QuizItem){
-      nd_=n_._Clone();
+      nd_=Factory_._Clone(n_);
     }
 
     //ModelContainer.nodeToEdit=nd_;
@@ -1653,19 +1583,19 @@ export class Factory_{
           , Factory_.QuizCheckboxes()
           );
 
-        let startDate=new HtmlItem(0,"QuizStartDate","Select Quiz start date","","","Select Quiz start date",true,"fxhr"
+        let startDate=new HtmlItem(1,"QuizStartDate","Select Quiz start date","","","Select Quiz start date",true,"fxhr"
           , Factory_.QuizStartDate()
           );
 
-        let circleCheck=new HtmlItem(0,"QuizCircle","Does quiz cicled?","","","Does quiz cicled?",true,"fxhr"
+        let circleCheck=new HtmlItem(2,"QuizCircle","Does quiz cicled?","","","Does quiz cicled?",true,"fxhr"
           , Factory_.QuizCicleCheckbox()
           );
 
-        let numbercontrols=new HtmlItem(1,"DateGap","Choose quiz restart period","","","Choose quiz restart period",true,"fxhr"
+        let numbercontrols=new HtmlItem(3,"DateGap","Choose quiz restart period","","","Choose quiz restart period",true,"fxhr"
           , Factory_.QuizNumberControls()
         );
 
-        let calendarcontrols=new HtmlItem(2,"CalendarControls","Choose quiz calendar period","","","Choose quiz calendar period",true,"fxhr"
+        let calendarcontrols=new HtmlItem(4,"CalendarControls","Choose quiz calendar period","","","Choose quiz calendar period",true,"fxhr"
           , Factory_.CalendarDropDowns()
         );
 
@@ -1821,9 +1751,16 @@ export class Factory_{
       return "Wrong qnswers count for this type. Only 1 allowed.";
     }
 
-
     static CloneItemByClass(n_:NodeCollection){
       let r_:any=null;
+
+      if(n_ instanceof HtmlItem){
+        r_=new HtmlItem(n_._key,n_._name,n_._value,n_.HtmlClass,n_.HtmlTypeAttr
+        ,n_.HtmlSubmittedValue,n_.show,n_.cssClass,n_.collection);
+      }
+      if(n_ instanceof QuizControls){
+        r_=new QuizControls({cssClass_:n_.cssClass,show_:n_.show,collection_:new Collection_<HtmlItem>()});
+      }
       if(n_ instanceof QuizItem){
         r_=new QuizItem({key_:n_._key,name_:n_._name,value_:n_._value,collection_:new Collection_<QuizItem>()})
       }
@@ -1831,13 +1768,63 @@ export class Factory_{
         r_=new Quiz({key_:n_._key,name_:n_._name,value_:n_._value,collection_:new Collection_<Question>(),itemParameter_:new QuizControls()})
       }
       if(n_ instanceof Question){
-        r_=new Question({key_:n_._key,name_:n_._name,value_:n_._value,collection_:new Collection_<Answer>(),itemParameter_:new QuestionControls()})
+        r_=new Question({key_:n_._key,name_:n_._name,value_:n_._value,collection_:new Collection_<Answer>()
+          ,itemParameter_:new QuestionControls()})
       }
       if(n_ instanceof Answer){
         r_=new Answer({key_:n_._key,name_:n_._name,value_:n_._value,collection_:null,itemParameter_:new AnswerControls()})
       }
+
+
+
       return r_;
     }
+
+
+    static _Clone(n_:NodeCollection){
+        let r=Factory_.CloneItemByClass(n_);
+        let num=-1;
+          r=Factory_._deepClone(n_,r,num);
+        return r;
+      }
+    static _deepClone(from_:NodeCollection,to_:NodeCollection,num_:number){
+
+        num_+=1;
+        let temp_=new NodeCollection();
+
+            if(from_._hasCollection()){
+            // console.log(["Parent create from,to:",from_,to_,num_]);
+
+              if(from_._hasArray()){
+
+              //has children
+
+                for(let n_ of from_.collection.array){
+                //console.log(["Collection loop:item,of",n_,from_]);
+
+                  if(n_ instanceof QuizItem){
+                    //console.log(["Pushed to parent from,to:",from_,to_]);
+
+                    temp_=Factory_.CloneItemByClass(n_);
+                    Factory_._deepClone(n_,temp_,num_);
+                  }
+
+                  to_.collection.array.push(temp_);
+
+                }
+
+              }else{
+                //head element
+
+                to_=Factory_.CloneItemByClass(from_);
+              }
+
+            }
+
+            num_-=1;
+            // console.log(["Return :",to_,to_._key]);
+            return to_;
+          }
 
 }
 
@@ -2154,62 +2141,24 @@ export class Test{
 
     }
 
+    public static CheckDeepCopyClasses(){
 
-    //shallow copy test
-
-    public static CheckShallowCopy(){
-      let cl0=new NodeCollection(0,"Cl00","Cl00"
-      ,new Collection_<NodeCollection>([
-        new NodeCollection(1,"Cl01","Cl01",
-            new Collection_<NodeCollection>([
-              new NodeCollection(0,"Cl10","Cl10",null)
-              ,new NodeCollection(0,"Cl11","Cl11",null)
-            ])
-        )
-        ,new NodeCollection(1,"Cl02","Cl02",null)
-      ])
-
-      );
-
-      let cl1=cl0._deepСopy(cl0);
-
-      let cl_0_10=cl0.scan("Cl10",cl0);
-      let cl_1_10=cl1.scan("Cl10",cl1);
-
-      cl_1_10._name="cl_1_10";
-
-      console.log(["CheckshallowCopy, cl0 to cl1. item",cl0,cl1]);
-      console.log(["Items, cl_0_10cl_1_10",cl_0_10,cl_1_10]);
-
-      let qrr0=new NodeCollection(0,"Node_00","Node_00",new Collection_<NodeCollection>([
-        new NodeCollection(0,"Node_01",null,null)
-        ,new NodeCollection(1,"Node_02",null,null)
-      ]));
-
-      let qrr1=qrr0._deepСopy(qrr0.collection.array);
-      // qrr0.collection.array[0]._name="namechanged";
-      qrr0.collection.array[0]._name="namechanged";
-      console.log(["Qrr1:",qrr1])
-    }
-
-    public static CheckDeepCopy(){
-
-      let qz_0=new QuizItem({key_:0,name_:"qz00",value_:"qz00",collection_:new Collection_<QuizItem>(
+      let qz_0=new QuizItem({key_:0,name_:"qz00",value_:"qz00",collection_:new Collection_<Quiz>(
         [
-          new QuizItem({key_:1,name_:"qz01",value_:"qz01",collection_:
-            new Collection_<QuizItem>(
+          new Quiz({key_:1,name_:"qz01",value_:"qz01",collection_:
+            new Collection_<Question>(
               [
-                new QuizItem({key_:3,name_:"qz03",value_:"qz03",collection_:null})
-                ,new QuizItem({key_:4,name_:"qz04",value_:"qz04",collection_:null})
-                ,new QuizItem({key_:5,name_:"qz05",value_:"qz05",collection_:null})
+                new Question({key_:3,name_:"qz03",value_:"qz03",collection_:null})
+                ,new Question({key_:4,name_:"qz04",value_:"qz04",collection_:null})
+                ,new Question({key_:5,name_:"qz05",value_:"qz05",collection_:null})
               ]
-            )
+            ),itemParameter_:new QuizControls()
         })
-          ,new QuizItem({key_:2,name_:"qz02",value_:"qz02",collection_:
-            new Collection_<QuizItem>(
+          ,new Quiz({key_:2,name_:"qz02",value_:"qz02",collection_:
+            new Collection_<Question>(
               [
-                new QuizItem({key_:6,name_:"qz06",value_:"qz06",collection_:null})
-                ,new QuizItem({key_:7,name_:"qz07",value_:"qz07",collection_:null})
+                new Question({key_:6,name_:"qz06",value_:"qz06",collection_:null})
+                ,new Question({key_:7,name_:"qz07",value_:"qz07",collection_:null})
               ]
             )
         })
@@ -2218,8 +2167,35 @@ export class Test{
       });
 
       let qz_1=new QuizItem({key_:0,name_:"qz10",value_:"qz10",collection_:null});
-      qz_1=qz_0._Clone();
+
+      qz_1=Factory_._Clone(qz_0);
+
       qz_0.collection.array[0]._name="changedName"
+
+      //ItemPrameterss change
+        let ip_0=null;
+        let qz_ch=qz_0.collection.array[0];
+        // console.log(["qz_ch",qz_ch])
+        if(qz_ch instanceof Quiz){
+          // console.log(["1",qz_ch])
+          ip_0=qz_ch.scanParameters("QuizStat");
+          if(ip_0 instanceof HtmlItem){
+            ip_0.show=false;
+          }
+        }
+
+      //ItemPrameterss change
+
+        let qz_ch_1=qz_1.collection.array[0];
+        // console.log(["qz_ch",qz_ch])
+        if(qz_ch_1 instanceof Quiz){
+          // console.log(["1",qz_ch])
+          let ip_1=qz_ch_1.scanParameters("QuizStat");
+          if(ip_1 instanceof HtmlItem){
+            console.log(["ItemParmeters, from, to : ",ip_0,ip_1]);
+          }
+        }
+
       console.log(["CheckDeepCopy: ",qz_0,qz_1]);
     }
 
@@ -2232,6 +2208,10 @@ export class Test{
         console.log(["qz instanceof Quiz: ",qz instanceof Quiz])
         console.log(["qz instanceof QuizItem: ",qz instanceof QuizItem])
         console.log(["qt instanceof Question: ",qt instanceof Question])
+    }
+
+    public static CheckDeepCopyRecursive(){
+
     }
 
     public static GO(){
@@ -2248,8 +2228,13 @@ export class Test{
 
       //DeepCopy check
 
-      this.CheckDeepCopy();
+      //this.CheckDeepCopy();
 
+      //Deepcopy class
+      this.CheckDeepCopyClasses();
+
+      //deep copy with recursive parameters copy
+      // this.CheckDeepCopyRecursive();
 
       //Inheritance check
 
