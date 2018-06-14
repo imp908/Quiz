@@ -44,7 +44,7 @@ export class MenuListComponent implements OnInit {
           this.conatinerBind();
       });
       ModelContainer.nodeDeleted.subscribe(s=>{
-        ServiceCl.log([this.constructor.name+" nodeDelete received: ",s])
+        ServiceCl.log(['nodeDeleted Received : ' + this.constructor.name,s])
           this.conatinerBind();
       });
 

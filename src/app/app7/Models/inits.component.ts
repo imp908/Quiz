@@ -1096,7 +1096,7 @@ export class ModelContainer{
 
   }
 
-  static clickStageDetect(b_:NodeCollection,n_:any){
+  static clickStageDetect(b_:Button,n_:any){
     ServiceCl.log(["clickStageDetect",b_,n_]);
     console.log(["instanceof: ",b_]);
 
@@ -1105,7 +1105,9 @@ export class ModelContainer{
       if(b_._name=="Edit_"){
         ServiceCl.log(["Edit_"]);
         let bt= ModelContainer.saveButtons_;
+
         // if(bt instanceof Button){ bt.disabled_=false;}
+
         ModelContainer.nodeSelect(n_);
       }
       if(b_._name=="Delete_"){
@@ -1120,7 +1122,6 @@ export class ModelContainer{
         ServiceCl.log("Copy_");
         ModelContainer.nodeCopySelect(n_);
       }
-
       ModelContainer.CheckAnswerAmount(false);
     }
 
@@ -1265,6 +1266,7 @@ export class ModelContainer{
         ModelContainer.AnswerToEdit=null;
       }
     }
+
     ModelContainer.nodeDeleted.emit(n_);
     ServiceCl.log(["nodeDelete",n_,ModelContainer]);
   }
@@ -1292,6 +1294,7 @@ export class ModelContainer{
       ServiceCl.log(["Save to ","Quiz",n_,quizEditable]);
       ModelContainer.saveTo(n_,quizEditable);
     }
+
     ModelContainer.nodeSaved.emit(n_);
   }
 
@@ -1379,7 +1382,10 @@ export class ModelContainer{
     let addNewToggle_:boolean=false;
     btn_.disabled_=false;
 
-    console.log(["ModelContainer.nodeToEdit: ",ModelContainer.nodeToEdit]);
+    console.log(["CheckAnswerAmount bntObj, btn_: ",btn_]);
+    console.log(["ModelContainer.nodeToEdit: ",ModelContainer.nodeToEdit instanceof QuizItem,ModelContainer.nodeToEdit]);
+    //If current qdditing node - Question => check button state
+
     if(ModelContainer.nodeToEdit !=null){
       if(ModelContainer.nodeToEdit instanceof Question){
 
@@ -1390,6 +1396,21 @@ export class ModelContainer{
 
         if(tx instanceof HtmlItem){
           if(tx.HtmlSubmittedValue=="Text answer"){
+
+
+            //if adding new item enable buttons
+
+            if(!isNew_){
+              console.log(["!isNew_: "])
+              if(ModelContainer.nodeToEdit.collection.array.length<=0){
+                console.log(["disabled_: ",btn_,tx])
+                btn_.disabled_=true;
+              }
+            }else{
+              console.log(["isNew_: "])
+                console.log(["not disabled_: ",btn_,tx])
+                btn_.disabled_=false;
+            }
 
             console.log(["not disabled_: ",btn_,tx])
 
@@ -1413,20 +1434,6 @@ export class ModelContainer{
           }
         }
 
-
-        //if adding new item enable buttons
-
-        if(!isNew_){
-          console.log(["!isNew_: "])
-          if(ModelContainer.nodeToEdit.collection.array.length<=0){
-            console.log(["disabled_: ",btn_,tx])
-            btn_.disabled_=true;
-          }
-        }else{
-          console.log(["isNew_: "])
-            console.log(["not disabled_: ",btn_,tx])
-            btn_.disabled_=false;
-        }
       }
     }
     ModelContainer.addNewToggle.emit(addNewToggle_);
@@ -1825,6 +1832,14 @@ export class Factory_{
             // console.log(["Return :",to_,to_._key]);
             return to_;
           }
+    static DeepClone(obj_:any){
+      let  r_ = Object.assign(
+					Object.create(
+					  Object.getPrototypeOf(obj_)
+					)  ,obj_
+				  );
+				  return r_;
+    }
 
 }
 
@@ -2210,8 +2225,33 @@ export class Test{
         console.log(["qt instanceof Question: ",qt instanceof Question])
     }
 
-    public static CheckDeepCopyRecursive(){
+    public static CheckDeepCopyVanilaJS(){
+      let qz_0=new QuizItem({key_:0,name_:"qz00",value_:"qz00",collection_:new Collection_<Quiz>(
+        [
+          new Quiz({key_:1,name_:"qz01",value_:"qz01",collection_:
+            new Collection_<Question>(
+              [
+                new Question({key_:3,name_:"qz03",value_:"qz03",collection_:null})
+                ,new Question({key_:4,name_:"qz04",value_:"qz04",collection_:null})
+                ,new Question({key_:5,name_:"qz05",value_:"qz05",collection_:null})
+              ]
+            ),itemParameter_:new QuizControls()
+        })
+          ,new Quiz({key_:2,name_:"qz02",value_:"qz02",collection_:
+            new Collection_<Question>(
+              [
+                new Question({key_:6,name_:"qz06",value_:"qz06",collection_:null})
+                ,new Question({key_:7,name_:"qz07",value_:"qz07",collection_:null})
+              ]
+            )
+        })
+        ]
+      )
+      });
 
+      let  qz_1 =Factory_.DeepClone(qz_0);
+      qz_0.collection.array[0]._name="Changed";
+      console.log(["JSON CheckDeepCopyVanilaJS:",qz_1]);
     }
 
     public static GO(){
@@ -2240,6 +2280,13 @@ export class Test{
 
       //this.CheckInstanceOfDeriveredClasses()
 
+
+      //check deep cloning of objects
+
+      //this.CheckDeepCopyVanilaJS();
+
+      ModelContainer.Init();
+      console.info(JSON.stringify(ModelContainer.nodesPassed_.collection.array[0]));
       ServiceCl.log(["GO " ]);
     }
 

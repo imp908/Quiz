@@ -47,7 +47,9 @@ export class ClickComponent implements OnInit {
     ServiceCl.log(["clicked_: ",o_,this.button_])
     ModelContainer.clickStageDetect(this.button_,o_);
   }
+
   clickEvent_(e:any){
     ServiceCl.log(["clickEvent_ : ",e])
   }
+
 }
