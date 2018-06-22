@@ -3,6 +3,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { NgModule, Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
 
+import { HttpClient, HttpHeaders , HttpResponse} from '@angular/common/http';
+
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { CommonModule } from '@angular/common';
@@ -37,6 +39,10 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { DropdownmultingComponent } from './templates/Elements/dropdowns/dropdownmulting/dropdownmulting.component';
 import { DropdownmultiComponent } from './templates/Elements/dropdowns/dropdownmulti/dropdownmulti.component';
 
+import {HttpService} from 'app/app7/Services/http.service'
+
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   imports: [
@@ -44,6 +50,7 @@ import { DropdownmultiComponent } from './templates/Elements/dropdowns/dropdownm
     ,NgbModule.forRoot()
 
     ,MultiselectDropdownModule
+    ,HttpClientModule
   ],
   declarations:[
     App7Component,
@@ -56,6 +63,6 @@ import { DropdownmultiComponent } from './templates/Elements/dropdowns/dropdownm
     DropdownmultingComponent,
     DropdownmultiComponent],
   bootstrap:[App7Component],
-  providers:[Service_]
+  providers:[Service_,HttpService]
 })
 export class App7Module { }

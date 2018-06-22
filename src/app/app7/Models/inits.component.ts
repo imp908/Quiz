@@ -2286,7 +2286,12 @@ export class Test{
       //this.CheckDeepCopyVanilaJS();
 
       ModelContainer.Init();
-      console.info(JSON.stringify(ModelContainer.nodesPassed_.collection.array[0]));
+
+      //JSON first Quiz
+      //console.info(JSON.stringify(ModelContainer.nodesPassed_.collection.array[0]));
+
+      console.info(JSON.stringify(ModelContainer.nodesPassed_));
+
       ServiceCl.log(["GO " ]);
     }
 
