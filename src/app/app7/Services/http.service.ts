@@ -17,7 +17,7 @@ export class HttpService {
 
   nodesPassed_:NodeCollection;
 
-  private url:string = 'http://localhost:3208//api//quiz//ps0';
+  private url:string = 'http://localhost:3208//api//quiz';
 
   constructor(private http: HttpClient) {
     ModelContainer.Init();
@@ -26,6 +26,10 @@ export class HttpService {
 
   addQuiz (quiz: NodeCollection): Observable<NodeCollection[]> {
     return this.http.post<NodeCollection[]>(this.url, quiz, httpOptions);
+  }
+
+  getQuiz(){
+    return this.http.get<NodeCollection[]>(this.url);
   }
 
   addQuizTs () {
@@ -38,4 +42,13 @@ export class HttpService {
     );
 
   }
+
+  getQuizTs(){
+    this.getQuiz().subscribe(
+      (s:NodeCollection[]) =>{
+        console.log(["Get: ",s])
+      }
+    );
+  }
+
 }

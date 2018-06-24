@@ -44,4 +44,8 @@ export class MenuComponent implements OnInit {
     this.http_.addQuizTs();
     ServiceCl.log(["Posted"]);
   }
+  QuizGet(){
+    this.http_.getQuizTs();
+    ServiceCl.log(["Getted"]);
+  }
 }
