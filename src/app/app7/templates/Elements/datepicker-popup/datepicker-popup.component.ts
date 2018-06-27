@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ServiceCl,Service_} from 'app/app7/Services/services.component'
-import {ModelContainer,Quiz,ItemParameter,HtmlItem} from 'app/app7/Models/inits.component'
+import {ModelContainer,Quiz,HtmlItem} from 'app/app7/Models/inits.component'
 
 @Component({
   selector: 'app-datepicker-popup',

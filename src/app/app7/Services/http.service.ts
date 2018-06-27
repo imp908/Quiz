@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders , HttpResponse} from '@angular/common/http';
 
 import { Injectable } from '@angular/core';
 
-import {Test,HtmlItem,QuizParameter,ModelContainer,NodeCollection,Quiz} from 'app/app7/Models/inits.component'
+import {Test,HtmlItem,ModelContainer,NodeCollection,Quiz} from 'app/app7/Models/inits.component'
 
 import {Observable} from 'rxjs/Observable';
 

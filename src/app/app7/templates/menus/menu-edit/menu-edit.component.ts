@@ -25,9 +25,7 @@ export class MenuEditComponent implements OnInit {
 
     ServiceCl.log(['Constructor : ' + this.constructor.name, this.saveButtons_, this.nodeToEdit_])
   }
-  nodeTypeGet(){
-    return this.nodeToEdit_.getType_();
-  }
+
   ngOnInit(){
     ServiceCl.log(['Inited  : ' + this.constructor.name, this.saveButtons_, this.nodeToEdit_])
     //edit new item

@@ -1,6 +1,6 @@
 import { Component, OnInit ,Input} from '@angular/core';
 import {ServiceCl,Service_} from 'app/app7/Services/services.component'
-import {Test,HtmlItem,QuizParameter,ModelContainer,NodeCollection,Quiz} from 'app/app7/Models/inits.component'
+import {Test,HtmlItem,ModelContainer,NodeCollection,Quiz} from 'app/app7/Models/inits.component'
 
 import {Collection_} from 'app/app7/Models/inits.component'
 
