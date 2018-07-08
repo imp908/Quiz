@@ -1,4 +1,5 @@
 :root {
+
   --backgroundZ:0;
   --menuZ:1;
   --shadowZ:3;
@@ -82,7 +83,6 @@
     );
 
 
-
     /* Scrollbar colors and degrees */
     --scrollbarWidth:1%;
     --scrollbarHeight:1%;
@@ -97,8 +97,5 @@
     --scrollbarThumbColorGradBlueHor:linear-gradient(var(--scrollbarColorGradDegHor), #30cfd0 0%, #330867 100%);
 
     --scrollbarThumbHoover:rgba(65, 27, 142,0.8);
-
-
-
 
 }

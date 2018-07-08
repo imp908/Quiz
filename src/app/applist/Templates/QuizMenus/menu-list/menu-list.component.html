@@ -1,0 +1,20 @@
+<p>
+  menu-list works!
+</p>
+
+<ng-container>
+  <div>
+    <ng-container *ngIf="_quizes!=null">
+    <div *ngFor="let i of _quizes">
+      <!-- <app-item [_item]="i"></app-item> -->
+      <div class="fxvt">
+        <hr>
+        <div class="fxhr">
+          <app-item [_item]="i"></app-item>
+          <app-items [_items]="this._buttons" [_itemsObject]="i"></app-items>
+        </div>
+      </div>
+    </div>
+    </ng-container>
+  </div>
+</ng-container>
