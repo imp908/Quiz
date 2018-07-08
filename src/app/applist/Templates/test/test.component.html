@@ -109,6 +109,10 @@
     <!-- Publish area  -->
     <!-- =======================================     -->
     <div class="itemGroup">
-      <app-menu-list [_quizes]="this.quizItems_.array"[_buttons]="this.ItemButtons_"></app-menu-list>
+      <app-menu-edit [_item]="this.quizItems_.array[0]"></app-menu-edit>
     </div>
+
+    <div class="itemGroup">
+      <app-menu-list [_quizes]="this.quizItems_.array"[_buttons]="this.ItemButtons_"></app-menu-list>
+    </div>.  
     <!-- =======================================     -->
