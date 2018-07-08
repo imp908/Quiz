@@ -80,19 +80,16 @@ export class FactoryNew{
 
     for(let i=0;i<12;i++){
       r.add(
-        new TextControlNew({
+        new LabelControlNew({
           key_:i,
-          name_:"Textctrl",
-          value_:"Month " + (i+1),
+          name_:"Text control",
+          value_:"Month "+(i+1),
           typeName_:null
           ,array_:null
           ,cssClass_:"",show_:true
           ,HtmlTypeAttr_:"div"
-          ,HtmlSubmittedValue_:"text value"
-          ,pattern_:null
-          ,maxLength_:null
-          ,minLength_:null
-        })
+          ,HtmlSubmittedValue_:null
+          })
       )
     }
     return r;
@@ -114,7 +111,7 @@ export class FactoryNew{
     });
 
     let checkboxes = new HtmlItemNew({
-      key_:1,
+      key_:0,
       name_:"QuizCheckboxControlls",
       value_:"QuizCheckboxControlls",
       typeName_:null
@@ -125,9 +122,9 @@ export class FactoryNew{
           value_:"Is question anonimous?",
           typeName_:null
           ,array_:null
-          ,cssClass_:"",show_:true
+          ,cssClass_:"fxhr",show_:true
           ,HtmlTypeAttr_:"div"
-          ,HtmlSubmittedValue_:false
+          ,HtmlSubmittedValue_:true
         })
         ,  new CheckBoxControlNew({
             key_:3,
@@ -135,7 +132,7 @@ export class FactoryNew{
             value_:"Show quiz statistics?",
             typeName_:null
             ,array_:null
-            ,cssClass_:"",show_:true
+            ,cssClass_:"fxhr",show_:true
             ,HtmlTypeAttr_:"div"
             ,HtmlSubmittedValue_:false
           })
@@ -145,7 +142,7 @@ export class FactoryNew{
               value_:"Place questions on list?",
               typeName_:null
               ,array_:null
-              ,cssClass_:"",show_:true
+              ,cssClass_:"fxhr",show_:true
               ,HtmlTypeAttr_:"div"
               ,HtmlSubmittedValue_:false
             })
@@ -155,39 +152,39 @@ export class FactoryNew{
                 value_:"Can quiz be replayed?",
                 typeName_:null
                 ,array_:null
-                ,cssClass_:"",show_:true
+                ,cssClass_:"fxhr",show_:true
                 ,HtmlTypeAttr_:"div"
                 ,HtmlSubmittedValue_:false
               })
       )
-      ,cssClass_:"",show_:true
+      ,cssClass_:"fxvt",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:false
     });
 
     let stardate = new HtmlItemNew({
-      key_:2,
+      key_:1,
       name_:"QuizStartDate",
-      value_:"Datepicker",
+      value_:"Quiz start date",
       typeName_:null
       ,array_:new Array<DatePickerControlNew>(
         new DatePickerControlNew({
           key_:0,
           name_:"QuizStartDate",
-          value_:"Datepicker",
+          value_:"Quiz start date",
           typeName_:null
           ,array_:null
-          ,cssClass_:"",show_:true
+          ,cssClass_:"fxhr",show_:true
           ,HtmlTypeAttr_:"div"
           ,HtmlSubmittedValue_:new Date(2018,1,1)
         }))
-      ,cssClass_:"",show_:true
+      ,cssClass_:"fxhr",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
 
     let cycleCheckbox = new HtmlItemNew({
-      key_:3,
+      key_:2,
       name_:"CycleCheckbox",
       value_:"CycleCheckbox",
       typeName_:null
@@ -198,11 +195,11 @@ export class FactoryNew{
          value_:"Does quiz need to be cicled?",
          typeName_:null
          ,array_:null
-         ,cssClass_:"",show_:true
+         ,cssClass_:"fxhr",show_:true
          ,HtmlTypeAttr_:"div"
          ,HtmlSubmittedValue_:false
        }))
-      ,cssClass_:"",show_:true
+      ,cssClass_:"fxhr",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
@@ -219,12 +216,12 @@ export class FactoryNew{
           value_:"Years gap",
           typeName_:null
           ,array_:null
-          ,cssClass_:"",show_:true
+          ,cssClass_:"fxvt",show_:true
           ,HtmlTypeAttr_:"div"
           ,HtmlSubmittedValue_:0
           ,DisplayValue_:0
           ,minN:0
-          ,maxN:2
+          ,maxN:9999
         })
         ,new NumberPickerControlNew({
           key_:0,
@@ -232,15 +229,46 @@ export class FactoryNew{
           value_:"Months gap",
           typeName_:null
           ,array_:null
-          ,cssClass_:"",show_:true
+          ,cssClass_:"fxvt",show_:true
           ,HtmlTypeAttr_:"div"
           ,HtmlSubmittedValue_:0
           ,DisplayValue_:0
-          ,minN:-2
-          ,maxN:3
+          ,minN:0
+          ,maxN:9999
         })
       )
+      ,cssClass_:"fxhr",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:""
+    });
+
+    let DropBoxes = new HtmlItemNew({
+      key_:5,
+      name_:"DropBoxes",
+      value_:"Time periods",
+      typeName_:null
+      ,array_:new Array<DropDownControlMultiNew>(
+      FactoryNew.MonthsInYear()
+      ,new DropDownControlMultiNew({
+      key_:1,
+      name_:"Weeks in year",
+      value_:"Weeks in year",
+      typeName_:null
+      ,array_:TestNew.LabelControlNewTest(3,"row").array
       ,cssClass_:"",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:""})
+      ,new DropDownControlMultiNew({
+      key_:2,
+      name_:"Days in week",
+      value_:"Days in week",
+      typeName_:null
+      ,array_:TestNew.LabelControlNewTest(3,"row").array
+      ,cssClass_:"",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:""})
+      )
+      ,cssClass_:"fxhr",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
@@ -249,7 +277,9 @@ export class FactoryNew{
     r.add(stardate);
     r.add(cycleCheckbox);
     r.add(quizNumbers);
+    r.add(DropBoxes);
 
+    r.sort(true);
     return r;
   }
   static questionParametersNewGen(){
