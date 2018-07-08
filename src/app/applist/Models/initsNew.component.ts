@@ -454,6 +454,35 @@ export class FactoryNew{
 
 }
 
+export class ModelContainerNew{
+
+  static nodeSelected:HtmlItemNew;
+
+  @Output() static stateChanged=new EventEmitter();
+
+  @Output() static nodeEdit=new EventEmitter();
+
+  public static buttonClicked(btn_:ButtonNew,obj:HtmlItemNew,e:any){
+    console.log(["buttonClicked :",btn_,obj,e])
+
+    if(btn_ instanceof EditNew){
+      console.log("edit")
+      if(obj != null){if(obj instanceof HtmlItemNew){
+        ModelContainerNew.nodeSelected=obj
+        ModelContainerNew.nodeEdit.emit();
+      }}
+    }
+    if(btn_ instanceof CopyNew){console.log("copy")}
+    if(btn_ instanceof DeleteNew){console.log("delete")}
+
+
+
+    ModelContainerNew.stateChanged.emit();
+  }
+
+
+
+}
 
 export class TestNew{
 

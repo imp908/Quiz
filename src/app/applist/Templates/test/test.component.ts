@@ -2,7 +2,7 @@ import {Component,OnInit} from '@angular/core';
 import {ButtonNew,HtmlItemNew,QuizItemNew} from 'src/app/applist/Models/POCOnew.component';
 import {QuizNew,QuestionNew,AnswerNew} from 'src/app/applist/Models/POCOnew.component';
 
-import {FactoryNew} from 'src/app/applist/Models/initsNew.component';
+import {FactoryNew,ModelContainerNew} from 'src/app/applist/Models/initsNew.component';
 
 import {ServiceCl} from 'src/app/applist/Services/services.component';
 
@@ -30,6 +30,13 @@ export class TestComponent implements OnInit {
   objectOne:HtmlItemNew;
   objectTwo:HtmlItemNew;
 
+  // Menu checker
+  _quizes:QuizNew[];
+  _questions:QuestionNew[];
+  _answers:AnswerNew[];
+
+  _buttons:ButtonNew[];
+
   constructor(){
     this.quizes_=new Array<QuizNew>();
     this.items_=TestNew.Buttons();
@@ -45,7 +52,7 @@ export class TestComponent implements OnInit {
     this.quizItems_=TestNew.QuizList();
     this.ItemButtons_=TestNew.ItemButtons();
 
-  
+
     this.quizes_=FactoryNew.quizes(3);
 
     this.TestItemButtons_=new HtmlItemNew(null);
@@ -59,6 +66,15 @@ export class TestComponent implements OnInit {
   }
 
   ngOnInit(){
+
+    ModelContainerNew.stateChanged.subscribe(s=>{
+      ServiceCl.log(["stateChanged received"]);
+    });
+    ModelContainerNew.nodeEdit.subscribe(s=>{
+      ServiceCl.log(["nodeEdit received"]);
+      this.quizItems_=ModelContainerNew.nodeSelected;
+    });
+
     ServiceCl.log(["Inited: " + this.constructor.name, this.quizItems_]);
   }
 
