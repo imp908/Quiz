@@ -119,7 +119,7 @@ export class FactoryNew{
         new TextControlNew({
           key_:0,
           name_:"ItemName",
-          value_:"Enter quiz name",
+          value_:"Enter quiz text",
           typeName_:null
           ,array_:null
           ,cssClass_:"fxhr",show_:true
@@ -323,35 +323,31 @@ export class FactoryNew{
       ,HtmlSubmittedValue_:"Question controlls"
     });
 
-    let textboxes = new TextControlNew({
-      key_:2,
-      name_:"Textctrl",
-      value_:"Question text",
+    let textboxes =new HtmlItemNew({
+      key_:0,
+      name_:"Questiontexts",
+      value_:"Questiontexts",
       typeName_:null
       ,array_:new Array<TextControlNew>(
-          new TextControlNew({
-            key_:0,
-            name_:"ItemName",
-            value_:"Enter question text",
-            typeName_:null
-            ,array_:null
-            ,cssClass_:"fxhr",show_:true
-            ,HtmlTypeAttr_:"div"
-            ,HtmlSubmittedValue_:""
-            ,DisplayValue_:""
-          })
-        )
-      ,cssClass_:"",show_:true
+        new TextControlNew({
+          key_:0,
+          name_:"ItemName",
+          value_:"Enter question text",
+          typeName_:null
+          ,array_:null
+          ,cssClass_:"fxhr",show_:true
+          ,HtmlTypeAttr_:"div"
+          ,HtmlSubmittedValue_:""
+          ,DisplayValue_:""
+        })
+      )
+      ,cssClass_:"fxvt",show_:true
       ,HtmlTypeAttr_:"div"
-      ,HtmlSubmittedValue_:null
-      ,DisplayValue_:"dsp"
-      ,pattern_:null
-      ,maxLength_:null
-      ,minLength_:null
+      ,HtmlSubmittedValue_:false
     });
 
     let dropboxes = new DropDownControlNgNew({
-        key_:0,
+        key_:1,
         name_:"QuestionTypes",
         value_:"Select answers type for question",
         typeName_:null
@@ -706,6 +702,7 @@ export class ModelContainerNew{
     this.questionSelected=null;
 
   }
+
   public static buttonClicked(btn_:ButtonNew,obj:HtmlItemNew,e:any){
     console.log(["buttonClicked :",btn_,obj,e])
 
@@ -750,7 +747,7 @@ export class ModelContainerNew{
       ModelContainerNew.nodeEdit.emit();
     }
 
-
+    ModelContainerNew.questionButtonsToggle();
     ModelContainerNew.stateChanged.emit();
   }
   public static checkboxClicked(item_:HtmlItemNew,object_:HtmlItemNew){
@@ -804,8 +801,8 @@ export class ModelContainerNew{
   static objectDetectAndBind(obj:HtmlItemNew){
 
     if(obj instanceof QuizItemNew){
-      ModelContainerNew.nodeSelected=obj;
       obj.nameObjectToItem();
+      ModelContainerNew.nodeSelected=obj;
       if(obj instanceof QuizNew){
         ModelContainerNew.answerSelected=null;
         ModelContainerNew.questionSelected=null;
@@ -862,28 +859,52 @@ export class ModelContainerNew{
     }
   }
   static DropBoxCheck(item_:HtmlItemNew){
-    if(item_.HtmlSubmittedValue=="Text answer"){
+    if(item_._name=="QuestionTypes"){
+      ModelContainerNew.questionButtonsToggle();
+    }
+  }
 
-      if(ModelContainerNew.nodeSelected instanceof QuestionNew){
+  static questionButtonsToggle(){
+    if(ModelContainerNew.nodeSelected instanceof QuestionNew){
 
+      let ctr=ModelContainerNew.questionSelected
+      .getControllItem("QuestionTypes");
 
-        if(ModelContainerNew.questionSelected.array.length==1){
-          // ServiceCl.log(["Disable NewAddNew"])
-          ModelContainerNew.disable.emit({btn:new NewAddNew(null)
-            ,obj:new QuestionNew(null)});
-        }
+      if(ctr!=null){
+      if(ctr.HtmlSubmittedValue=="Text answer"){
 
-        if(ModelContainerNew.questionSelected.array.length>1){
-          // ServiceCl.log(["Disable NewAddNew,SaveNew"])
-          ModelContainerNew.disable.emit({btn:new SaveNew(null)
-            ,obj:new QuestionNew(null)});
-          ModelContainerNew.disable.emit({btn:new NewAddNew(null)
-            ,obj:new QuestionNew(null)});
-        }
+          if(ModelContainerNew.questionSelected.array.length==1){
+            ServiceCl.log(["Disable NewAddNew"])
 
+            ModelContainerNew.disable.emit({btn:new NewAddNew(null)
+              ,obj:new AnswerNew(null),act:true});
+            ModelContainerNew.disable.emit({btn:new SaveNew(null)
+              ,obj:new QuestionNew(null),act:false});
+          }
+          if(ModelContainerNew.questionSelected.array.length>1){
+            ServiceCl.log(["Disable NewAddNew,SaveNew"])
 
+            ModelContainerNew.disable.emit({btn:new SaveNew(null)
+              ,obj:new QuestionNew(null),act:true});
+            ModelContainerNew.disable.emit({btn:new NewAddNew(null)
+              ,obj:new AnswerNew(null),act:true});
+          }
 
+          if(ModelContainerNew.questionSelected.array.length==0){
+            ModelContainerNew.disable.emit({btn:new SaveNew(null)
+              ,obj:new QuestionNew(null),act:false});
+            ModelContainerNew.disable.emit({btn:new NewAddNew(null)
+              ,obj:new AnswerNew(null),act:false});
+          }
+
+      }else{
+        ModelContainerNew.disable.emit({btn:new SaveNew(null)
+          ,obj:new QuestionNew(null),act:false});
+        ModelContainerNew.disable.emit({btn:new NewAddNew(null)
+          ,obj:new AnswerNew(null),act:false});
       }
+      }
+
     }
   }
 

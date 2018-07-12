@@ -633,13 +633,14 @@ export class QuizItemNew extends HtmlItemNew{
   nameObjectToItem(){
     let extrName=this.nameItem();
     if(extrName!=null){
-      extrName.HtmlSubmittedValue=this._name;
+      // console.log(["nameObjectToItem: ",extrName.HtmlSubmittedValue,this._name])
+      extrName.HtmlSubmittedValue=this._value;
     }
   }
   nameItemToObject(){
     let extrName=this.nameItem();
     if(extrName!=null){
-      this._name=extrName.HtmlSubmittedValue;
+      this._value=extrName.HtmlSubmittedValue;
     }
   }
 
