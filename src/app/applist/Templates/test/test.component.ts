@@ -20,11 +20,12 @@ export class TestComponent implements OnInit {
   controlls_:HtmlItemNew;
 
   ItemButtons_:HtmlItemNew;
-  quizItems_:HtmlItemNew;
+  editButtons_:HtmlItemNew;
+  quizItems_:QuizItemNew;
 
   quizes_: Array<QuizNew>;
-  questions_:QuestionNew[];
-  answers_:AnswerNew[];
+  questions_:Array<QuestionNew>;
+  answers_:Array<AnswerNew>;
 
   TestItemButtons_:HtmlItemNew;
   objectOne:HtmlItemNew;
@@ -37,7 +38,13 @@ export class TestComponent implements OnInit {
 
   _buttons:ButtonNew[];
 
+
   constructor(){
+
+    TestNew.GO();
+
+    ModelContainerNew.Init();
+
     this.quizes_=new Array<QuizNew>();
     this.items_=TestNew.Buttons();
 
@@ -50,10 +57,8 @@ export class TestComponent implements OnInit {
     //
 
     this.quizItems_=TestNew.QuizList();
-    this.ItemButtons_=TestNew.ItemButtons();
-
-
-    this.quizes_=FactoryNew.quizes(3);
+    this.ItemButtons_=FactoryNew.ItemButtons("");
+    this.editButtons_=FactoryNew.EditButtons("");
 
     this.TestItemButtons_=new HtmlItemNew(null);
     this.TestItemButtons_.array=new Array<HtmlItemNew>(
@@ -68,12 +73,9 @@ export class TestComponent implements OnInit {
   ngOnInit(){
 
     ModelContainerNew.stateChanged.subscribe(s=>{
-      ServiceCl.log(["stateChanged received"]);
+      ServiceCl.log(["stateChanged received by " + this.constructor.name]);
     });
-    ModelContainerNew.nodeEdit.subscribe(s=>{
-      ServiceCl.log(["nodeEdit received"]);
-      this.quizItems_=ModelContainerNew.nodeSelected;
-    });
+
 
     ServiceCl.log(["Inited: " + this.constructor.name, this.quizItems_]);
   }

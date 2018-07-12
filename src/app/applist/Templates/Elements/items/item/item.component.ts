@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import {ServiceCl} from 'src/app/applist/Services/services.component'
-import {HtmlItemNew,QuizItemNew} from 'src/app/applist/Models/POCOnew.component'
-import {FactoryNew} from 'src/app/applist/Models/initsNew.component';
+import {HtmlItemNew,QuizItemNew,TextControlNew} from 'src/app/applist/Models/POCOnew.component'
+import {FactoryNew,ModelContainerNew} from 'src/app/applist/Models/initsNew.component';
 
 @Component({
   selector: 'app-item',
@@ -28,14 +28,19 @@ export class ItemComponent implements OnInit {
     return FactoryNew.InstanceCheck(this._item);
   }
   clicked_(e_){
+    console.log(["clicked: ",e_])
     if(FactoryNew.TypeCheck(this._item)=='CheckBox'){
       this._item.HtmlSubmittedValue=!this._item.HtmlSubmittedValue;
-      ServiceCl.log(["Checkbox clicked",this._item]);
+      ModelContainerNew.checkboxClicked(this._item,this._object);
+      ServiceCl.log(["Checkbox clicked_",this._item,this._object]);
     }
     ServiceCl.log(["Item clicked event for item and object: ",e_,this._item,this._object]);
   }
   changeTextbox_(e){
-    this._item.HtmlSubmittedValue=e;
+    if(this._item instanceof TextControlNew){
+      this._item.HtmlSubmittedValue=e;
+      this._item.displayValue=this._item.HtmlSubmittedValue;
+    }
     ServiceCl.log(["changeTextbox_: ",e,this._item])
   }
   isQuizItem(i_:HtmlItemNew){

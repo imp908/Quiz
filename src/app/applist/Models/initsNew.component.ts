@@ -17,7 +17,7 @@ import {NodeNew,CollectionNew
   ,DatePickerControlNew,NumberPickerControlNew
   ,ButtonNew
   ,LabelControlNew
-  ,NewAddNew,SaveNew,EditNew,CopyNew,DeleteNew
+  ,NewAddNew,SaveNew,EditNew,CopyNew,DeleteNew,Cancel
 } from './POCOnew.component';
 
 
@@ -110,6 +110,29 @@ export class FactoryNew{
       ,HtmlSubmittedValue_:"Quiz controlls"
     });
 
+    let textboxes = new HtmlItemNew({
+      key_:0,
+      name_:"Quiztexts",
+      value_:"Quiztexts",
+      typeName_:null
+      ,array_:new Array<TextControlNew>(
+        new TextControlNew({
+          key_:0,
+          name_:"ItemName",
+          value_:"Enter quiz name",
+          typeName_:null
+          ,array_:null
+          ,cssClass_:"fxhr",show_:true
+          ,HtmlTypeAttr_:"div"
+          ,HtmlSubmittedValue_:""
+          ,DisplayValue_:""
+        })
+      )
+      ,cssClass_:"fxvt",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:false
+    });
+
     let checkboxes = new HtmlItemNew({
       key_:0,
       name_:"QuizCheckboxControlls",
@@ -191,7 +214,7 @@ export class FactoryNew{
       ,array_: new Array<CheckBoxControlNew>(
         new CheckBoxControlNew({
          key_:0,
-         name_:"Cicle",
+         name_:"CycleCheckboxItem",
          value_:"Does quiz need to be cicled?",
          typeName_:null
          ,array_:null
@@ -237,14 +260,14 @@ export class FactoryNew{
           ,maxN:9999
         })
       )
-      ,cssClass_:"fxhr",show_:true
+      ,cssClass_:"fxhr",show_:false
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
 
     let DropBoxes = new HtmlItemNew({
       key_:5,
-      name_:"DropBoxes",
+      name_:"DropBoxesGroup",
       value_:"Time periods",
       typeName_:null
       ,array_:new Array<DropDownControlMultiNew>(
@@ -255,7 +278,7 @@ export class FactoryNew{
       value_:"Weeks in year",
       typeName_:null
       ,array_:TestNew.LabelControlNewTest(3,"row").array
-      ,cssClass_:"",show_:true
+      ,cssClass_:"",show_:false
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""})
       ,new DropDownControlMultiNew({
@@ -273,11 +296,16 @@ export class FactoryNew{
       ,HtmlSubmittedValue_:""
     });
 
+
+    r.add(textboxes);
     r.add(checkboxes);
     r.add(stardate);
     r.add(cycleCheckbox);
     r.add(quizNumbers);
     r.add(DropBoxes);
+
+    DropBoxes.show=false;
+    quizNumbers.show=false;
 
     r.sort(true);
     return r;
@@ -295,27 +323,40 @@ export class FactoryNew{
       ,HtmlSubmittedValue_:"Question controlls"
     });
 
-    let textboxes=new TextControlNew({
+    let textboxes = new TextControlNew({
       key_:2,
       name_:"Textctrl",
       value_:"Question text",
       typeName_:null
-      ,array_:null
+      ,array_:new Array<TextControlNew>(
+          new TextControlNew({
+            key_:0,
+            name_:"ItemName",
+            value_:"Enter question text",
+            typeName_:null
+            ,array_:null
+            ,cssClass_:"fxhr",show_:true
+            ,HtmlTypeAttr_:"div"
+            ,HtmlSubmittedValue_:""
+            ,DisplayValue_:""
+          })
+        )
       ,cssClass_:"",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:null
+      ,DisplayValue_:"dsp"
       ,pattern_:null
       ,maxLength_:null
       ,minLength_:null
     });
 
-    let questionType = new DropDownControlMultiNew({
+    let dropboxes = new DropDownControlNgNew({
         key_:0,
-        name_:"Answer Type",
+        name_:"QuestionTypes",
         value_:"Select answers type for question",
         typeName_:null
-        ,array_:new Array<TextControlNew>(
-          new TextControlNew({
+        ,array_:new Array<LabelControlNew>(
+          new LabelControlNew({
             key_:0,
             name_:"Text answer",
             value_:"Text answer",
@@ -324,11 +365,8 @@ export class FactoryNew{
             ,cssClass_:"",show_:true
             ,HtmlTypeAttr_:"div"
             ,HtmlSubmittedValue_:""
-            ,pattern_:null
-            ,maxLength_:null
-            ,minLength_:null
           })
-          ,new TextControlNew({
+          ,new LabelControlNew({
             key_:1,
             name_:"Select one answer",
             value_:"Select one answer",
@@ -337,11 +375,9 @@ export class FactoryNew{
             ,cssClass_:"",show_:true
             ,HtmlTypeAttr_:"div"
             ,HtmlSubmittedValue_:""
-            ,pattern_:null
-            ,maxLength_:null
-            ,minLength_:null
+
           })
-          ,new TextControlNew({
+          ,new LabelControlNew({
             key_:2,
             name_:"Select any answer",
             value_:"Select any answer",
@@ -350,11 +386,9 @@ export class FactoryNew{
             ,cssClass_:"",show_:true
             ,HtmlTypeAttr_:"div"
             ,HtmlSubmittedValue_:""
-            ,pattern_:null
-            ,maxLength_:null
-            ,minLength_:null
+
           })
-          ,new TextControlNew({
+          ,new LabelControlNew({
             key_:3,
             name_:"Rating answer",
             value_:"Rating answer",
@@ -363,23 +397,143 @@ export class FactoryNew{
             ,cssClass_:"",show_:true
             ,HtmlTypeAttr_:"div"
             ,HtmlSubmittedValue_:""
-            ,pattern_:null
-            ,maxLength_:null
-            ,minLength_:null
+
           })
         )
         ,cssClass_:"",show_:true
         ,HtmlTypeAttr_:"div"
-        ,HtmlSubmittedValue_:null
+        ,HtmlSubmittedValue_:"Question type"
       });
 
-
     r.add(textboxes)
-    r.add(questionType)
+    r.add(dropboxes)
 
     return r;
   }
 
+  public static ItemButtons(itmNm:string){
+    let r = new HtmlItemNew(null);
+
+      r.addArr([new EditNew({key_:0,
+      name_:"Edit "+itmNm,
+      value_:"Edit "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-purple",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Edit "+itmNm,disabled_:false})
+      ,new CopyNew({key_:0,
+      name_:"Copy "+itmNm,
+      value_:"Copy "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-unique",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Copy "+itmNm,disabled_:false})
+      ,new DeleteNew({key_:0,
+      name_:"Delete "+itmNm,
+      value_:"Delete "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-danger",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Delete "+itmNm,disabled_:false})]);
+
+    r.cssClass="flexCtnr flexRow";
+    r.show=true;
+    return r;
+  }
+  public static EditButtons(itmNm:string){
+    let r = new HtmlItemNew(null);
+
+      r.addArr([new SaveNew({key_:0,
+      name_:"Save "+itmNm,
+      value_:"Save "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-darkgreen",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Save "+itmNm,disabled_:false})
+      ,new Cancel({key_:0,
+      name_:"Cancel "+itmNm,
+      value_:"Cancel "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-evening-night",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Cancel "+itmNm,disabled_:false})
+      ,new CopyNew({key_:0,
+      name_:"Copy "+itmNm,
+      value_:"Copy "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-unique",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Copy "+itmNm,disabled_:false})
+      ,new DeleteNew({key_:0,
+      name_:"Delete "+itmNm,
+      value_:"Delete "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-danger",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Delete "+itmNm,disabled_:false})
+      ]);
+
+    r.cssClass="flexCtnr flexRow";
+    r.show=true;
+    return r;
+  }
+  public static AddNewButton(itmNm:string){
+    let r = new HtmlItemNew(null);
+
+      r.addArr([new NewAddNew({key_:0,
+      name_:"Add new "+itmNm,
+      value_:"Add new "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-darkgreen",show_:true
+      ,HtmlTypeAttr_:"Add new"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Add new "+itmNm,disabled_:false})
+      ]);
+
+    r.cssClass="flexCtnr flexRow";
+    r.show=true;
+    // return r;
+
+    let r2 = new Array<ButtonNew>(
+      new NewAddNew({key_:0,
+      name_:"Add new "+itmNm,
+      value_:"Add new "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-darkgreen",show_:true
+      ,HtmlTypeAttr_:"Add new"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Add new "+itmNm,disabled_:false})
+    );
+
+
+    return r2;
+
+  }
 
   //quiz objects generating
 
@@ -434,7 +588,38 @@ export class FactoryNew{
     return r;
   }
 
-  static GenQuizes(qn:number,qtn:number,an:number
+  static NewQuizItemObj(obj:QuizItemNew){
+    let r: QuizItemNew;
+
+    if(obj instanceof QuizNew){
+      r= new QuizNew({key_:null,
+      name_:"Quiz name",
+      value_:"new quiz",
+      typeName_:null,array_:new Array<QuestionNew>()
+      ,itemControlls_:FactoryNew.quizItemParametersNewGen().array
+      ,cssClass_:"",show_:true
+      ,HtmlTypeAttr_:"",HtmlSubmittedValue_:"Enter quiz name"});
+    }
+    if(obj instanceof QuestionNew){
+      r= new QuestionNew({key_:null,
+      name_:"Question name",
+      value_:"new question",
+      typeName_:null,array_:new Array<AnswerNew>()
+      ,itemControlls_:FactoryNew.questionParametersNewGen().array
+      ,cssClass_:"",show_:true
+      ,HtmlTypeAttr_:"",HtmlSubmittedValue_:"Enter question name"});
+    }
+    if(obj instanceof AnswerNew){
+      r=new AnswerNew({key_:null,
+      name_:"Answer name",
+      value_:"new answer",
+      typeName_:null,array_:null
+      ,itemControlls_:null,cssClass_:"",show_:true
+      ,HtmlTypeAttr_:"",HtmlSubmittedValue_:""})
+    }
+    return r;
+  }
+  static GenQuizes(qnM:number,qtnM:number,anM:number
     ,qzCss:string,qtCss:string,awCss:string){
 
     let nodes=new QuizItemNew({key_:0,
@@ -443,6 +628,8 @@ export class FactoryNew{
     typeName_:null,array_:new Array<QuizNew>(),
     itemControlls_:null,cssClass_:qzCss,show_:true,
     HtmlTypeAttr_:"",HtmlSubmittedValue_:""});
+
+    let qn=FactoryNew.rnd(1,qnM);
 
     for(let i=0;i<qn;i++){
       let qzNew=new QuizNew({key_:i,
@@ -453,64 +640,252 @@ export class FactoryNew{
       ,cssClass_:qtCss,show_:true
       ,HtmlTypeAttr_:"",HtmlSubmittedValue_:""});
 
+        let qtn=FactoryNew.rnd(1,qtnM);
+
         for(let i2=0;i2<qtn;i2++){
-          let qtNew=new QuestionNew({key_:i+i2,
-          name_:"Question_name "+(i+i2),
-          value_:"Question_value "+(i+i2),
+          let qtNew=new QuestionNew({key_:i2,
+          name_:"Question_name "+(i2),
+          value_:"Question_value "+(i2),
           typeName_:"QuestionNew",array_:new Array<AnswerNew>()
           ,itemControlls_:FactoryNew.questionParametersNewGen().array
           ,cssClass_:awCss,show_:true
           ,HtmlTypeAttr_:"",HtmlSubmittedValue_:""});
 
+            let an=FactoryNew.rnd(1,anM);
             for(let i3=0;i3<an;i3++){
-              let awNew=new AnswerNew({key_:i+i2+i3,
-              name_:"Answer_name "+(i+i2+i3),
-              value_:"Answer_value "+(i+i2+i3),
+              let awNew=new AnswerNew({key_:i3,
+              name_:"Answer_name "+(i3),
+              value_:"Answer_value "+(i3),
               typeName_:"AnswerNew",array_:null
               ,itemControlls_:null,cssClass_:"",show_:true
               ,HtmlTypeAttr_:"",HtmlSubmittedValue_:""});
 
               qtNew.array.push(awNew);
             }
-
           qzNew.array.push(qtNew);
         }
 
       nodes.array.push(qzNew);
+
     }
 
     return nodes;
+  }
+
+  static rnd(min:number,max:number){
+    return Math.floor(Math.random()*(max-min)+min)
   }
 
 }
 
 export class ModelContainerNew{
 
-  static nodeSelected:HtmlItemNew;
+  static QuizesPassed:QuizItemNew;
+
+  static nodeSelected:QuizItemNew;
+  static quizSelected:QuizNew;
+  static questionSelected:QuestionNew;
+
+  static answerSelected:AnswerNew;
+
+  static buttonsQuiz_:ButtonNew[]
+  static buttonsQuestions_:ButtonNew[]
+  static buttonsAnswers_:ButtonNew[]
 
   @Output() static stateChanged=new EventEmitter();
-
   @Output() static nodeEdit=new EventEmitter();
+  @Output() static nodeCopy=new EventEmitter();
 
+  @Output() static disable=new EventEmitter();
+
+  public static Init(){
+    this.QuizesPassed=FactoryNew.GenQuizes(5,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
+
+    this.nodeSelected=null;
+    this.quizSelected=null;
+    this.questionSelected=null;
+
+  }
   public static buttonClicked(btn_:ButtonNew,obj:HtmlItemNew,e:any){
     console.log(["buttonClicked :",btn_,obj,e])
 
-    if(btn_ instanceof EditNew){
-      console.log("edit")
-      if(obj != null){if(obj instanceof HtmlItemNew){
-        ModelContainerNew.nodeSelected=obj
+    if(btn_ instanceof NewAddNew){
+      console.log("add new");
+      if(obj != null){if(obj instanceof QuizItemNew){
+        ModelContainerNew.objectDetectAndCreate(obj);
         ModelContainerNew.nodeEdit.emit();
       }}
     }
-    if(btn_ instanceof CopyNew){console.log("copy")}
-    if(btn_ instanceof DeleteNew){console.log("delete")}
+    if(btn_ instanceof Cancel){
+      console.log("cancel");
+      ModelContainerNew.objectCnacel();
+      ModelContainerNew.nodeEdit.emit();
+    }
 
+    if(btn_ instanceof EditNew){
+      console.log("edit")
+      if(obj != null){if(obj instanceof QuizItemNew){
+        ModelContainerNew.objectDetectAndBind(obj);
+        ModelContainerNew.nodeEdit.emit();
+      }}
+    }
+    if(btn_ instanceof CopyNew){
+      console.log("copy")
+      ModelContainerNew.objectCopy(obj);
+      ModelContainerNew.nodeCopy.emit();
+    }
+    if(btn_ instanceof SaveNew){
+      console.log("save")
+      ModelContainerNew.objectDetectAndSave(obj);
+
+      ModelContainerNew.objectCnacel();
+      ModelContainerNew.nodeEdit.emit();
+
+      ModelContainerNew.nodeSelected=null;
+    }
+    if(btn_ instanceof DeleteNew){
+      console.log("delete")
+      ModelContainerNew.objectDelete(obj);
+      // ModelContainerNew.objectCnacel();
+      ModelContainerNew.nodeEdit.emit();
+    }
 
 
     ModelContainerNew.stateChanged.emit();
   }
+  public static checkboxClicked(item_:HtmlItemNew,object_:HtmlItemNew){
+    ModelContainerNew.CycleCheckboxCheck(item_,object_);
+    console.log(["checkboxClicked: ",item_,object_])
+  }
+  public static dropboxClicked(item_:HtmlItemNew){
+    ModelContainerNew.DropBoxCheck(item_);
+    ServiceCl.log(["dropboxClicked: ",item_]);
+  }
+
+  static objectCnacel(){
+    if(ModelContainerNew.nodeSelected instanceof QuizNew){
+      ServiceCl.log("QuizNew cancel")
+      ModelContainerNew.quizSelected=null;
+      ModelContainerNew.questionSelected=null;
+    }
+    if(ModelContainerNew.nodeSelected instanceof QuestionNew){
+      console.log("QuestionNew cancel")
+      ModelContainerNew.questionSelected=null;
+    }
+    if(ModelContainerNew.nodeSelected instanceof AnswerNew){
+      console.log("AnswerNew cancel")
+
+    }
+    ModelContainerNew.nodeSelected=null;
+  }
+  static objectCopy(obj:HtmlItemNew){
+    if(obj instanceof QuizItemNew){
+      obj.nameObjectToItem();
+      ModelContainerNew.nodeSelected=obj.recObj();
+      ModelContainerNew.nodeSelected._key=null;
+    }
+  }
+
+  static QuestionCountDetect(){
+
+  }
+
+  static objectDetectAndCreate(obj:HtmlItemNew){
+    if(obj instanceof QuizNew){
+      ModelContainerNew.nodeSelected=FactoryNew.NewQuizItemObj(new QuizNew(null));
+    }
+    if(obj instanceof QuestionNew){
+      ModelContainerNew.nodeSelected=FactoryNew.NewQuizItemObj(new QuestionNew(null));
+    }
+    if(obj instanceof AnswerNew){
+      ModelContainerNew.nodeSelected=FactoryNew.NewQuizItemObj(new AnswerNew(null));
+    }
+  }
+  static objectDetectAndBind(obj:HtmlItemNew){
+
+    if(obj instanceof QuizItemNew){
+      ModelContainerNew.nodeSelected=obj;
+      obj.nameObjectToItem();
+      if(obj instanceof QuizNew){
+        ModelContainerNew.answerSelected=null;
+        ModelContainerNew.questionSelected=null;
+        ModelContainerNew.quizSelected=obj;
+      }
+      if(obj instanceof QuestionNew){
+        ModelContainerNew.answerSelected=null;
+        ModelContainerNew.questionSelected=obj;
+      }
+      if(obj instanceof AnswerNew){
+        ModelContainerNew.answerSelected=obj;
+      }
+
+    }
+  }
+  static objectDetectAndSave(obj:HtmlItemNew){
+    if(obj instanceof QuizItemNew){
+      obj.nameItemToObject();
+      if(obj instanceof QuizNew){
+        ModelContainerNew.QuizesPassed.addUpdate(obj);
+      }
+      if(obj instanceof QuestionNew){
+        ModelContainerNew.quizSelected.addUpdate(obj);
+      }
+      if(obj instanceof AnswerNew){
+        ModelContainerNew.questionSelected.addUpdate(obj);
+      }
+    }
+  }
+  static objectDelete(obj:HtmlItemNew){
+    if(obj instanceof QuizItemNew){
+      if(obj instanceof QuizNew){
+        this.QuizesPassed.delete(obj);
+        ModelContainerNew.quizSelected=null;
+      }
+      if(obj instanceof QuestionNew){
+        this.quizSelected.delete(obj);
+        ModelContainerNew.questionSelected=null;
+      }
+      if(obj instanceof AnswerNew){
+        this.questionSelected.delete(obj);
+      }
+    }
+  }
+
+  static CycleCheckboxCheck(item_:HtmlItemNew,object_:HtmlItemNew){
+    if(item_._name=="CycleCheckboxItem"){
+      if(object_ instanceof QuizItemNew){
+        let nbGroup=object_.getControllItem("NumberPickerGroup");
+        let dbGroup=object_.getControllItem("DropBoxesGroup");
+        if(nbGroup!=null){nbGroup.show=item_.HtmlSubmittedValue;}
+        if(dbGroup!=null){dbGroup.show=item_.HtmlSubmittedValue;}
+      }
+    }
+  }
+  static DropBoxCheck(item_:HtmlItemNew){
+    if(item_.HtmlSubmittedValue=="Text answer"){
+
+      if(ModelContainerNew.nodeSelected instanceof QuestionNew){
 
 
+        if(ModelContainerNew.questionSelected.array.length==1){
+          // ServiceCl.log(["Disable NewAddNew"])
+          ModelContainerNew.disable.emit({btn:new NewAddNew(null)
+            ,obj:new QuestionNew(null)});
+        }
+
+        if(ModelContainerNew.questionSelected.array.length>1){
+          // ServiceCl.log(["Disable NewAddNew,SaveNew"])
+          ModelContainerNew.disable.emit({btn:new SaveNew(null)
+            ,obj:new QuestionNew(null)});
+          ModelContainerNew.disable.emit({btn:new NewAddNew(null)
+            ,obj:new QuestionNew(null)});
+        }
+
+
+
+      }
+    }
+  }
 
 }
 
@@ -551,6 +926,7 @@ export class TestNew{
           ,cssClass_:cssItem_,show_:true
           ,HtmlTypeAttr_:"div"
           ,HtmlSubmittedValue_:"text value"+i
+          ,DisplayValue_:""
           ,pattern_:null
           ,maxLength_:null
           ,minLength_:null})
@@ -776,6 +1152,7 @@ export class TestNew{
       ,cssClass_:"",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:"text value"
+      ,DisplayValue_:""
       ,pattern_:null
       ,maxLength_:null
       ,minLength_:null});
@@ -791,13 +1168,13 @@ export class TestNew{
 
     let tbdd0=new TextControlNew({key_:60,name_:"Textctrl20",value_:"Textctrl20",
     typeName_:"TextControlNew",array_:null,cssClass_:"",show_:true,HtmlTypeAttr_:"div"
-    ,HtmlSubmittedValue_:"drop box tb1",pattern_:null,maxLength_:null,minLength_:null});
+    ,HtmlSubmittedValue_:"drop box tb1",DisplayValue_:"",pattern_:null,maxLength_:null,minLength_:null});
     let tbdd1=new TextControlNew({key_:61,name_:"Textctrl21",value_:"Textctrl21",
     typeName_:"TextControlNew",array_:null,cssClass_:"",show_:true,HtmlTypeAttr_:"div"
-    ,HtmlSubmittedValue_:"drop box tb2",pattern_:null,maxLength_:null,minLength_:null});
+    ,HtmlSubmittedValue_:"drop box tb2",DisplayValue_:"",pattern_:null,maxLength_:null,minLength_:null});
     let tbdd2=new TextControlNew({key_:62,name_:"Textctrl22",value_:"Textctrl22",
     typeName_:"TextControlNew",array_:null,cssClass_:"",show_:true,HtmlTypeAttr_:"div"
-    ,HtmlSubmittedValue_:"drop box tb3",pattern_:null,maxLength_:null,minLength_:null});
+    ,HtmlSubmittedValue_:"drop box tb3",DisplayValue_:"",pattern_:null,maxLength_:null,minLength_:null});
     let tddArr=[tbdd0,tbdd1,tbdd2]
     let ddC0=new DropDownControlNgNew({key_:68,
     name_:"DropDownControlNgNew1",
@@ -888,7 +1265,7 @@ export class TestNew{
         ,object_:new TextControlNew({
         key_:0,name_:"Textctrl"+0,value_:"Textctrl"+0,typeName_:null
         ,array_:null,cssClass_:"",show_:true,HtmlTypeAttr_:"div"
-        ,HtmlSubmittedValue_:"text value"+0,pattern_:null,maxLength_:null
+        ,HtmlSubmittedValue_:"text value"+0,DisplayValue_:"",pattern_:null,maxLength_:null
         ,minLength_:null})
     } ,{
       buttons_:new HtmlItemNew({key_:0,name_:"Test button 1",value_:"Test button 1"
@@ -968,48 +1345,12 @@ export class TestNew{
     return r;
   }
 
-  public static ItemButtons(){
-    let r = new HtmlItemNew(null);
 
-      r.addArr([new EditNew({key_:0,
-      name_:"Edit Quiz",
-      value_:"Edit Quiz",
-      typeName_:null
-      ,array_:null
-      ,itemControlls_:null
-      ,cssClass_:"btn btn-purple",show_:true
-      ,HtmlTypeAttr_:"div"
-      ,HtmlSubmittedValue_:null
-      ,clicked_:false,toolTipText_:"Edit Quiz",disabled_:false})
-      ,new CopyNew({key_:0,
-      name_:"Copy Quiz",
-      value_:"Copy Quiz",
-      typeName_:null
-      ,array_:null
-      ,itemControlls_:null
-      ,cssClass_:"btn btn-unique",show_:true
-      ,HtmlTypeAttr_:"div"
-      ,HtmlSubmittedValue_:null
-      ,clicked_:false,toolTipText_:"Copy Quiz",disabled_:false})
-      ,new DeleteNew({key_:0,
-      name_:"Delete Quiz",
-      value_:"Delete Quiz",
-      typeName_:null
-      ,array_:null
-      ,itemControlls_:null
-      ,cssClass_:"btn btn-danger",show_:true
-      ,HtmlTypeAttr_:"div"
-      ,HtmlSubmittedValue_:null
-      ,clicked_:false,toolTipText_:"Delete Quiz",disabled_:false})]);
-
-    r.cssClass="fxhr";
-    return r;
-  }
   //Generating quizes
 
   public static QuizList(){
 
-    let r=FactoryNew.GenQuizes(3,4,5,"fxvt","fxvt","fxvt");
+    let r=FactoryNew.GenQuizes(5,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
 
     return r;
 
@@ -1234,6 +1575,117 @@ export class TestNew{
     return r;
   }
 
+  public static DeepCopyTest(){
+
+    let qz=
+      FactoryNew.GenQuizes(5,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol").array[0];
+    let qzCp=qz.recObj();
+
+    let qzItm:HtmlItemNew;
+    let qzItmCp:HtmlItemNew;
+
+    if(qz instanceof QuizNew){
+      qzItm=qz.scan("MonthsGap",qz.itemControlls);
+    }
+    if(qzCp instanceof QuizNew){
+      qzItmCp=qzCp.scan("MonthsGap",qzCp.itemControlls);
+    }
+    qzItm._value="cahnged";
+    console.log(["Quiz recursive check: ",qz,qzCp,qzItm,qzItmCp])
+
+  }
+
+  public static ItemColelctionTest(){
+
+    let OK="OK";
+    let notOK="NOT OK";
+    let qz = new HtmlItemNew(null);
+
+    for(let i=0;i<5;i++){
+      qz.add(FactoryNew.NewQuizItemObj(new QuizNew(null)));
+    }
+    console.log(["ItemColelctionTest: ",qz.array]);
+
+
+    //add check
+
+    let idPrev=qz.array.length-1;
+    let qzNew=FactoryNew.NewQuizItemObj(new QuizNew(null));
+    qz.add(qzNew);
+    if(qz.array[qz.array.length-1]._key==idPrev+1){
+      console.log(["ItemColelctionTest add: "+ OK,qz.array,qzNew]);
+    }else{console.log(["ItemColelctionTest add: "+ notOK,qz.array,qzNew]);}
+
+
+    // add update check
+
+    idPrev=qz.array.length-1;
+    let qzAddUpd=FactoryNew.NewQuizItemObj(new QuizNew(null));
+    // console.log(["ItemColelctionTest addUpdate start: ",qzAddUpd]);
+    qz.addUpdate(qzAddUpd);
+    if(qz.array[qz.array.length-1]._key==idPrev+1){
+      console.log(["ItemColelctionTest addUpdate: " + OK,qz.array,qzAddUpd]);
+    }else{console.log(["ItemColelctionTest addUpdate: " + notOK,qz.array,qzAddUpd]);}
+
+
+    //quiz update
+
+    let newName="name changed";
+    let qzUpd=qz.array[3];
+    qzUpd._name=newName;
+    qz.update(qzUpd);
+    if(qz.array[3]._name===newName){
+      console.log(["ItemColelctionTest clean update : " + OK,qz.array,qzUpd]);
+    }else{console.log(["ItemColelctionTest clean update : " + notOK,qz.array,qzUpd]);}
+
+
+    //add update
+
+    newName="name changed2";
+    qzUpd._name=newName;
+    qz.addUpdate(qzUpd);
+    if(qz.array[3]._name===newName){
+      console.log(["ItemColelctionTest addUpdate : " + OK,qz.array,qzUpd]);
+    }else{console.log(["ItemColelctionTest addUpdate : " + notOK,qz.array,qzUpd]);}
+
+
+    //delete check
+
+    idPrev=qz.array.length-1;
+    qz.delete(qzUpd);
+    if(qz.array.length-1==(idPrev-1)){
+      console.log(["ItemColelctionTest delete : " + OK,qz.array,qzUpd]);
+    }else{console.log(["ItemColelctionTest delete : " + notOK,qz.array,qzUpd]);}
+
+
+    //clone chech
+
+    idPrev=qz.array.length-1;
+    let qzChng=qz.array[2];
+    let qzCp=qzChng.recObj();
+
+    let itmOrig:HtmlItemNew;
+    let itmChange:HtmlItemNew;
+
+    if(qzChng instanceof QuizNew){
+      itmOrig=qzChng.scan("IsAnonimous",qzChng.itemControlls)}
+    if(qzCp instanceof QuizNew){
+      itmChange=qzChng.scan("IsAnonimous",qzCp.itemControlls)}
+
+    itmChange.HtmlSubmittedValue=true;
+    itmOrig.HtmlSubmittedValue=false;
+    if(itmChange.HtmlSubmittedValue!==itmOrig.HtmlSubmittedValue){
+      console.log(["Clonned :" + OK,qzChng,qzCp,itmOrig.HtmlSubmittedValue,itmChange.HtmlSubmittedValue])
+    }else{console.log(["Clonned :" + notOK,qzChng,qzCp,itmOrig.HtmlSubmittedValue,itmChange.HtmlSubmittedValue])}
+
+  }
+
+  public static QuizCicleCheckboxesTets(){
+    let qz = FactoryNew.GenQuizes(5,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
+
+    qz.getControllItem("");
+  }
+
   public static GO(){
 
     //collection tests
@@ -1253,6 +1705,16 @@ export class TestNew{
 
     //type checker Test
     //TestNew.TypeCheckTest();
+
+
+    //check cloning
+
+    // TestNew.DeepCopyTest();
+
+
+    //check collection array beahaviour
+
+    // TestNew.ItemColelctionTest();
 
   }
 

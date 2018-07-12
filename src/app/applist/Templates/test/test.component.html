@@ -3,6 +3,7 @@
 </p>
 
 <!-- elements pure start test  -->
+
 <ng-container *ngIf="1!=1">
 
   <!-- Components test-->
@@ -93,26 +94,33 @@
     <!-- Menu list check -->
     <!-- =======================================     -->
     <div class="itemGroup">
-      <app-menu-list [_quizes]="this.quizItems_.array"[_buttons]="this.ItemButtons_"></app-menu-list>
+      <app-menu-list [_quizes]="this.quizItems_.array"[_buttonsQuiz]="this.ItemButtons_"></app-menu-list>
     </div>
     <div class="itemGroup">
-      <app-menu-list [_quizes]="this.quizItems_.array[0].array"[_buttons]="this.ItemButtons_"></app-menu-list>
+      <app-menu-list [_quizes]="this.quizItems_.array[0].array"[_buttonsQuiz]="this.ItemButtons_"></app-menu-list>
     </div>
     <div class="itemGroup">
-      <app-menu-list [_quizes]="this.quizItems_.array[0].array[0].array"[_buttons]="this.ItemButtons_"></app-menu-list>
+      <app-menu-list [_quizes]="this.quizItems_.array[0].array[0].array"[_buttonsQuiz]="this.ItemButtons_"></app-menu-list>
     </div>
     <!-- =======================================     -->
 
   </div>
+
 </ng-container>
+
+<ng-container>
 
     <!-- Publish area  -->
     <!-- =======================================     -->
+
     <div class="itemGroup">
-      <app-menu-edit [_item]="this.quizItems_.array[0]"></app-menu-edit>
+      <!-- <app-menu-edit [_item]="this.quizItems_.array[0]"  [_editButtons]="editButtons_"></app-menu-edit> -->
     </div>
 
     <div class="itemGroup">
-      <app-menu-list [_quizes]="this.quizItems_.array"[_buttons]="this.ItemButtons_"></app-menu-list>
-    </div>.  
+      <app-menu-main [_buttonsQuiz]="this.ItemButtons_" [editButtons_]="this.editButtons_"></app-menu-main>
+    </div>
+
     <!-- =======================================     -->
+
+</ng-container>

@@ -19,7 +19,7 @@ export class NodeNew{
       this._value=o.value_;
       this._typeName=o.typeName_;
 
-      if(o.key_==null){this._key=0;}
+      // if(o.key_==null){this._key=0;}
       if(o.typeName_==null){this._typeName=this.constructor.name}
     }else{
       this._key=0;
@@ -49,6 +49,8 @@ export class CollectionNew<T extends NodeNew> extends NodeNew{
 
 
   add(item:T){
+    // console.log(["Add",this,item]);
+
     var max=0;
     var toPsuh:boolean=false;
 
@@ -143,6 +145,7 @@ export class CollectionNew<T extends NodeNew> extends NodeNew{
     return null;
   }
   update(item:T){
+    // console.log(["Update",this,item]);
     var max=0;
     var toPsuh:boolean=false;
 
@@ -167,19 +170,24 @@ export class CollectionNew<T extends NodeNew> extends NodeNew{
 
   addUpdate(item:T){
     if((typeof(this.array)!=null)){
-      var index_=this.array.findIndex(s=>s._key===item._key);
+      if(item._key!=null){
+
+      var index_=this.array.find(s=>s._key==item._key);
         if(this.tolog){
           // console.log(index_);
         }
-
+        // console.log(["addUpdate",this,item,index_]);
         if(index_!=null){
-          // console.log("Add");
-          this.add(item);
-        }else{
           // console.log("Update");
           this.update(item);
+        }else{
+          // console.log("Add");
+          this.add(item);
         }
+
+      }else{this.add(item);}
     }
+
   }
 
   addUpdateArr(items:Array<T>){
@@ -312,14 +320,14 @@ export class HtmlItemNew extends CollectionNew<HtmlItemNew>{
   show:boolean;
 
   constructor(o:{key_?:number,
-  name_?:string,
-  value_?:string,
-  typeName_?:string
-  ,array_:HtmlItemNew[]
-  ,cssClass_:string
-  ,show_:boolean
-  ,HtmlTypeAttr_:string
-  ,HtmlSubmittedValue_:any}){
+    name_?:string,
+    value_?:string,
+    typeName_?:string
+    ,array_:HtmlItemNew[]
+    ,cssClass_:string
+    ,show_:boolean
+    ,HtmlTypeAttr_:string
+    ,HtmlSubmittedValue_:any}){
     if(o!=null){
       super(o);
       this.show=o.show_;
@@ -331,6 +339,63 @@ export class HtmlItemNew extends CollectionNew<HtmlItemNew>{
       this._typeName=this.constructor.name
     }
   }
+
+  scan(name_:string,f_:HtmlItemNew[]){
+    let r_:HtmlItemNew=null;
+      r_=HtmlItemNew.recArr(name_,f_,r_)
+      // console.log("Return ed ext ",r_)
+    return r_;
+  }
+  static recArr(name_:string,itm_:Array<HtmlItemNew>,ret_:HtmlItemNew){
+    // console.log("started ",itm_,ret_)
+    if(itm_!=null){
+    if(itm_.length>0){
+      for(let i=0;i<itm_.length;i++){
+        // console.log("inited for i: ",i,itm_,ret_)
+        if(itm_[i]._name==name_){
+          ret_= itm_[i];
+          // console.log(["Itm name: ",itm_[i]._name,name_,ret_])
+        }else{
+          if(itm_[i].array!=null){
+          if(itm_[i].array.length>0){
+            // console.log("recurced:  ",i,itm_[i].array,ret_)
+            ret_=HtmlItemNew.recArr(name_,itm_[i].array,ret_);
+          }
+          }
+        }
+      }
+    }
+    }
+
+    // console.log("returned ",ret_)
+    return ret_;
+  }
+
+  DeepClone(){
+    let  r_ = Object.assign(
+      Object.create(
+        Object.getPrototypeOf(this)
+      ),this
+      );
+      return r_;
+  }
+  recObj(){
+    let ret_:HtmlItemNew;
+      ret_=this.DeepClone();
+      ret_.array=[];
+        if(this.array!=null){
+        if(this.array.length){
+          let ln=this.array.length;
+          for(let i=0;i<ln;i++){
+            let ps=this.array[i].recObj();
+            // console.log(ps)
+            ret_.array.push(ps);
+          }
+        }
+        }
+    return ret_;
+  }
+
 }
 
 //html iytems for Form Controlls createion and quiz elements controls display
@@ -340,6 +405,7 @@ export class TextControlNew extends HtmlItemNew{
   pattern:string;
   maxLength:number;
   minLength:number;
+  displayValue:string;
 
   constructor(o:{key_?:number,
   name_?:string,
@@ -349,6 +415,7 @@ export class TextControlNew extends HtmlItemNew{
   ,show_:boolean
   ,HtmlTypeAttr_:string
   ,HtmlSubmittedValue_:any
+  ,DisplayValue_:any
   ,pattern_?:string
   ,maxLength_?:number
   ,minLength_?:number}){
@@ -357,6 +424,7 @@ export class TextControlNew extends HtmlItemNew{
       this.pattern=o.pattern_;
       this.maxLength=o.maxLength_;
       this.minLength=o.minLength_;
+      this.displayValue=o.DisplayValue_;
     }
     else{
       this._typeName=this.constructor.name
@@ -492,8 +560,8 @@ export class QuizItemNew extends HtmlItemNew{
   itemControlls:HtmlItemNew[];
 
   constructor(o:{key_?:number,name_?:string,value_?:string,typeName_?:string
-  ,array_:QuizItemNew[],itemControlls_:HtmlItemNew[]
-  ,cssClass_:string,show_:boolean,HtmlTypeAttr_:string,HtmlSubmittedValue_:any}){
+    ,array_:QuizItemNew[],itemControlls_:HtmlItemNew[]
+    ,cssClass_:string,show_:boolean,HtmlTypeAttr_:string,HtmlSubmittedValue_:any}){
     if(o!=null){
       super(o);
       this.itemControlls=o.itemControlls_;
@@ -506,20 +574,82 @@ export class QuizItemNew extends HtmlItemNew{
       this._typeName=this.constructor.name
     }
   }
+
+  recObj(){
+    let ret_:QuizItemNew;
+      ret_=this.DeepClone();
+      ret_.array=[];
+      ret_.itemControlls=[];
+
+      if(this.itemControlls!=null){
+        let ln=this.itemControlls.length;
+        for(let i=0;i<ln;i++){
+          let ps=this.itemControlls[i].recObj();
+          // console.log(ps)
+          ret_.itemControlls.push(ps);
+        }
+      }
+
+      if(this.array!=null){
+      if(this.array.length){
+        let ln=this.array.length;
+        for(let i=0;i<ln;i++){
+          let ps=this.array[i].recObj();
+          // console.log(ps)
+          ret_.array.push(ps);
+        }
+      }
+      }
+
+    return ret_;
+  }
+
+  getControllItem(name:string){
+    if(this.itemControlls!=null){
+      if(this.itemControlls.length>0){
+        let itm=this.scan(name,this.itemControlls);
+        // console.log("------------------------")
+        // console.log(["nameExtractBind",this.itemControlls,itm])
+        if(itm!=null){
+          return itm;
+        }
+      }
+    }
+    return null;
+  }
+  nameItem(){
+    if(this.itemControlls!=null){
+      if(this.itemControlls.length>0){
+        let itm=this.scan("ItemName",this.itemControlls);
+        // console.log("------------------------")
+        // console.log(["nameExtractBind",this.itemControlls,itm])
+        if(itm!=null){
+          return itm;
+        }
+      }
+    }
+    return null;
+  }
+  nameObjectToItem(){
+    let extrName=this.nameItem();
+    if(extrName!=null){
+      extrName.HtmlSubmittedValue=this._name;
+    }
+  }
+  nameItemToObject(){
+    let extrName=this.nameItem();
+    if(extrName!=null){
+      this._name=extrName.HtmlSubmittedValue;
+    }
+  }
+
 }
 
 //child quiz objects
 
-export class AnswerNew extends QuizItemNew{
-
-}
-export class QuestionNew extends QuizItemNew{
-
-}
-export class QuizNew extends QuizItemNew{
-
-
-}
+export class AnswerNew extends QuizItemNew{}
+export class QuestionNew extends QuizItemNew{}
+export class QuizNew extends QuizItemNew{}
 
 
 //Buttons
@@ -556,3 +686,4 @@ export class SaveNew extends ButtonNew{}
 export class EditNew extends ButtonNew{}
 export class CopyNew extends ButtonNew{}
 export class DeleteNew extends ButtonNew{}
+export class Cancel extends ButtonNew{}

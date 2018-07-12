@@ -1,3 +1,11 @@
-<p>
-  menu-main works!
-</p>
+<ng-container *ngIf="this._editItem!=null">
+<div class="itemGroup">
+  <app-menu-edit [_item]="this._editItem" [_editButtons]="editButtons_"></app-menu-edit>
+</div>
+</ng-container>
+
+<ng-container *ngIf="this._quizItems!=null">
+<div class="itemGroup">
+  <app-menu-list [_quizes]="this._quizItems" [_buttonsQuiz]="this._buttonsQuiz"></app-menu-list>
+</div>
+</ng-container>
