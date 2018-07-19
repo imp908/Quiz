@@ -377,7 +377,7 @@ export class HtmlItemNew extends CollectionNew<HtmlItemNew>{
         Object.getPrototypeOf(this)
       ),this
       );
-      return r_;
+    return r_;
   }
   recObj(){
     let ret_:HtmlItemNew;
@@ -556,7 +556,7 @@ export class LabelControlNew extends HtmlItemNew{}
 //base quiz object
 
 export class QuizItemNew extends HtmlItemNew{
-  show:boolean;
+
   itemControlls:HtmlItemNew[];
 
   constructor(o:{key_?:number,name_?:string,value_?:string,typeName_?:string
@@ -608,8 +608,10 @@ export class QuizItemNew extends HtmlItemNew{
     if(this.itemControlls!=null){
       if(this.itemControlls.length>0){
         let itm=this.scan(name,this.itemControlls);
+
         // console.log("------------------------")
         // console.log(["nameExtractBind",this.itemControlls,itm])
+
         if(itm!=null){
           return itm;
         }
@@ -633,7 +635,7 @@ export class QuizItemNew extends HtmlItemNew{
   nameObjectToItem(){
     let extrName=this.nameItem();
     if(extrName!=null){
-      // console.log(["nameObjectToItem: ",extrName.HtmlSubmittedValue,this._name])
+      console.log(["nameObjectToItem: ",extrName,this])
       extrName.HtmlSubmittedValue=this._value;
     }
   }
@@ -688,3 +690,5 @@ export class EditNew extends ButtonNew{}
 export class CopyNew extends ButtonNew{}
 export class DeleteNew extends ButtonNew{}
 export class Cancel extends ButtonNew{}
+
+export class PassQuiz extends ButtonNew{}

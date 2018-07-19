@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders , HttpResponse} from '@angular/common/http';
 
-import { Injectable } from '@angular/core';
+import {Injectable } from '@angular/core';
 
-import {HtmlItemNew} from 'src/app/applist/Models/POCOnew.component'
+import {QuizItemNew} from 'src/app/applist/Models/POCOnew.component'
+import {FactoryNew} from 'src/app/applist/Models/initsNew.component'
 
 import {Observable} from 'rxjs/Observable';
 
@@ -12,42 +13,68 @@ const httpOptions = {
   })
 };
 
-@Injectable()
-export class HttpService {
+@Injectable({providedIn: 'root' })
+export class HttpService{
 
-  nodesPassed_:HtmlItemNew;
+  nodesPassed_:QuizItemNew;
 
-  private url:string = 'http://localhost:3208//api//quiz';
+  private url:string = 'http://localhost:63282/api/quiz2/';
 
   constructor(private http: HttpClient){
-    this.nodesPassed_=new HtmlItemNew(null);
+    // this.nodesPassed_=new QuizItemNew(null);
   }
 
-  addQuiz (quiz: HtmlItemNew): Observable<HtmlItemNew[]>{
-    return this.http.post<HtmlItemNew[]>(this.url, quiz, httpOptions);
+  addQuiz(url_:string,quiz: QuizItemNew): Observable<QuizItemNew>{
+    if(url_==null || url_=="" || url_==" "){url_=this.url};
+    let body = JSON.stringify(quiz);
+    console.log(body);
+    return this.http.post<QuizItemNew>(url_, body, httpOptions);
   }
 
-  getQuiz(){
-    return this.http.get<HtmlItemNew[]>(this.url);
+  getQuiz(url_:string): Observable<QuizItemNew>{
+    if(url_==null || url_=="" || url_==" "){url_=this.url};
+    console.log("Get quiz" + url_)
+    return this.http.get<QuizItemNew>(url_);
+  }
+  getQuiz2(url_:string): Observable<HttpResponse<QuizItemNew>>{
+    if(url_==null){url_=this.url};
+    return this.http.get<QuizItemNew>(url_, { observe: 'response' });
   }
 
-  addQuizTs(){
+  getQuizResp(url_:string){
+    this.getQuiz2(url_).subscribe(s=>{
+        // console.log(s);
+      }
+    )
+  }
+  getQuizObj(url_:string):QuizItemNew {
+    let r0=new QuizItemNew(null);
+    let r1=new QuizItemNew(null);
+    let r2=new QuizItemNew(null);
 
-    this.addQuiz(this.nodesPassed_)
+    this.getQuiz(url_).subscribe((s:QuizItemNew)=>{
+
+        FactoryNew.cloneFromProt(r0,s);
+        FactoryNew.cloneFromObj(r1,s);
+        r2=FactoryNew.cloneByKey(s);
+        console.log(r2,s);
+
+      }
+    )
+
+    return r2;
+  }
+
+
+  addQuizTs(str_:string){
+
+    this.addQuiz(str_,this.nodesPassed_)
     .subscribe(
-      (s:HtmlItemNew[]) =>{
-        console.log(["Post: ",s])
+      (s:QuizItemNew) =>{
+        console.log(["addQuizTs: ",s])
       }
     );
 
-  }
-
-  getQuizTs(){
-    this.getQuiz().subscribe(
-      (s:HtmlItemNew[]) =>{
-        console.log(["Get: ",s])
-      }
-    );
   }
 
 }

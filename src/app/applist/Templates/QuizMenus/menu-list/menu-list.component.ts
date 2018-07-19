@@ -27,7 +27,7 @@ export class MenuListComponent implements OnInit {
 
   ngOnInit(){
 
-    this._buttonsQuiz=FactoryNew.ItemButtons("");
+    this._buttonsQuiz=FactoryNew.QuizButtons("");
     this._buttonsQuestion=FactoryNew.ItemButtons("");
     this._buttonsAnswer=FactoryNew.ItemButtons("");
 

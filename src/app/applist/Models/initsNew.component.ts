@@ -17,7 +17,7 @@ import {NodeNew,CollectionNew
   ,DatePickerControlNew,NumberPickerControlNew
   ,ButtonNew
   ,LabelControlNew
-  ,NewAddNew,SaveNew,EditNew,CopyNew,DeleteNew,Cancel
+  ,NewAddNew,SaveNew,EditNew,CopyNew,DeleteNew,Cancel,PassQuiz
 } from './POCOnew.component';
 
 
@@ -27,7 +27,7 @@ export class FactoryNew{
 
     if(i_ == null ){return null}
 
-    if(i_ instanceof LabelControlNew){ return "LabelControlNew"}
+
 
 
     if(i_ instanceof QuizNew){ return "QuizNew"}
@@ -36,6 +36,7 @@ export class FactoryNew{
 
 
     if(i_ instanceof TextControlNew){ return "TextControlNew"}
+    if(i_ instanceof LabelControlNew){ return "LabelControlNew"}
     if(i_ instanceof CheckBoxControlNew){ return 'CheckBox'}
     if(i_ instanceof DropDownControlNgNew){ return "DropDownControlNgNew"}
     if(i_ instanceof DropDownControlMultiNgNew){ return "DropDownControlMultiNgNew"}
@@ -62,6 +63,41 @@ export class FactoryNew{
     if(i_ instanceof ButtonNew){return 'Button'}
     if(i_ instanceof QuizItemNew){return 'QuizItem'}
     if(i_ instanceof HtmlItemNew){return 'HtmlItem'}
+  }
+  static InstanceFromString(i_:string){
+    let r = null;
+
+      if(i_==="HtmlItemNew"){r=new HtmlItemNew(null);}
+
+      if(i_==="QuizItemNew"){r=new QuizItemNew(null);}
+
+      if(i_==="QuizNew"){r=new QuizNew(null);}
+      if(i_==="QuestionNew"){r=new QuestionNew(null);}
+      if(i_==="AnswerNew"){r=new AnswerNew(null);}
+
+      if(i_==="TextControlNew"){r=new TextControlNew(null);}
+      if(i_==="LabelControlNew"){r=new LabelControlNew(null);}
+      if(i_==="CheckBox"){r=new CheckBoxControlNew(null);}
+      if(i_==="CheckBoxControlNew"){r=new CheckBoxControlNew(null);}
+      if(i_==="DropDownControlNgNew"){r=new DropDownControlNgNew(null);}
+      if(i_==="DropDownControlMultiNgNew"){r=new DropDownControlMultiNgNew(null);}
+      if(i_==="DropDownControlMultiNew"){r=new DropDownControlMultiNew(null);}
+      if(i_==="RadioButton"){r=new RadioButtonControlNew(null);}
+      if(i_==="RadioButtonControlNew"){r=new RadioButtonControlNew(null);}
+      if(i_==="DatePickerControlNew"){r=new DatePickerControlNew(null);}
+      if(i_==="NumberPickerControlNew"){r=new NumberPickerControlNew(null);}
+
+      if(i_==="NewAddNew"){r=new NewAddNew(null);}
+      if(i_==="SaveNew"){r=new SaveNew(null);}
+      if(i_==="EditNew"){r=new EditNew(null);}
+      if(i_==="CopyNew"){r=new CopyNew(null);}
+      if(i_==="DeleteNew"){r=new DeleteNew(null);}
+
+      if(i_==="ButtonNew"){r=new ButtonNew(null);}
+
+
+
+    return r;
   }
 
   //service genes
@@ -94,6 +130,37 @@ export class FactoryNew{
     }
     return r;
   }
+
+  static DaysInWeek(){
+    let r = new DropDownControlMultiNew({
+      key_:0,
+      name_:"DaysInWeek",
+      value_:"Days in week",
+      typeName_:null
+      ,array_:null
+      ,cssClass_:"",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+    });
+
+    for(let i=0;i<7;i++){
+      r.add(
+        new LabelControlNew({
+          key_:i,
+          name_:"Label control",
+          value_:"Day "+(i+1),
+          typeName_:null
+          ,array_:null
+          ,cssClass_:"",show_:true
+          ,HtmlTypeAttr_:"div"
+          ,HtmlSubmittedValue_:null
+          })
+      )
+    }
+    return r;
+  }
+
+
 
   //Quiz object parameters
 
@@ -132,9 +199,8 @@ export class FactoryNew{
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:false
     });
-
     let checkboxes = new HtmlItemNew({
-      key_:0,
+      key_:1,
       name_:"QuizCheckboxControlls",
       value_:"QuizCheckboxControlls",
       typeName_:null
@@ -186,7 +252,7 @@ export class FactoryNew{
     });
 
     let stardate = new HtmlItemNew({
-      key_:1,
+      key_:2,
       name_:"QuizStartDate",
       value_:"Quiz start date",
       typeName_:null
@@ -197,17 +263,67 @@ export class FactoryNew{
           value_:"Quiz start date",
           typeName_:null
           ,array_:null
-          ,cssClass_:"fxhr",show_:true
+          ,cssClass_:"flexCtnr flexRow",show_:true
           ,HtmlTypeAttr_:"div"
           ,HtmlSubmittedValue_:new Date(2018,1,1)
         }))
-      ,cssClass_:"fxhr",show_:true
+      ,cssClass_:"flexCtnr",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:""
+    });
+    let startTime =  new HtmlItemNew({
+      key_:3,
+      name_:"NumberPickerGroup",
+      value_:"Quiz start time",
+      typeName_:null
+      ,array_:new Array<NumberPickerControlNew>(
+        new NumberPickerControlNew({
+          key_:0,
+          name_:"HourSelect",
+          value_:"Start hour (24H)",
+          typeName_:null
+          ,array_:null
+          ,cssClass_:"fxvt",show_:true
+          ,HtmlTypeAttr_:"div"
+          ,HtmlSubmittedValue_:0
+          ,DisplayValue_:0
+          ,minN:0
+          ,maxN:23
+        })
+        , new NumberPickerControlNew({
+            key_:0,
+            name_:"MinutesSelect",
+            value_:"Start minutes",
+            typeName_:null
+            ,array_:null
+            ,cssClass_:"fxvt",show_:true
+            ,HtmlTypeAttr_:"div"
+            ,HtmlSubmittedValue_:0
+            ,DisplayValue_:0
+            ,minN:0
+            ,maxN:59
+          })
+      )
+      ,cssClass_:"flexCtnr flexRow",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
 
+    let startGroup=new HtmlItemNew({
+      key_:1,
+      name_:"QuizStartGroup",
+      value_:"QuizStartGroup",
+      typeName_:null
+      ,array_:new Array<HtmlItemNew>(
+      stardate,startTime
+      )
+      ,cssClass_:"flexCtnr flexRow fxHrCt",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:false
+    });
+
     let cycleCheckbox = new HtmlItemNew({
-      key_:2,
+      key_:10,
       name_:"CycleCheckbox",
       value_:"CycleCheckbox",
       typeName_:null
@@ -227,12 +343,33 @@ export class FactoryNew{
       ,HtmlSubmittedValue_:""
     });
 
+    let labels = new HtmlItemNew({
+      key_:2,
+      name_:"CycleLableGroup",
+      value_:"CycleLable",
+      typeName_:null
+      ,array_: new Array<LabelControlNew>(
+        new LabelControlNew({
+         key_:0,
+         name_:"CycleCheckboxItemLabel",
+         value_:"Cycle quiz every time gap",
+         typeName_:null
+         ,array_:null
+         ,cssClass_:"fxvt",show_:true
+         ,HtmlTypeAttr_:"div"
+         ,HtmlSubmittedValue_:true
+       }))
+      ,cssClass_:"fxvt",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:""
+    });
     let quizNumbers = new HtmlItemNew({
       key_:4,
       name_:"NumberPickerGroup",
       value_:"NumberPickerGroup",
       typeName_:null
       ,array_:new Array<NumberPickerControlNew>(
+
         new NumberPickerControlNew({
           key_:0,
           name_:"YearGap",
@@ -247,7 +384,7 @@ export class FactoryNew{
           ,maxN:9999
         })
         ,new NumberPickerControlNew({
-          key_:0,
+          key_:1,
           name_:"MonthsGap",
           value_:"Months gap",
           typeName_:null
@@ -259,53 +396,78 @@ export class FactoryNew{
           ,minN:0
           ,maxN:9999
         })
+        ,new NumberPickerControlNew({
+          key_:2,
+          name_:"WeeksGap",
+          value_:"Weeks gap",
+          typeName_:null
+          ,array_:null
+          ,cssClass_:"fxvt",show_:true
+          ,HtmlTypeAttr_:"div"
+          ,HtmlSubmittedValue_:0
+          ,DisplayValue_:0
+          ,minN:0
+          ,maxN:9999
+        })
+        ,new NumberPickerControlNew({
+          key_:3,
+          name_:"DaysGap",
+          value_:"Days gap",
+          typeName_:null
+          ,array_:null
+          ,cssClass_:"fxvt",show_:true
+          ,HtmlTypeAttr_:"div"
+          ,HtmlSubmittedValue_:0
+          ,DisplayValue_:0
+          ,minN:0
+          ,maxN:9999
+        })
+
       )
-      ,cssClass_:"fxhr",show_:false
+      ,cssClass_:"fxhr",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
-
-    let DropBoxes = new HtmlItemNew({
+    let dropBoxes = new HtmlItemNew({
       key_:5,
       name_:"DropBoxesGroup",
-      value_:"Time periods",
+      value_:"Start report every time gap",
       typeName_:null
       ,array_:new Array<DropDownControlMultiNew>(
       FactoryNew.MonthsInYear()
-      ,new DropDownControlMultiNew({
-      key_:1,
-      name_:"Weeks in year",
-      value_:"Weeks in year",
-      typeName_:null
-      ,array_:TestNew.LabelControlNewTest(3,"row").array
-      ,cssClass_:"",show_:false
-      ,HtmlTypeAttr_:"div"
-      ,HtmlSubmittedValue_:""})
-      ,new DropDownControlMultiNew({
-      key_:2,
-      name_:"Days in week",
-      value_:"Days in week",
-      typeName_:null
-      ,array_:TestNew.LabelControlNewTest(3,"row").array
-      ,cssClass_:"",show_:true
-      ,HtmlTypeAttr_:"div"
-      ,HtmlSubmittedValue_:""})
+      ,FactoryNew.DaysInWeek()
       )
       ,cssClass_:"fxhr",show_:true
       ,HtmlTypeAttr_:"div"
       ,HtmlSubmittedValue_:""
     });
 
+    let cycleGroup=new HtmlItemNew({
+      key_:15,
+      name_:"CycleGtoup",
+      value_:"CycleGtoup",
+      typeName_:null
+      ,array_: new Array<HtmlItemNew>(
+        labels,quizNumbers,dropBoxes)
+      ,cssClass_:"fxvt",show_:false
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:""
+    });
 
     r.add(textboxes);
     r.add(checkboxes);
-    r.add(stardate);
-    r.add(cycleCheckbox);
-    r.add(quizNumbers);
-    r.add(DropBoxes);
 
-    DropBoxes.show=false;
-    quizNumbers.show=false;
+    r.add(startGroup);
+    // r.add(startTime);
+    // r.add(stardate);
+
+    r.add(cycleCheckbox);
+
+    r.add(cycleGroup);
+
+    // r.add(labels);
+    // r.add(quizNumbers);
+    // r.add(DropBoxes);
 
     r.sort(true);
     return r;
@@ -406,11 +568,101 @@ export class FactoryNew{
 
     return r;
   }
+  static answerParametersNewGen(){
+
+    let r=new HtmlItemNew({
+       key_:0,
+       name_:"AnswerControlls",
+       value_:"Answer controlls",
+       typeName_:null
+       ,array_:new Array<HtmlItemNew>()
+       ,cssClass_:"",show_:true
+       ,HtmlTypeAttr_:"div"
+       ,HtmlSubmittedValue_:""
+     });
+
+     let textboxes=new HtmlItemNew({
+       key_:0,
+       name_:"AnswerName",
+       value_:"AnswerName",
+       typeName_:null
+       ,array_:new Array<TextControlNew>(
+         new TextControlNew({
+           key_:0,
+           name_:"ItemName",
+           value_:"Enter answer text",
+           typeName_:null
+           ,array_:null
+           ,cssClass_:"fxhr",show_:true
+           ,HtmlTypeAttr_:"div"
+           ,HtmlSubmittedValue_:""
+           ,DisplayValue_:""
+         })
+       )
+       ,cssClass_:"fxvt",show_:true
+       ,HtmlTypeAttr_:"div"
+       ,HtmlSubmittedValue_:false
+     });
+
+     r.add(textboxes);
+
+     return r;
+  }
+
+
 
   public static ItemButtons(itmNm:string){
     let r = new HtmlItemNew(null);
 
       r.addArr([new EditNew({key_:0,
+      name_:"Edit "+itmNm,
+      value_:"Edit "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-purple",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Edit "+itmNm,disabled_:false})
+      ,new CopyNew({key_:0,
+      name_:"Copy "+itmNm,
+      value_:"Copy "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-unique",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Copy "+itmNm,disabled_:false})
+      ,new DeleteNew({key_:0,
+      name_:"Delete "+itmNm,
+      value_:"Delete "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-danger",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Delete "+itmNm,disabled_:false})]);
+
+    r.cssClass="flexCtnr flexRow";
+    r.show=true;
+    return r;
+  }
+  public static QuizButtons(itmNm:string){
+    let r = new HtmlItemNew(null);
+
+      r.addArr([new PassQuiz({key_:0,
+      name_:"Pass "+itmNm,
+      value_:"Pass "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn",show_:true
+      ,HtmlTypeAttr_:"div"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Pass "+itmNm,disabled_:false})
+      ,new EditNew({key_:0,
       name_:"Edit "+itmNm,
       value_:"Edit "+itmNm,
       typeName_:null
@@ -610,7 +862,8 @@ export class FactoryNew{
       name_:"Answer name",
       value_:"new answer",
       typeName_:null,array_:null
-      ,itemControlls_:null,cssClass_:"",show_:true
+      ,itemControlls_:FactoryNew.answerParametersNewGen().array
+      ,cssClass_:"",show_:true
       ,HtmlTypeAttr_:"",HtmlSubmittedValue_:""})
     }
     return r;
@@ -653,7 +906,8 @@ export class FactoryNew{
               name_:"Answer_name "+(i3),
               value_:"Answer_value "+(i3),
               typeName_:"AnswerNew",array_:null
-              ,itemControlls_:null,cssClass_:"",show_:true
+              ,itemControlls_:FactoryNew.answerParametersNewGen().array
+              ,cssClass_:"",show_:true
               ,HtmlTypeAttr_:"",HtmlSubmittedValue_:""});
 
               qtNew.array.push(awNew);
@@ -670,6 +924,51 @@ export class FactoryNew{
 
   static rnd(min:number,max:number){
     return Math.floor(Math.random()*(max-min)+min)
+  }
+
+  static cloneFromProt(to_:any,from_:any){
+    let  r_ = Object.assign(
+      to_,Object.create(
+        Object.getPrototypeOf(from_)
+      )
+    );
+    return r_;
+  }
+  static cloneFromObj(to_:any,from_:any){
+    return Object.assign(to_,from_);
+  }
+  static cloneByKey(from_:QuizItemNew){
+    let r = FactoryNew.InstanceFromString(from_._typeName);
+
+    // console.log(["cloneByKey for: ",from_,r]);
+
+    if(r!=null){
+      if(from_!=null){
+        let keys_=Object.keys(from_);
+        // console.log(keys_);
+        if(keys_!=null && keys_.length>0){
+          for(let i of keys_){
+            if(from_[i]!=null){
+
+              if(Array.isArray(from_[i])){
+                r[i]=new Array<QuizItemNew>();
+                for(let i2 of from_[i]){
+                  r[i].push(FactoryNew.cloneByKey(i2));
+                  FactoryNew.cloneByKey(i2);
+                  // console.log(["cloneByKey arr: ",from_[i],i2,r,i,r[i]])
+                }
+              }else{
+                // console.log(["cloneByKey from: ",r,from_,i])
+                r[i]=from_[i];
+              }
+
+            }
+          }
+        }
+      }
+    }else{r=from_}
+
+    return r;
   }
 
 }
@@ -695,7 +994,7 @@ export class ModelContainerNew{
   @Output() static disable=new EventEmitter();
 
   public static Init(){
-    this.QuizesPassed=FactoryNew.GenQuizes(5,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
+    this.QuizesPassed=FactoryNew.GenQuizes(7,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
 
     this.nodeSelected=null;
     this.quizSelected=null;
@@ -766,11 +1065,11 @@ export class ModelContainerNew{
       ModelContainerNew.questionSelected=null;
     }
     if(ModelContainerNew.nodeSelected instanceof QuestionNew){
-      console.log("QuestionNew cancel")
+      ServiceCl.log("QuestionNew cancel")
       ModelContainerNew.questionSelected=null;
     }
     if(ModelContainerNew.nodeSelected instanceof AnswerNew){
-      console.log("AnswerNew cancel")
+      ServiceCl.log("AnswerNew cancel")
 
     }
     ModelContainerNew.nodeSelected=null;
@@ -851,10 +1150,19 @@ export class ModelContainerNew{
   static CycleCheckboxCheck(item_:HtmlItemNew,object_:HtmlItemNew){
     if(item_._name=="CycleCheckboxItem"){
       if(object_ instanceof QuizItemNew){
+
+        /*
         let nbGroup=object_.getControllItem("NumberPickerGroup");
         let dbGroup=object_.getControllItem("DropBoxesGroup");
+        let clGroup=object_.getControllItem("CycleLableGroup");
         if(nbGroup!=null){nbGroup.show=item_.HtmlSubmittedValue;}
         if(dbGroup!=null){dbGroup.show=item_.HtmlSubmittedValue;}
+        if(clGroup!=null){clGroup.show=item_.HtmlSubmittedValue;}
+        */
+
+        let cGroup=object_.getControllItem("CycleGtoup");
+        if(cGroup!=null){cGroup.show=item_.HtmlSubmittedValue;}
+
       }
     }
   }
@@ -867,7 +1175,7 @@ export class ModelContainerNew{
   static questionButtonsToggle(){
     if(ModelContainerNew.nodeSelected instanceof QuestionNew){
 
-      let ctr=ModelContainerNew.questionSelected
+      let ctr=ModelContainerNew.nodeSelected
       .getControllItem("QuestionTypes");
 
       if(ctr!=null){
@@ -1707,6 +2015,16 @@ export class TestNew{
     qz.getControllItem("");
   }
 
+  public static JSONparseCheck(){
+
+      // let q= Object.assign(new QuizItemNew(null),"'{_name:1}'");
+      let q:QuizItemNew;
+      q = new QuizItemNew(JSON.parse('{"_key": 0,"_name": "QuizItems","_value": "QuizItems",	"_typeName": "QuizItemNew",	"cssClass": "fxvt",	"show": true,	"created": "2018-07-17 16:43:05",	"changed": "2018-07-17 16:43:05"}'));
+
+      console.log("JSON parsed: ");
+      console.log(q);
+  }
+
   public static GO(){
 
     //collection tests
@@ -1736,6 +2054,11 @@ export class TestNew{
     //check collection array beahaviour
 
     // TestNew.ItemColelctionTest();
+
+
+    //Check JSON convert
+
+    //TestNew.JSONparseCheck();
 
   }
 
