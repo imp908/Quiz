@@ -926,12 +926,16 @@ export class FactoryNew{
     return Math.floor(Math.random()*(max-min)+min)
   }
 
+  //cloning objects
+
   static cloneFromProt(to_:any,from_:any){
+
     let  r_ = Object.assign(
       to_,Object.create(
         Object.getPrototypeOf(from_)
       )
     );
+
     return r_;
   }
   static cloneFromObj(to_:any,from_:any){
@@ -969,6 +973,77 @@ export class FactoryNew{
     }else{r=from_}
 
     return r;
+  }
+
+  static GradientGen(){
+
+    var cssGrad="linear-gradient("
+    var degs="deg"
+    var comma=",";
+    var strClose=")";
+
+    var toDeg=true;
+
+    var res:string[]=new Array<string>();
+
+    if(toDeg){
+      res.push(Math.floor(Math.random()*(360/3)).toString());
+    }
+
+    var blues:string[]=[
+      "#001f3f","#0074D9","#7FDBFF","#39CCCC"
+    ];
+    var greens:string[]=[
+      "#39CCCC","#3D9970","#2ECC40","#01FF70"
+    ];
+    var oranges:string[]=[
+      "#FFDC00","#FF851B","#FF4136"
+    ];
+    var violets:string[]=[
+      "#85144b ","#F012BE","#B10DC9"
+    ];
+
+    var colors:Array<string[]>=
+    new Array<string[]>(blues,greens,oranges,violets);
+    var iter=2;
+    var prevMax=0;
+    var localMax=0;
+    for(var i=0;i<iter;i++){
+      while(prevMax==localMax){
+        localMax=FactoryNew.rnd(0,colors.length);
+      }
+      prevMax=localMax;
+      console.log(["localMax: ",localMax]);
+      var localMax2=FactoryNew.rnd(0,colors[localMax].length);
+      console.log(["localMax2: ",localMax2]);
+      // res.push(colors[i][localMax2]);
+      res.push(colors[localMax][localMax2]);
+    }
+
+
+
+    for(var i3 =0; i3<res.length;i3++){
+
+      // console.log(["res: ",res[i3]]);
+
+      if(toDeg && i3==0){
+        cssGrad+=res[i3];
+        cssGrad+=degs;
+        cssGrad+=comma;
+      }else{
+        cssGrad+=res[i3];
+        if(i3<(res.length-1)){
+          cssGrad+=comma;
+        }
+      }
+
+    }
+
+    cssGrad+=strClose;
+
+    console.log(["cssGrad: ",cssGrad]);
+
+    return cssGrad;
   }
 
 }
@@ -2025,6 +2100,10 @@ export class TestNew{
       console.log(q);
   }
 
+  public static ColorCheck(){
+    FactoryNew.GradientGen();
+  }
+
   public static GO(){
 
     //collection tests
@@ -2059,6 +2138,10 @@ export class TestNew{
     //Check JSON convert
 
     //TestNew.JSONparseCheck();
+
+    //color checker
+
+    // TestNew.ColorCheck();
 
   }
 

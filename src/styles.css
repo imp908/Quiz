@@ -3,4 +3,8 @@
 @import './assets/bootstrap-theme.css';
 @import './assets/common.css';
 @import './assets/vars_.css';
+@import './assets/grads.css';
 @import './assets/scrollbars.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 'Roboto', sans-serif; }

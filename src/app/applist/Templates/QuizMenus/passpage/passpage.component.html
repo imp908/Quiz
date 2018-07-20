@@ -1,0 +1,8 @@
+<ng-container> <div [class]="cssback" [ngStyle]="this.style_"> draw</div> </ng-container>
+<!-- <ng-container> <div [class]="cssback" style="position:absolute;height:100%;width:100%;background:linear-gradient(54deg,#0074D9,#7FDBFF)"> draw</div> </ng-container> -->
+<div class="slidecontainer" style="position:relative;">
+  <input  type="range" min="1" max="100" [value]="opacity_*100" class="slider" id="myRange"  (change)="changed($event)" #d>
+</div>
+<p>
+  passpage works!
+</p>

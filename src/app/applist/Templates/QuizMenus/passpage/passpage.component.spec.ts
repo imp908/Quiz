@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DropdownmultngComponent } from './dropdownmulting.component';
+import { PasspageComponent } from './passpage.component';
 
-describe('DropdownmultngComponent', () => {
-  let component: DropdownmultngComponent;
-  let fixture: ComponentFixture<DropdownmultngComponent>;
+describe('PasspageComponent', () => {
+  let component: PasspageComponent;
+  let fixture: ComponentFixture<PasspageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DropdownmultngComponent ]
+      declarations: [ PasspageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DropdownmultngComponent);
+    fixture = TestBed.createComponent(PasspageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

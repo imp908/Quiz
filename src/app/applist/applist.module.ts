@@ -22,34 +22,30 @@ import { DropdownComponent } from './Templates/Elements/dropdowns/dropdownng/dro
 
 import { GappickerNgComponent } from './Templates/Elements/gappicker-ng/gappicker-ng.component';
 import { MenuitemComponent } from './Templates/QuizMenus/menuitem/menuitem.component';
+import { PasspageComponent } from './Templates/QuizMenus/passpage/passpage.component';
 
 import { PageNotFoundComponent } from './Templates/Pages/page-not-found/page-not-found.component';
 
-import {HttpClientModule } from '@angular/common/http';
-import { RouterModule, Routes } from '@angular/router';
 
-const appListRoutes : Routes =[
-  { path: 'qz',component: TestComponent },
-  { path: 'ps',component: MenuMainComponent },
-  { path: '',redirectTo: 'qz' , pathMatch:'full'},
-  { path: '**', component: PageNotFoundComponent}
-];
+import { AppRoutingModule } from 'src/app/applist/app-routing.module';
+
+import {HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [ApplistComponent,DatepickerPopupComponent
-    , ButtonComponent, ItemComponent, TestComponent
-    , ItemsComponent, MenuListComponent, MenuEditComponent, MenuMainComponent
+    ,ButtonComponent, ItemComponent, TestComponent
+    ,ItemsComponent, MenuListComponent, MenuEditComponent, MenuMainComponent
     ,DropdownmultiComponent,DropdownComponent
-    ,GappickerNgComponent, MenuitemComponent, PageNotFoundComponent
+    ,GappickerNgComponent, MenuitemComponent
+    ,PageNotFoundComponent, PasspageComponent
     ],
   imports: [
-    RouterModule.forRoot(
-      appListRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    ),
     BrowserModule,ReactiveFormsModule,FormsModule,CommonModule
     ,NgbModule.forRoot()
     ,HttpClientModule
+    ,AppRoutingModule, BrowserAnimationsModule
   ]
   ,bootstrap:[ApplistComponent]
 })
