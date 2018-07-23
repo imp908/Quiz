@@ -927,15 +927,12 @@ export class FactoryNew{
   }
 
   //cloning objects
-
   static cloneFromProt(to_:any,from_:any){
-
     let  r_ = Object.assign(
       to_,Object.create(
         Object.getPrototypeOf(from_)
       )
     );
-
     return r_;
   }
   static cloneFromObj(to_:any,from_:any){
@@ -975,6 +972,13 @@ export class FactoryNew{
     return r;
   }
 
+  static lineGradPlace(){
+    var cssGrad="linear-gradient("
+    var degs="deg"
+    var comma=",";
+    var strClose=")";
+
+  }
   static GradientGen(){
 
     var cssGrad="linear-gradient("
@@ -987,7 +991,7 @@ export class FactoryNew{
     var res:string[]=new Array<string>();
 
     if(toDeg){
-      res.push(Math.floor(Math.random()*(360/3)).toString());
+      res.push(Math.floor(Math.random()*360).toString());
     }
 
     var blues:string[]=[
@@ -997,33 +1001,24 @@ export class FactoryNew{
       "#39CCCC","#3D9970","#2ECC40","#01FF70"
     ];
     var oranges:string[]=[
-      "#FFDC00","#FF851B","#FF4136"
+      "#FFDC00","#FF851B","#FF4136 "
     ];
     var violets:string[]=[
       "#85144b ","#F012BE","#B10DC9"
     ];
 
     var colors:Array<string[]>=
-    new Array<string[]>(blues,greens,oranges,violets);
-    var iter=2;
-    var prevMax=0;
-    var localMax=0;
-    for(var i=0;i<iter;i++){
-      while(prevMax==localMax){
-        localMax=FactoryNew.rnd(0,colors.length);
-      }
-      prevMax=localMax;
-      console.log(["localMax: ",localMax]);
-      var localMax2=FactoryNew.rnd(0,colors[localMax].length);
-      console.log(["localMax2: ",localMax2]);
-      // res.push(colors[i][localMax2]);
-      res.push(colors[localMax][localMax2]);
+    new Array<string[]>(blues,greens,oranges,violets) ;
+
+    var localMax=Math.floor(Math.random()*colors.length);
+    var localMax2=Math.floor(Math.random()*colors[localMax].length);
+
+    // console.log(["localMax: ",localMax]);
+    for(var i=0;i<=localMax2;i++){
+      res.push(colors[localMax][i]);
     }
 
-
-
     for(var i3 =0; i3<res.length;i3++){
-
       // console.log(["res: ",res[i3]]);
 
       if(toDeg && i3==0){
@@ -1036,14 +1031,59 @@ export class FactoryNew{
           cssGrad+=comma;
         }
       }
-
     }
-
     cssGrad+=strClose;
 
     console.log(["cssGrad: ",cssGrad]);
 
     return cssGrad;
+  }
+
+
+  static ColorArr2(n:number):Array<string>{
+      var res=new Array<string>();
+      var colors=["#4CAF50","#8BC34A","#CDDC39","#FBC02D","#FFEB3B","#FF9800","#E64A19"
+        ,"rgb(244, 67, 54)","rgb(233, 30, 99)","rgb(156, 39, 176)","rgb(103, 58, 183)"
+        ,"rgb(63, 81, 181)","rgb(33, 150, 243)","rgb(3, 169, 244)","rgb(3, 169, 244)"
+        ,"rgb(0, 150, 136)"];
+
+      if(colors!=null){
+        if(colors.length>0){
+
+        var cols=3;
+
+        if(n==null){cols=FactoryNew.rnd(2,colors.length)}
+        if(n>0){cols=n;}
+
+        for(var i=0;i<cols;i++){
+          res.push(colors[FactoryNew.rnd(0,colors.length)]);
+        }
+
+      }}
+
+      return res;
+  }
+
+  static degAdd(str:Array<string>,deg_:number){
+    if(deg_==null){deg_=FactoryNew.rnd(0,360);}
+    str.unshift(deg_+"deg");
+  }
+
+  static linearGrad(str:Array<string>){
+    console.log(str);
+    var res=new Array<string>();
+      res.push("linear-gradient(");
+      res.push(str.join(","));
+      res.push(")");
+    return res;
+  }
+
+  static gradArr(n:number,deg:number){
+    var col=FactoryNew.ColorArr2(n);
+    FactoryNew.degAdd(col,deg);
+    var res=FactoryNew.linearGrad(col).join('');
+
+    return res;
   }
 
 }
@@ -2101,7 +2141,8 @@ export class TestNew{
   }
 
   public static ColorCheck(){
-    FactoryNew.GradientGen();
+
+    console.log(FactoryNew.gradArr(null,null));
   }
 
   public static GO(){
@@ -2141,7 +2182,7 @@ export class TestNew{
 
     //color checker
 
-    // TestNew.ColorCheck();
+    TestNew.ColorCheck();
 
   }
 
