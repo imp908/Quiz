@@ -17,7 +17,8 @@ import {NodeNew,CollectionNew
   ,DatePickerControlNew,NumberPickerControlNew
   ,ButtonNew
   ,LabelControlNew
-  ,NewAddNew,SaveNew,EditNew,CopyNew,DeleteNew,Cancel,PassQuiz
+  ,NewAddNew,SaveNew,EditNew,CopyNew,DeleteNew,Cancel,Pass,Start
+  ,Next,Previous
 } from './POCOnew.component';
 
 
@@ -652,7 +653,7 @@ export class FactoryNew{
   public static QuizButtons(itmNm:string){
     let r = new HtmlItemNew(null);
 
-      r.addArr([new PassQuiz({key_:0,
+      r.addArr([new Pass({key_:0,
       name_:"Pass "+itmNm,
       value_:"Pass "+itmNm,
       typeName_:null
@@ -778,9 +779,66 @@ export class FactoryNew{
       ,clicked_:false,toolTipText_:"Add new "+itmNm,disabled_:false})
     );
 
-
     return r2;
 
+  }
+
+  public static PassButton(itmNm:string){
+    let r = new HtmlItemNew(null);
+
+      r.addArr([new Pass({key_:0,
+      name_:"Pass"+" "+itmNm,
+      value_:"Pass"+" "+itmNm,
+      typeName_:null
+      ,array_:null
+      ,itemControlls_:null
+      ,cssClass_:"btn btn-darkgreen",show_:true
+      ,HtmlTypeAttr_:"Pass"
+      ,HtmlSubmittedValue_:null
+      ,clicked_:false,toolTipText_:"Pass"+" "+itmNm,disabled_:false})
+      ]);
+
+    r.cssClass="flexCtnr flexRow";
+    r.show=true;
+    return r;
+
+  }
+  public static StartButton(itmNm:string){
+    return new Start({key_:0,
+    name_:"Start"+" "+itmNm,
+    value_:"Start"+" "+itmNm,
+    typeName_:null
+    ,array_:null
+    ,itemControlls_:null
+    ,cssClass_:"btn btn-darkgreen",show_:true
+    ,HtmlTypeAttr_:"Start"
+    ,HtmlSubmittedValue_:null
+    ,clicked_:false,toolTipText_:"Start"+" "+itmNm,disabled_:false})
+  }
+
+  public static NextButton(itmNm:string){
+    return new Next({key_:0,
+    name_:"Next"+" "+itmNm,
+    value_:"Next"+" "+itmNm,
+    typeName_:null
+    ,array_:null
+    ,itemControlls_:null
+    ,cssClass_:"btn btn-darkgreen",show_:true
+    ,HtmlTypeAttr_:"Next"
+    ,HtmlSubmittedValue_:null
+    ,clicked_:false,toolTipText_:"Next"+" "+itmNm,disabled_:false});
+  }
+  public static PreviousButton(itmNm:string){
+    return new Previous({key_:1,
+    name_:"Previous"+" "+itmNm,
+    value_:"Previous"+" "+itmNm,
+    typeName_:null
+    ,array_:null
+    ,itemControlls_:null
+    ,cssClass_:"btn btn-darkgreen",show_:true
+    ,HtmlTypeAttr_:"Previous"
+    ,HtmlSubmittedValue_:null
+    ,clicked_:false,toolTipText_:"Previous"+" "+itmNm,disabled_:false});
   }
 
   //quiz objects generating
@@ -927,6 +985,7 @@ export class FactoryNew{
   }
 
   //cloning objects
+
   static cloneFromProt(to_:any,from_:any){
     let  r_ = Object.assign(
       to_,Object.create(
@@ -1102,6 +1161,8 @@ export class ModelContainerNew{
   static buttonsQuestions_:ButtonNew[]
   static buttonsAnswers_:ButtonNew[]
 
+  static buttonPass:ButtonNew;
+
   @Output() static stateChanged=new EventEmitter();
   @Output() static nodeEdit=new EventEmitter();
   @Output() static nodeCopy=new EventEmitter();
@@ -1159,6 +1220,23 @@ export class ModelContainerNew{
       ModelContainerNew.objectDelete(obj);
       // ModelContainerNew.objectCnacel();
       ModelContainerNew.nodeEdit.emit();
+    }
+
+    if(btn_ instanceof Pass){
+
+      console.log("Pass")
+    }
+    if(btn_ instanceof Start){
+
+      console.log("Start")
+    }
+    if(btn_ instanceof Next){
+
+      console.log("Next")
+    }
+    if(btn_ instanceof Previous){
+
+      console.log("Previous")
     }
 
     ModelContainerNew.questionButtonsToggle();
@@ -2182,7 +2260,7 @@ export class TestNew{
 
     //color checker
 
-    TestNew.ColorCheck();
+    //TestNew.ColorCheck();
 
   }
 
