@@ -162,7 +162,6 @@ export class FactoryNew{
   }
 
 
-
   //Quiz object parameters
 
   static quizItemParametersNewGen(){
@@ -611,7 +610,6 @@ export class FactoryNew{
   }
 
 
-
   public static ItemButtons(itmNm:string){
     let r = new HtmlItemNew(null);
 
@@ -784,24 +782,16 @@ export class FactoryNew{
   }
 
   public static PassButton(itmNm:string){
-    let r = new HtmlItemNew(null);
-
-      r.addArr([new Pass({key_:0,
-      name_:"Pass"+" "+itmNm,
-      value_:"Pass"+" "+itmNm,
-      typeName_:null
-      ,array_:null
-      ,itemControlls_:null
-      ,cssClass_:"btn btn-darkgreen",show_:true
-      ,HtmlTypeAttr_:"Pass"
-      ,HtmlSubmittedValue_:null
-      ,clicked_:false,toolTipText_:"Pass"+" "+itmNm,disabled_:false})
-      ]);
-
-    r.cssClass="flexCtnr flexRow";
-    r.show=true;
-    return r;
-
+    return new Pass({key_:0,
+    name_:"Pass"+" "+itmNm,
+    value_:"Pass"+" "+itmNm,
+    typeName_:null
+    ,array_:null
+    ,itemControlls_:null
+    ,cssClass_:"btn btn-darkgreen",show_:true
+    ,HtmlTypeAttr_:"Pass"
+    ,HtmlSubmittedValue_:null
+    ,clicked_:false,toolTipText_:"Pass"+" "+itmNm,disabled_:false})
   }
   public static StartButton(itmNm:string){
     return new Start({key_:0,
@@ -1154,14 +1144,18 @@ export class ModelContainerNew{
   static nodeSelected:QuizItemNew;
   static quizSelected:QuizNew;
   static questionSelected:QuestionNew;
+  static questionNum:number;
 
   static answerSelected:AnswerNew;
 
-  static buttonsQuiz_:ButtonNew[]
-  static buttonsQuestions_:ButtonNew[]
-  static buttonsAnswers_:ButtonNew[]
+  static buttonsQuiz_=new HtmlItemNew(null);
+  static buttonsQuestions_=new HtmlItemNew(null);
+  static buttonsAnswers_=new HtmlItemNew(null);
 
   static buttonPass:ButtonNew;
+  static buttonPrevious_:ButtonNew;
+  static buttonNext_:ButtonNew;
+
 
   @Output() static stateChanged=new EventEmitter();
   @Output() static nodeEdit=new EventEmitter();
@@ -1169,17 +1163,31 @@ export class ModelContainerNew{
 
   @Output() static disable=new EventEmitter();
 
+  @Output() static pass=new EventEmitter();
+  @Output() static start=new EventEmitter();
+
+  @Output() static swap=new EventEmitter();
+
   public static Init(){
-    this.QuizesPassed=FactoryNew.GenQuizes(7,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
 
-    this.nodeSelected=null;
-    this.quizSelected=null;
-    this.questionSelected=null;
+    ModelContainerNew.QuizesPassed=FactoryNew.GenQuizes(7,5,5,"flexCtnr flexRow","flexCtnr flexRow","flexCtnr flexCol");
 
+    ModelContainerNew.nodeSelected=null;
+    ModelContainerNew.quizSelected=null;
+    ModelContainerNew.questionSelected=null;
+
+    ModelContainerNew.buttonsQuiz_=FactoryNew.QuizButtons("");
+    ModelContainerNew.buttonsQuestions_=FactoryNew.QuizButtons("");
+    ModelContainerNew.buttonsAnswers_=FactoryNew.QuizButtons("");
+
+    ModelContainerNew.buttonPrevious_=FactoryNew.PreviousButton("");
+    ModelContainerNew.buttonNext_=FactoryNew.NextButton("");
+
+    // this.buttonPass=FactoryNew.PassButton("");
   }
 
   public static buttonClicked(btn_:ButtonNew,obj:HtmlItemNew,e:any){
-    console.log(["buttonClicked :",btn_,obj,e])
+    // console.log(["buttonClicked :",btn_,obj,e])
 
     if(btn_ instanceof NewAddNew){
       console.log("add new");
@@ -1222,21 +1230,31 @@ export class ModelContainerNew{
       ModelContainerNew.nodeEdit.emit();
     }
 
-    if(btn_ instanceof Pass){
 
-      console.log("Pass")
+    if(btn_ instanceof Pass){
+      if(obj instanceof QuizNew){
+        ModelContainerNew.quizSelected=obj;
+        ModelContainerNew.pass.emit(obj);
+        console.log("Pass emitted");
+      }
+
     }
     if(btn_ instanceof Start){
 
-      console.log("Start")
+      if(obj instanceof QuizNew){
+        ModelContainerNew.Start();
+        ModelContainerNew.start.emit(ModelContainerNew.questionSelected);
+      }
+      console.log("Start");
     }
-    if(btn_ instanceof Next){
 
-      console.log("Next")
+    if(btn_ instanceof Next){
+      ModelContainerNew.Next();
+      console.log("Next");
     }
     if(btn_ instanceof Previous){
-
-      console.log("Previous")
+      ModelContainerNew.Previous();
+      console.log("Previous");
     }
 
     ModelContainerNew.questionButtonsToggle();
@@ -1406,6 +1424,82 @@ export class ModelContainerNew{
       }
       }
 
+    }
+  }
+
+  static checkQuiz() : boolean{
+
+    if(ModelContainerNew.quizSelected!=null){
+      if(ModelContainerNew.quizSelected.array!=null){
+        if(ModelContainerNew.quizSelected.array.length>0){
+          return true;
+        }else{ServiceCl.log("ModelContainerNew quiz questions array is empty")}
+      }else{ServiceCl.log("ModelContainerNew quiz has no questions array")}
+    }else{ServiceCl.log("no quizSelected in ModelContainerNew")}
+
+    return false;
+  }
+
+  static Start(){
+
+    //if random question order add check
+    //if random answer order add check
+
+    if(ModelContainerNew.checkQuiz()==true){
+      ModelContainerNew.questionNum=0;
+      let qs=ModelContainerNew.quizSelected.array[ModelContainerNew.questionNum];
+      if(qs instanceof QuestionNew){
+        ModelContainerNew.questionSelected=qs;
+        ModelContainerNew.buttonPrevious_.show=false;
+      }
+      if(ModelContainerNew.quizSelected.array.length==1){ModelContainerNew.buttonNext_.show=false;}
+    }
+
+  }
+  static Next(){
+    //if random question order add check
+    //if random answer order add check
+    if(ModelContainerNew.checkQuiz()==true){
+      ModelContainerNew.checkQstIncrease();
+      ModelContainerNew.questToggle();
+    }else{ServiceCl.log(["quizSelected is null"]);}
+  }
+  static Previous(){
+    //if random question order add check
+    //if random answer order add check
+    if(ModelContainerNew.checkQuiz()==true){
+      ModelContainerNew.checkQstDecrease();
+      ModelContainerNew.questToggle();
+    }else{ServiceCl.log(["quizSelected is null"]);}
+  }
+
+  static questToggle(){
+      let qs=ModelContainerNew.quizSelected.array[ModelContainerNew.questionNum];
+
+      if(qs instanceof QuestionNew){
+        ModelContainerNew.questionSelected=qs;
+        ServiceCl.log(["swap emitted",ModelContainerNew.questionSelected]);
+        ModelContainerNew.swap.emit(ModelContainerNew.questionSelected);
+      }else{ServiceCl.log(["no question",ModelContainerNew.quizSelected,ModelContainerNew.questionNum]);}
+
+  }
+
+  static checkQstIncrease(){
+    if((ModelContainerNew.questionNum+1)<=(ModelContainerNew.quizSelected.array.length)){
+      ModelContainerNew.questionNum+=1;
+      ModelContainerNew.buttonPrevious_.show=true;
+      if((ModelContainerNew.questionNum)==(ModelContainerNew.quizSelected.array.length)){
+        ModelContainerNew.buttonNext_.show=false;
+      }
+    }
+  }
+  static checkQstDecrease(){
+    if((ModelContainerNew.questionNum-1)>=(0)){
+      ModelContainerNew.questionNum-=1;
+      ModelContainerNew.buttonNext_.show=true;
+      if((ModelContainerNew.questionNum)==(0)){
+        ModelContainerNew.buttonPrevious_.show=false;
+      }
     }
   }
 

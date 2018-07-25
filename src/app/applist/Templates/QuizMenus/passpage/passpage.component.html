@@ -14,8 +14,8 @@
   </div>
 
   <ng-container *ngIf="this._question==null">
-
-    <div #d class="passCard" (mouseenter)="mouseenter_($event,d)" (mouseleave)="mouseleave_($event,d)">
+    <div #d class="passCard">
+       <!-- (mouseenter)="mouseenter_($event,d)" (mouseleave)="mouseleave_($event,d)"> -->
       <div class="cardHdr">
         <h3 id="crdhdr" style="font-size:18px;">{{_quiz._value}}</h3>
       </div>
@@ -36,7 +36,6 @@
         </div>
       </div>
     </div>
-
   </ng-container>
 
   <ng-container *ngIf="this._question!=null">
@@ -47,9 +46,61 @@
       <div class="cardTxt">
         <h3 id="crdtxt" style="font-size:15px;">{{_question._value}}</h3>
       </div>
-      <div class="start">
+      <div class="startQs">
+
+        <!-- svg from model -> sanitizer issue -->
+        <!-- <svg><use [attr.xlink:href]="svgs" class="arr arrLt"></use></svg> -->
+        <!-- svg from CSS fail -->
+        <!-- <a class="arr arrLt"></a> -->
+        <!-- <svg class="arrLt"></svg> -->
+
+        <!-- svg in html -->
+
+        <!-- <svg class="arr arrLt" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        	 width="306px" height="306px" viewBox="0 0 306 306" style="enable-background:new 0 0 306 306;" xml:space="preserve">
+          <g>
+          	<g >
+          		<polygon points="94.35,0 58.65,35.7 175.95,153 58.65,270.3 94.35,306 247.35,153 		" />
+          	</g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+          <g>
+          </g>
+        </svg> -->
+
+        <!-- svg from file  -->
+        <!-- <object id="pv" type="image/svg+xml" data="assets/svg/arrRtRd.svg" class="arr arrLt"></object> -->
         <app-button [_button]="_buttonPrevious" [_object]="_question"></app-button>
         <app-button [_button]="_buttonNext" [_object]="_question"></app-button>
+        <!-- <object id="nx" type="image/svg+xml" data="assets/svg/arrRtRd.svg" class="arr arrRt"></object> -->
+
       </div>
     </div>
   </ng-container>
