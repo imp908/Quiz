@@ -175,7 +175,7 @@
   width: 45px;
   height: 35px;
   background-size: 45px 40px;
-  transform: rotate(-180deg);
+  /* transform: rotate(-180deg); */
 }
 
 .arrLt:hover{
@@ -212,4 +212,9 @@ c:after {
   right: 0;
   bottom: 0;
   left:0;
+}
+
+.arrBtnElem{
+  display: inline-block;
+  vertical-align: middle;
 }

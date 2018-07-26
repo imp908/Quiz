@@ -1094,7 +1094,7 @@ export class FactoryNew{
       var colors=["#4CAF50","#8BC34A","#CDDC39","#FBC02D","#FFEB3B","#FF9800","#E64A19"
         ,"rgb(244, 67, 54)","rgb(233, 30, 99)","rgb(156, 39, 176)","rgb(103, 58, 183)"
         ,"rgb(63, 81, 181)","rgb(33, 150, 243)","rgb(3, 169, 244)","rgb(3, 169, 244)"
-        ,"rgb(0, 150, 136)"];
+        ,"rgb(0, 150, 136)","#7a306c","#bdc667","#58bc82","#eb7bc0","#1b5299"];
 
       if(colors!=null){
         if(colors.length>0){
@@ -1485,10 +1485,10 @@ export class ModelContainerNew{
   }
 
   static checkQstIncrease(){
-    if((ModelContainerNew.questionNum+1)<=(ModelContainerNew.quizSelected.array.length)){
+    if((ModelContainerNew.questionNum+1)<=(ModelContainerNew.quizSelected.array.length-1)){
       ModelContainerNew.questionNum+=1;
       ModelContainerNew.buttonPrevious_.show=true;
-      if((ModelContainerNew.questionNum)==(ModelContainerNew.quizSelected.array.length)){
+      if((ModelContainerNew.questionNum)==(ModelContainerNew.quizSelected.array.length-1)){
         ModelContainerNew.buttonNext_.show=false;
       }
     }
